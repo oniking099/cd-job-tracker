@@ -1,6 +1,7 @@
 name: Job Search
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 4 * * *'    # 12:00 北京时间
     - cron: '0 5 * * *'    # 13:00 北京时间
