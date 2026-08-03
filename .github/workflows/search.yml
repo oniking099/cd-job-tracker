@@ -1,0 +1,53 @@
+name: Job Search
+
+on:
+  schedule:
+    - cron: '0 4 * * *'    # 12:00 北京时间
+    - cron: '0 5 * * *'    # 13:00 北京时间
+    - cron: '0 6 * * *'    # 14:00 北京时间
+    - cron: '0 7 * * *'    # 15:00 北京时间
+    - cron: '0 8 * * *'    # 16:00 北京时间
+    - cron: '0 9 * * *'    # 17:00 北京时间
+
+concurrency:
+  group: chengdu-job-search
+  cancel-in-progress: false
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Run search round
+        run: python scripts/search.py
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          QWENVL_API_KEY: ${{ secrets.QWENVL_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
+
+      - name: Commit search data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "data: search results [skip ci]"
+          file_pattern: 'data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成都招聘信息日报 — {{ date_str }}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        state: { bg: '#FEF2F2', border: '#DC2626', text: '#991B1B', badge: '#EF4444' },
+        central: { bg: '#FFFBEB', border: '#D97706', text: '#92400E', badge: '#F59E0B' },
+        foreign: { bg: '#EFF6FF', border: '#2563EB', text: '#1E40AF', badge: '#3B82F6' },
+        jv: { bg: '#ECFDF5', border: '#059669', text: '#065F46', badge: '#10B981' },
+        other: { bg: '#F9FAFB', border: '#6B7280', text: '#374151', badge: '#9CA3AF' },
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="max-w-4xl mx-auto px-4 py-6">
+
+  <!-- 头部 -->
+  <header class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">🏙️ 成都招聘信息日报</h1>
+    <p class="text-gray-500 mt-1 text-sm">{{ date_str }}</p>
+    <div class="flex flex-wrap gap-3 mt-4">
+      {% for ct in summary %}
+      <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium" style="background:{{ ct.bg_color }}; color:{{ ct.text_color }}">
+        {{ ct.emoji }} {{ ct.label }} <strong>{{ ct.count }}</strong>
+      </span>
+      {% endfor %}
+      <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-gray-800 text-white">
+        共 <strong>{{ total_count }}</strong> 个岗位
+      </span>
+    </div>
+  </header>
+
+  <!-- 类别区域 -->
+  {% for group in groups %}
+  <section class="mb-5 bg-white rounded-2xl shadow-sm overflow-hidden">
+    <!-- 类别标题 -->
+    <button
+      class="w-full flex items-center justify-between px-6 py-4 cursor-pointer hover:opacity-90 transition"
+      style="background: {{ group.bg_color }}; color: {{ group.text_color }}"
+      onclick="toggleCategory('cat-{{ loop.index }}', this)"
+    >
+      <h2 class="text-lg font-bold flex items-center gap-2">
+        <span>{{ group.emoji }}</span>
+        <span>{{ group.label }}</span>
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: {{ group.badge_color }}; color: white">{{ group.jobs|length }}</span>
+      </h2>
+      <span id="cat-arrow-{{ loop.index }}" class="text-xl transition-transform duration-300">▼</span>
+    </button>
+
+    <!-- 排序工具栏 -->
+    <div id="cat-{{ loop.index }}" class="px-6 py-3 bg-gray-50 border-b flex flex-wrap items-center gap-2">
+      <span class="text-sm text-gray-500 mr-1">排序：</span>
+      <button class="px-3 py-1 text-sm rounded-full bg-white border hover:bg-gray-100 transition" onclick="sortCards('cat-body-{{ loop.index }}', 'salary', 'desc')">薪资↓</button>
+      <button class="px-3 py-1 text-sm rounded-full bg-white border hover:bg-gray-100 transition" onclick="sortCards('cat-body-{{ loop.index }}', 'salary', 'asc')">薪资↑</button>
+      <button class="px-3 py-1 text-sm rounded-full bg-white border hover:bg-gray-100 transition" onclick="sortCards('cat-body-{{ loop.index }}', 'distance', 'desc')">距离↓</button>
+      <button class="px-3 py-1 text-sm rounded-full bg-white border hover:bg-gray-100 transition" onclick="sortCards('cat-body-{{ loop.index }}', 'distance', 'asc')">距离↑</button>
+    </div>
+
+    <!-- 卡片容器 -->
+    <div id="cat-body-{{ loop.index }}" class="divide-y divide-gray-100">
+      {% for job in group.jobs %}
+      <article class="px-6 py-5 hover:bg-gray-50 transition card-item"
+               data-salary="{{ job.salary_min }}"
+               data-distance="{{ job.distance_km or 99999 }}">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <!-- 左列 -->
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-bold text-gray-900 truncate">{{ job.company }}</h3>
+            <p class="text-gray-600 text-sm mt-0.5">{{ job.title }}</p>
+          </div>
+          <!-- 右列 -->
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            {% if job.hr_active %}
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> HR活跃
+            </span>
+            {% endif %}
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold text-red-600 bg-red-50">
+              💰 {{ job.salary_display }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
+          <span class="flex items-center gap-1">📍 {{ job.location or "成都" }}</span>
+          {% if job.distance_km is not none %}
+          <span class="flex items-center gap-1">📏 {{ job.distance_km }}km</span>
+          {% endif %}
+          <span class="flex items-center gap-1">📅 {{ job.posted_date or "近期" }}</span>
+        </div>
+
+        {% if job.responsibilities %}
+        <div class="mt-3 text-sm text-gray-700">
+          <span class="font-medium text-gray-900">📋 职责：</span>
+          <span class="line-clamp-2">{{ job.responsibilities[:150] }}{% if job.responsibilities|length > 150 %}...{% endif %}</span>
+        </div>
+        {% endif %}
+
+        {% if job.requirements %}
+        <div class="mt-1.5 text-sm text-gray-700">
+          <span class="font-medium text-gray-900">✅ 要求：</span>
+          <span class="line-clamp-2">{{ job.requirements[:150] }}{% if job.requirements|length > 150 %}...{% endif %}</span>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-wrap items-center gap-2 mt-4">
+          <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+            🔗 来源：{{ job.platform }}
+          </span>
+          {% if job.url %}
+          <a href="{{ job.url }}" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition shadow-sm">
+            查看详情 ↗
+          </a>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+
+      {% if group.jobs|length == 0 %}
+      <div class="px-6 py-8 text-center text-gray-400 text-sm">今日暂无此类岗位</div>
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <!-- 尾部 -->
+  <footer class="text-center text-xs text-gray-400 py-4">
+    由 chengdu-job-tracker 自动生成 · 数据来源：51Job、智联招聘、猎聘、拉勾、BOSS直聘等
+  </footer>
+</div>
+
+<script>
+// 分类展开/收起
+function toggleCategory(id, btn) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById('cat-arrow-' + id.split('-')[1]);
+  if (!body || !arrow) return;
+
+  // 切换排序工具栏和卡片
+  const sortBar = body.previousElementSibling;
+  const isVisible = body.style.display !== 'none';
+
+  body.style.display = isVisible ? 'none' : '';
+  if (sortBar && sortBar !== btn) {
+    sortBar.style.display = isVisible ? 'none' : '';
+  }
+  arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+  arrow.textContent = isVisible ? '▶' : '▼';
+}
+
+// 排序
+function sortCards(containerId, by, order) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const cards = Array.from(container.querySelectorAll('.card-item'));
+  cards.sort((a, b) => {
+    const aVal = parseFloat(a.dataset[by]) || 0;
+    const bVal = parseFloat(b.dataset[by]) || 0;
+    return order === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+  cards.forEach(card => container.appendChild(card));
+}
+</script>
+</body>
+</html>
