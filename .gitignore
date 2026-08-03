@@ -19,3 +19,5 @@ Thumbs.db
 
 # Playwright
 playwright-report/
+.claude/settings.local.json
+.mcp.json

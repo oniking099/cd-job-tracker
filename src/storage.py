@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Iterator
 
 from src.config import DATA_DIR
-from src.models import Job, SearchRound
+from src.models import CompanyType, Job, SearchRound
 
 
 def _today_dir() -> Path:
@@ -174,5 +174,3 @@ def _dict_to_job(d: dict) -> Job:
         exclude_reason=d.get("exclude_reason", ""),
     )
 
-
-from src.models import CompanyType

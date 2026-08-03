@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 from src.config import DATA_DIR
-from src.models import Job, SearchRound
+from src.models import CompanyType, Job, SearchRound
 from src.scrapers import ALL_SCRAPERS
 from src.filters.salary import filter_salary
 from src.filters.major import match_major
@@ -299,7 +299,7 @@ async def run_report():
 
     # 统计摘要
     from collections import Counter
-    type_counts = Counter((j.company_type or "未知").value for j in valid_jobs)
+    type_counts = Counter((j.company_type or CompanyType.OTHER).value for j in valid_jobs)
     print("\n今日统计:")
     for ct, count in type_counts.most_common():
         print(f"  {ct}: {count}")

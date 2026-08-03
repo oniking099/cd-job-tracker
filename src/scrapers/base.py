@@ -17,8 +17,7 @@ from playwright.async_api import (
     BrowserContext,
     Page,
 )
-from playwright_stealth import StealthConfig
-from playwright_stealth import stealth_async as inject_stealth
+from playwright_stealth import Stealth
 
 from src.config import (
     REQUEST_DELAY_MIN,
@@ -106,9 +105,9 @@ class BaseScraper(ABC):
             geolocation={"latitude": 30.5728, "longitude": 104.0668},  # 成都
         )
 
-        # Stealth 注入
-        await inject_stealth(context, StealthConfig(
-            webdriver=True,
+        # Stealth 注入（playwright-stealth 2.x API）
+        stealth = Stealth(
+            navigator_webdriver=True,   # 1.x 的 webdriver → navigator_webdriver
             webgl_vendor=True,
             chrome_app=True,
             chrome_csi=True,
@@ -123,9 +122,10 @@ class BaseScraper(ABC):
             navigator_plugins=True,
             navigator_user_agent=False,
             navigator_vendor=True,
-            outerdimensions=True,
             hairline=True,
-        ))
+            # outerdimensions 在 2.x 已移除
+        )
+        await stealth.apply_stealth_async(context)
 
         return context
 
@@ -156,13 +156,6 @@ class BaseScraper(ABC):
                 await asyncio.sleep(wait)
 
         return False
-
-    async def search(self, keyword: str) -> list[Job]:
-        """
-        在平台上搜索关键词，返回岗位列表。
-        子类必须实现此方法。
-        """
-        raise NotImplementedError
 
     async def _parse_with_fallback(self, page: Page) -> list[Job]:
         """

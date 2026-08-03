@@ -31,7 +31,7 @@ SALARY_PATTERNS: list[tuple[str, int]] = [
 ]
 
 # 特殊标记
-UNKNOWN_SALARY_KEYWORDS = ["面议", "薪资open", "薪资open", "待遇从优", "薪资优厚", "薪资丰厚"]
+UNKNOWN_SALARY_KEYWORDS = ["面议", "薪资open", "待遇从优", "薪资优厚", "薪资丰厚"]
 
 
 def extract_salary(salary_text: str) -> tuple[float, float]:
