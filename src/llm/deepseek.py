@@ -4,9 +4,12 @@ DeepSeek 客户端：文本推理、职位匹配、企业分类辅助。
 """
 from __future__ import annotations
 
+import logging
 from openai import AsyncOpenAI
 
 from src.config import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL, DEEPSEEK_MODEL
+
+logger = logging.getLogger(__name__)
 
 
 def create_client() -> AsyncOpenAI:
@@ -116,5 +119,6 @@ async def cross_platform_dedup(
                 raw = raw[4:]
         indices = json.loads(raw)
         return [jobs[i] for i in indices if 0 <= i < len(jobs)]
-    except Exception:
+    except Exception as e:
+        logger.warning(f"LLM跨平台去重失败，返回原始列表: {e}")
         return jobs

@@ -6,9 +6,12 @@ API 兼容 OpenAI 格式。
 from __future__ import annotations
 
 import base64
+import logging
 from openai import AsyncOpenAI
 
 from src.config import QWENVL_API_KEY, QWENVL_BASE_URL, QWENVL_MODEL
+
+logger = logging.getLogger(__name__)
 
 
 def _create_client() -> AsyncOpenAI:
@@ -74,5 +77,6 @@ async def extract_jobs_from_screenshot(
 
     try:
         return json.loads(raw.strip())
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        logger.warning(f"Qwen-VL JSON解析失败: {e}, raw={raw[:200]}")
         return []

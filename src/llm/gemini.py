@@ -5,9 +5,12 @@ Gemini Flash-Lite 视觉提取客户端（备用）
 from __future__ import annotations
 
 import base64
+import logging
 from openai import AsyncOpenAI
 
 from src.config import GEMINI_API_KEY, GEMINI_MODEL
+
+logger = logging.getLogger(__name__)
 
 
 def _create_client() -> AsyncOpenAI:
@@ -60,5 +63,6 @@ Return ONLY a JSON array, no markdown formatting.""",
 
     try:
         return json.loads(raw.strip())
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        logger.warning(f"Gemini JSON解析失败: {e}, raw={raw[:200]}")
         return []

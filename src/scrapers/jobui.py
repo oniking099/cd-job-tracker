@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -12,6 +13,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class JobuiScraper(BaseScraper):
     platform_name = "职友集"
     base_url = "https://www.jobui.com"
@@ -38,7 +40,8 @@ class JobuiScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[jobui] 失败: {e}")
                 continue
 
         await page.close()
@@ -87,7 +90,8 @@ class JobuiScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[jobui] 失败: {e}")
                 continue
 
         return jobs

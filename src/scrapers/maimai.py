@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -12,6 +13,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class MaimaiScraper(BaseScraper):
     platform_name = "脉脉"
     base_url = "https://maimai.cn"
@@ -45,7 +47,8 @@ class MaimaiScraper(BaseScraper):
                 if len(batch) < 10:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[maimai] 失败: {e}")
                 continue
 
         await page.close()
@@ -89,7 +92,8 @@ class MaimaiScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[maimai] 失败: {e}")
                 continue
 
         return jobs
@@ -116,6 +120,6 @@ class MaimaiScraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[maimai] JSON提取失败: {e}")
         return jobs

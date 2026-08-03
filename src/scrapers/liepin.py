@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -11,6 +12,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class LiepinScraper(BaseScraper):
     platform_name = "猎聘"
     base_url = "https://www.liepin.com"
@@ -43,7 +45,8 @@ class LiepinScraper(BaseScraper):
                 if len(batch) < 25:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[liepin] 失败: {e}")
                 continue
 
         await page.close()
@@ -98,7 +101,8 @@ class LiepinScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[liepin] 失败: {e}")
                 continue
 
         return jobs
@@ -126,6 +130,6 @@ class LiepinScraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[liepin] JSON提取失败: {e}")
         return jobs

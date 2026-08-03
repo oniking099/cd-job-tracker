@@ -14,6 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          # ⚠️ 使用 GH_PAT 而非默认 GITHUB_TOKEN，因此 [skip ci] 标签是防止 CI 无限循环的关键防线
           token: ${{ secrets.GH_PAT }}
           fetch-depth: 0
 
@@ -22,9 +23,15 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Run tests
+        run: python -m pytest tests/ -v
 
       - name: Generate report & push
         run: python scripts/report.py
@@ -33,6 +40,7 @@ jobs:
           SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
           GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
 
+      # [skip ci] 防止 GH_PAT commit 触发新的 workflow，形成无限循环
       - name: Commit report
         if: always()
         uses: stefanzweifel/git-auto-commit-action@v5

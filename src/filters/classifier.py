@@ -8,7 +8,11 @@
 """
 from __future__ import annotations
 
+import logging
+
 from src.models import Job, CompanyType
+
+logger = logging.getLogger(__name__)
 
 # ---- 规则分类 ----
 
@@ -167,8 +171,8 @@ async def classify_with_llm(
             if idx < len(uncertain):
                 uncertain[idx].company_type = type_map.get(item["type"], CompanyType.OTHER)
 
-    except Exception:
-        # LLM 失败时全部标记为"其他"
+    except Exception as e:
+        logger.warning(f"LLM 企业分类失败（{len(uncertain)}条待分类），降级为OTHER: {e}")
         for j in uncertain:
             j.company_type = CompanyType.OTHER
 

@@ -5,11 +5,14 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import random
 import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 from playwright.async_api import (
     async_playwright,
@@ -148,8 +151,8 @@ class BaseScraper(ABC):
                 response = await page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 if response and response.ok:
                     return True
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(f"[{self.platform_name}] 请求失败(第{attempt+1}次): {url}, 原因: {e}")
 
             if attempt < MAX_RETRIES - 1:
                 wait = 5 * (2 ** attempt)
@@ -168,15 +171,15 @@ class BaseScraper(ABC):
         try:
             from src.llm.qwen_vl import extract_jobs_from_screenshot as qwen_extract
             return await qwen_extract(screenshot_bytes, self.platform_name)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] Qwen-VL 降级提取失败: {e}")
 
         # 尝试 Gemini
         try:
             from src.llm.gemini import extract_jobs_from_screenshot as gemini_extract
             return await gemini_extract(screenshot_bytes, self.platform_name)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] Gemini 降级提取失败: {e}")
 
         return []
 

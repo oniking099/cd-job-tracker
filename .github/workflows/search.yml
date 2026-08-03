@@ -3,13 +3,17 @@ name: Job Search
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 4 * * *'    # 12:00 北京时间
-    - cron: '0 5 * * *'    # 13:00 北京时间
-    - cron: '0 6 * * *'    # 14:00 北京时间
-    - cron: '0 7 * * *'    # 15:00 北京时间
-    - cron: '0 8 * * *'    # 16:00 北京时间
-    - cron: '0 9 * * *'    # 17:00 北京时间
+    # 北京时间 12:00~17:00，每小时一轮
+    # UTC = BJT - 8h
+    - cron: '0 4 * * *'    # 12:00 BJT → round 12
+    - cron: '0 5 * * *'    # 13:00 BJT → round 13
+    - cron: '0 6 * * *'    # 14:00 BJT → round 14
+    - cron: '0 7 * * *'    # 15:00 BJT → round 15
+    - cron: '0 8 * * *'    # 16:00 BJT → round 16
+    - cron: '0 9 * * *'    # 17:00 BJT → round 17
 
+# 注意：使用 concurrency group 防止同一轮次重复执行
+# cancel-in-progress: false 确保即使前一轮延迟也排队执行
 concurrency:
   group: chengdu-job-search
   cancel-in-progress: false
@@ -23,6 +27,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          # ⚠️ 使用 GH_PAT 而非默认 GITHUB_TOKEN，因此 [skip ci] 标签是防止 CI 无限循环的关键防线
+          # 若误删 commit message 中的 [skip ci]，每次搜索提交将触发新的 workflow 运行
           token: ${{ secrets.GH_PAT }}
 
       - name: Setup Python
@@ -30,11 +36,15 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
 
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           playwright install chromium --with-deps
+
+      - name: Run tests
+        run: python -m pytest tests/ -v
 
       - name: Run search round
         run: python scripts/search.py
@@ -44,6 +54,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
 
+      # [skip ci] 防止 GH_PAT commit 触发新的 workflow，形成无限循环
       - name: Commit search data
         if: always()
         uses: stefanzweifel/git-auto-commit-action@v5

@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -11,6 +12,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class YupaoScraper(BaseScraper):
     platform_name = "鱼泡直聘"
     base_url = "https://www.yupao.com"
@@ -39,7 +41,8 @@ class YupaoScraper(BaseScraper):
                 if len(batch) < 20:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[yupao] 失败: {e}")
                 continue
 
         await page.close()
@@ -84,7 +87,8 @@ class YupaoScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[yupao] 失败: {e}")
                 continue
 
         return jobs

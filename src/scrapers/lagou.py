@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -11,6 +12,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class LagouScraper(BaseScraper):
     platform_name = "拉勾"
     base_url = "https://www.lagou.com"
@@ -44,7 +46,8 @@ class LagouScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[lagou] 失败: {e}")
                 continue
 
         await page.close()
@@ -96,7 +99,8 @@ class LagouScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[lagou] 失败: {e}")
                 continue
 
         return jobs
@@ -126,6 +130,6 @@ class LagouScraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[lagou] JSON提取失败: {e}")
         return jobs

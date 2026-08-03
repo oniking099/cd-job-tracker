@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 import json
 import re
 from datetime import datetime
@@ -13,6 +14,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class ZhilianScraper(BaseScraper):
     platform_name = "智联招聘"
     base_url = "https://www.zhaopin.com"
@@ -48,7 +50,8 @@ class ZhilianScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[zhilian] 失败: {e}")
                 continue
 
         await page.close()
@@ -96,7 +99,8 @@ class ZhilianScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[zhilian] 失败: {e}")
                 continue
 
         return jobs
@@ -129,6 +133,6 @@ class ZhilianScraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[zhilian] JSON提取失败: {e}")
         return jobs

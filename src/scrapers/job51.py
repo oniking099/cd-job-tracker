@@ -5,12 +5,15 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
 from src.scrapers.base import BaseScraper
 from src.models import Job
+
+logger = logging.getLogger(__name__)
 
 
 class Job51Scraper(BaseScraper):
@@ -46,7 +49,7 @@ class Job51Scraper(BaseScraper):
                     break  # 最后一页
 
             except Exception as e:
-                # 单页失败不阻塞
+                logger.warning(f"[{self.platform_name}] 第{page_num}页搜索失败: {e}")
                 continue
 
         await page.close()
@@ -100,7 +103,8 @@ class Job51Scraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[{self.platform_name}] HTML解析失败: {e}")
                 continue
 
         return jobs
@@ -130,7 +134,7 @@ class Job51Scraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] API JSON提取失败: {e}")
 
         return jobs

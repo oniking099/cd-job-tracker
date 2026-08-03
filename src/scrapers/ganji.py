@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -11,6 +12,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class GanjiScraper(BaseScraper):
     platform_name = "赶集直招"
     base_url = "https://cd.ganji.com"
@@ -37,7 +39,8 @@ class GanjiScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[ganji] 失败: {e}")
                 continue
 
         await page.close()
@@ -80,7 +83,8 @@ class GanjiScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[ganji] 失败: {e}")
                 continue
 
         return jobs

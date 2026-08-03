@@ -5,11 +5,14 @@ BOSS直聘反爬最严格，需要特别处理。
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
 from src.scrapers.base import BaseScraper
 from src.models import Job
+
+logger = logging.getLogger(__name__)
 
 
 class BossScraper(BaseScraper):
@@ -26,8 +29,8 @@ class BossScraper(BaseScraper):
         try:
             await self._retry_get(page, self.base_url)
             await self._random_delay()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] 首页访问失败: {e}")
 
         for page_num in range(1, 4):
             try:
@@ -54,7 +57,8 @@ class BossScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[{self.platform_name}] 第{page_num}页搜索失败: {e}")
                 # BOSS直聘反爬严格，单页失败就降级
                 if page_num == 1:
                     batch = await self._parse_with_fallback(page)
@@ -123,7 +127,8 @@ class BossScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[{self.platform_name}] HTML解析失败: {e}")
                 continue
 
         return jobs
@@ -161,6 +166,6 @@ class BossScraper(BaseScraper):
                         search_round=round_label,
                     )
                     jobs.append(job)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] JSON数据提取失败: {e}")
         return jobs

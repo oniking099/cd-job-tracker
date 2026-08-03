@@ -4,10 +4,13 @@
 """
 from __future__ import annotations
 
+import logging
 import math
 import httpx
 
 from src.config import GAODE_API_KEY, HOME_LNG, HOME_LAT
+
+logger = logging.getLogger(__name__)
 
 
 async def geocode(address: str) -> tuple[float, float] | None:
@@ -34,7 +37,8 @@ async def geocode(address: str) -> tuple[float, float] | None:
                 loc = data["geocodes"][0]["location"]
                 lng, lat = loc.split(",")
                 return float(lng), float(lat)
-        except Exception:
+        except Exception as e:
+            logger.warning(f"高德地理编码失败: {e}")
             pass
 
     return None

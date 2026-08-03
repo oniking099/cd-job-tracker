@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from selectolax.parser import HTMLParser
 
@@ -11,6 +12,7 @@ from src.scrapers.base import BaseScraper
 from src.models import Job
 
 
+logger = logging.getLogger(__name__)
 class ChinahrScraper(BaseScraper):
     platform_name = "中华英才网"
     base_url = "https://www.chinahr.com"
@@ -37,7 +39,8 @@ class ChinahrScraper(BaseScraper):
                 if len(batch) < 15:
                     break
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[chinahr] 失败: {e}")
                 continue
 
         await page.close()
@@ -82,7 +85,8 @@ class ChinahrScraper(BaseScraper):
                 )
                 jobs.append(job)
 
-            except Exception:
+            except Exception as e:
+                logger.warning(f"[chinahr] 失败: {e}")
                 continue
 
         return jobs
