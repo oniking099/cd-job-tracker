@@ -1,0 +1,7 @@
+[    2606ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?1fd599e534290bdb4d4ba21c52abb2f2:0
+[    2606ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?ef78700d457fd9f8a48411e380cf326c:0
+[    2607ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?94e6bc3192f9f4ed79f1aa8e513a4a62:0
+[   39505ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://hbjob.bjx.com.cn/search/result/?kw=%E6%B0%94%E8%B1%A1&kp=&sg=&rank=1&district=1025&ajax=1&_=1785811292599:0
+[   40618ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?1fd599e534290bdb4d4ba21c52abb2f2:0
+[   40619ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?ef78700d457fd9f8a48411e380cf326c:0
+[   40619ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?94e6bc3192f9f4ed79f1aa8e513a4a62:0

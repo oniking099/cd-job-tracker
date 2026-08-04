@@ -1,0 +1,200 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e4]:
+    - link [ref=e5] [cursor=pointer]:
+      - /url: https://www.liepin.com
+      - img "猎聘" [ref=e6]
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "首页" [ref=e9] [cursor=pointer]:
+          - /url: https://www.liepin.com
+      - listitem [ref=e10]:
+        - link "职位" [ref=e11] [cursor=pointer]:
+          - /url: https://www.liepin.com/zhaopin/?inputFrom=head_navigation&scene=init&workYearCode=0&ckId=q38mcvq0p4385gjyqjs3yw3cp4e1nrv8
+      - listitem [ref=e12]:
+        - link "校园" [ref=e13] [cursor=pointer]:
+          - /url: https://www.liepin.com/campus/?t=1
+      - listitem [ref=e14]:
+        - link "海归" [ref=e15] [cursor=pointer]:
+          - /url: https://www.liepin.com/returnee/
+      - listitem [ref=e16]:
+        - link "简历优化" [ref=e18] [cursor=pointer]:
+          - /url: https://vas.liepin.com/v/view-intro?utm_content=pcjuhexiala&imscid=R000014437
+      - listitem [ref=e19]: 猎聘APP
+    - list [ref=e21]:
+      - listitem [ref=e22]:
+        - link "我是猎头" [ref=e23] [cursor=pointer]:
+          - /url: https://h.liepin.com/?imscid=R002017570#sfrom=click-pc_homepage-front_navigation-hunter_new
+      - listitem [ref=e24]:
+        - link "我是招聘方" [ref=e25] [cursor=pointer]:
+          - /url: javascript:void(0);
+        - img [ref=e26]:
+          - generic [ref=e27]: NEW
+      - listitem [ref=e30]: 登录/注册
+  - generic [ref=e39]:
+    - generic [ref=e40]:
+      - list [ref=e41]:
+        - listitem [ref=e42] [cursor=pointer]: 热门职位
+        - listitem [ref=e43] [cursor=pointer]: 推荐职位
+        - listitem [ref=e44] [cursor=pointer]: 热门行业
+        - listitem [ref=e45] [cursor=pointer]: 周边城市
+        - listitem [ref=e46] [cursor=pointer]: 热门城市
+        - listitem [ref=e47] [cursor=pointer]: 其他公司
+        - listitem [ref=e48] [cursor=pointer]: 相关公司
+        - listitem [ref=e49] [cursor=pointer]: 手机版
+      - generic [ref=e50]:
+        - link "重庆POS应用招聘" [ref=e51] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpposyingyong/
+        - link "重庆交易基金招聘" [ref=e52] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpjiaoyijijin/
+        - link "重庆4S店备件经理招聘" [ref=e53] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zp4sdianbeijianjingli/
+        - link "重庆办公室行政文员招聘" [ref=e54] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpbangongshixingzhengwenyuan/
+        - link "重庆厨房电器销售经理招聘" [ref=e55] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpchufangdianqixiaoshoujl/
+        - link "重庆安装调试员招聘" [ref=e56] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpanzhuangdiaoshiyuan/
+        - link "重庆店面推广专员招聘" [ref=e57] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpdianmiantuiguangzhuanyuan/
+        - link "重庆安装造价实习招聘" [ref=e58] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpanzhuangzaojiashixi/
+        - link "重庆必胜客储备经理招聘" [ref=e59] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpbishengkechubeijingli/
+        - link "重庆海外渠道拓展招聘" [ref=e60] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zphaiwaiqudaotuozhan/
+        - link "重庆物流配送站长招聘" [ref=e61] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpwuliupeisongzhanchang/
+        - link "重庆电池项目经理招聘" [ref=e62] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpdianchixiangmujingli/
+        - link "重庆公募基金产品总监招聘" [ref=e63] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpgmjjcpzj9a6f/
+        - link "重庆除草剂生测员招聘" [ref=e64] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpccjscy8l7v/
+        - link "重庆淘宝拼多多店主招聘" [ref=e65] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zptbpdddz8e9r/
+        - link "重庆前台收银服务员招聘" [ref=e66] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpqtsyfwy7m3i/
+        - link "重庆电主轴研发工程师招聘" [ref=e67] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpdzzyfgcs10l7o/
+        - link "重庆性能测试岗招聘" [ref=e68] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpxncsgn9x8m/
+        - link "重庆法定节假日招聘" [ref=e69] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpfdjjru2u7m/
+        - link "重庆用户画像LEADER招聘" [ref=e70] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpyhhxleaders9w6/
+        - link "重庆座舱方向招聘" [ref=e71] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpzcfxv4k7s/
+        - link "重庆仓储产品招聘" [ref=e72] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpcccpb6q2c/
+        - link "重庆机构柜台岗招聘" [ref=e73] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpjggtgy7d1g/
+        - link "重庆PC子计划招聘" [ref=e74] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zppczjhs1o2/
+        - link "重庆厂房接待员招聘" [ref=e75] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpcfjdyq7l1p/
+        - link "重庆ADME主管招聘" [ref=e76] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpadmezgg2a4/
+        - link "重庆外贸理单主管招聘" [ref=e77] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpwmldzgf4t7/
+        - link "重庆营销陪伴岗招聘" [ref=e78] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpyxpbgp4e9/
+        - link "重庆储备商务经理岗招聘" [ref=e79] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpcbswjlgw9q8/
+        - link "重庆公关与策划主管招聘" [ref=e80] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zpggychzge4a6/
+    - generic [ref=e81]:
+      - generic [ref=e82]: 当前位置：
+      - generic [ref=e83]:
+        - link "重庆招聘网" [ref=e84] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/
+        - text: ">"
+        - link "重庆招聘信息" [ref=e85] [cursor=pointer]:
+          - /url: https://www.liepin.com/city-cq/zhaopin/?scene=seo
+  - iframe [ref=e86]:
+    - contentinfo [ref=f1e2]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - generic [ref=f1e8]: 企业服务热线和算法推荐/未成年人举报渠道：
+          - generic [ref=f1e9]:
+            - strong [ref=f1e10]: 400-6212-266
+            - strong [ref=f1e11]: 400-8199-392（备用）
+            - paragraph [ref=f1e12]: 工作日9:00-19:00
+          - paragraph [ref=f1e13]:
+            - link [ref=f1e14] [cursor=pointer]:
+              - /url: mailto:jubao@liepin.com
+              - strong [ref=f1e15]: jubao@liepin.com
+        - generic [ref=f1e16]:
+          - generic [ref=f1e17]:
+            - term [ref=f1e18]: 投资者关系
+            - definition [ref=f1e19]:
+              - link "公司简介" [ref=f1e20] [cursor=pointer]:
+                - /url: //ir.liepin.com/index.html
+            - definition [ref=f1e21]:
+              - link "信息披露" [ref=f1e22] [cursor=pointer]:
+                - /url: //ir.liepin.com/disclosure.html
+            - definition [ref=f1e23]:
+              - link "企业管制" [ref=f1e24] [cursor=pointer]:
+                - /url: //ir.liepin.com/management.html
+            - definition [ref=f1e25]:
+              - link "投资者关系联络" [ref=f1e26] [cursor=pointer]:
+                - /url: //ir.liepin.com/relationalnetwork.html
+          - generic [ref=f1e27]:
+            - term [ref=f1e28]: 共赢
+            - definition [ref=f1e29]:
+              - link "网站合作" [ref=f1e30] [cursor=pointer]:
+                - /url: //wow.liepin.com/t1007623/index.html
+            - definition [ref=f1e31]:
+              - link "加入猎聘" [ref=f1e32] [cursor=pointer]:
+                - /url: //wow.liepin.com/t1006107/index.html?mscid=Favsk7rH
+            - definition [ref=f1e33]:
+              - link "代理加盟" [ref=f1e34] [cursor=pointer]:
+                - /url: //wow.liepin.com/t1014307/index.html
+            - definition [ref=f1e35]:
+              - link "猎聘HRO" [ref=f1e36] [cursor=pointer]:
+                - /url: //wow.liepin.com/t1014857/50159328.html
+          - generic [ref=f1e37]:
+            - term [ref=f1e38]: 产品与服务
+            - definition [ref=f1e39]:
+              - link "香港招聘" [ref=f1e40] [cursor=pointer]:
+                - /url: //wow.liepin.com/t1011439/daf73a6d.html
+            - definition [ref=f1e41]:
+              - link "算法推荐服务说明" [ref=f1e42] [cursor=pointer]:
+                - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0018
+            - definition [ref=f1e43]:
+              - link "算法备案信息" [ref=f1e44] [cursor=pointer]:
+                - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0057
+            - definition [ref=f1e45]:
+              - link "安全防范指南" [ref=f1e46] [cursor=pointer]:
+                - /url: https://wow.liepin.com/t1013881/pc.html?mscid=Fc5P1I2a
+            - definition [ref=f1e47]:
+              - link "企业培训" [ref=f1e48] [cursor=pointer]:
+                - /url: //www.lebanban.com
+        - figure "下载猎聘APP" [ref=f1e50]:
+          - paragraph [ref=f1e52]:
+            - link "关注猎聘" [ref=f1e53] [cursor=pointer]:
+              - /url: http://weibo.com/lietouwang
+      - separator [ref=f1e61]
+      - generic [ref=f1e63]:
+        - paragraph [ref=f1e64]:
+          - link "津ICP备15007986号-11" [ref=f1e65] [cursor=pointer]:
+            - /url: https://beian.miit.gov.cn/#/Integrated/index
+          - link "ICP经营许可证：合字B2-20160007" [ref=f1e66] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0053
+          - link "人力资源服务许可证" [ref=f1e67] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0054
+          - link "营业执照" [ref=f1e68] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0055
+          - link [ref=f1e69] [cursor=pointer]:
+            - /url: http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502035189
+            - img "安备" [ref=f1e70]
+            - text: 京公网安备 11010502035189号
+          - link "个人信息保护政策" [ref=f1e71] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?mscid=Fb1dVVx_&agreementType=A0002
+          - link "猎聘用户服务协议" [ref=f1e72] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?mscid=Fb1dVVx_&agreementType=A0001
+          - link "投诉举报制度" [ref=f1e73] [cursor=pointer]:
+            - /url: https://wow.liepin.com/t1008237/index.html?agreementType=A0056
+        - paragraph [ref=f1e74]:
+          - text: Copyright © 2006-2026 liepin.com All Rights Reserved
+          - link "违法和不良信息举报" [ref=f1e75] [cursor=pointer]:
+            - /url: https://www.12377.cn/

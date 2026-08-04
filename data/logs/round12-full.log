@@ -1,0 +1,44 @@
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[51Job] 预导航失败: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://we.51job.com/pc/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&searchType=2&jobArea=090200&sortType=0", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[agent] 截图失败: Page.screenshot: Protocol error (Page.captureScreenshot): Unable to capture screenshot
+Call log:
+  - taking page screenshot
+  - waiting for fonts to load...
+  - fonts loaded
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[32m[INFO] 2026-08-03 23:10:54,613 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:10:54,676 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:10:54,676 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:10:54,750 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:10:54,751 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:10:54,752 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:10:54,834 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:10:54,855 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[32m[INFO] 2026-08-03 23:10:54,855 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[agent] 视觉提取返回空

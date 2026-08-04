@@ -1,0 +1,184 @@
+- generic [ref=f4e3]:
+  - generic [ref=f4e5]:
+    - link [ref=f4e6] [cursor=pointer]:
+      - /url: /
+    - generic [ref=f4e8]:
+      - link "首页" [ref=f4e10] [cursor=pointer]:
+        - /url: /
+      - link "职位" [ref=f4e12] [cursor=pointer]:
+        - /url: /job
+      - link "实习" [ref=f4e14] [cursor=pointer]:
+        - /url: /internship
+      - link "校园招聘" [ref=f4e16] [cursor=pointer]:
+        - /url: /campusRecruitment
+      - link "企业" [ref=f4e18] [cursor=pointer]:
+        - /url: /enterprise
+    - generic [ref=f4e19]:
+      - generic [ref=f4e21]:
+        - text: 登录
+        - generic [ref=f4e23]: "|"
+        - text: 注册
+      - link "企业入口" [ref=f4e24] [cursor=pointer]:
+        - /url: https://www.chinahr.com/newchr/open/bregis#/login
+      - link "招聘 SaaS 服务" [ref=f4e25] [cursor=pointer]:
+        - /url: https://e.chinahr.com
+  - generic [ref=f4e27]:
+    - generic [ref=f4e28]:
+      - generic [ref=f4e29]:
+        - button "不限" [ref=f4e31] [cursor=pointer]
+        - textbox "搜索职位/公司" [ref=f4e34]: 气象
+      - generic [ref=f4e35] [cursor=pointer]: 搜索
+    - generic [ref=f4e36]:
+      - generic [ref=f4e37] [cursor=pointer]: 公众号
+      - generic [ref=f4e40] [cursor=pointer]: 小程序
+  - generic [ref=f4e43]:
+    - generic [ref=f4e44]:
+      - generic [ref=f4e45]:
+        - link [ref=f4e47] [cursor=pointer]:
+          - /url: ""
+        - link [ref=f4e49] [cursor=pointer]:
+          - /url: ""
+        - link [ref=f4e51] [cursor=pointer]:
+          - /url: https://brzp.chinasme.cn/
+        - link [ref=f4e53] [cursor=pointer]:
+          - /url: ""
+        - link [ref=f4e55] [cursor=pointer]:
+          - /url: ""
+        - link [ref=f4e57] [cursor=pointer]:
+          - /url: https://www.chinahr.com/job
+      - list [ref=f4e58]:
+        - listitem [ref=f4e59] [cursor=pointer]:
+          - button [ref=f4e60]
+        - listitem [ref=f4e61] [cursor=pointer]:
+          - button [ref=f4e62]
+        - listitem [ref=f4e63] [cursor=pointer]:
+          - button [ref=f4e64]
+        - listitem [ref=f4e65] [cursor=pointer]:
+          - button [ref=f4e66]
+        - listitem [ref=f4e67] [cursor=pointer]:
+          - button [ref=f4e68]
+        - listitem [ref=f4e69] [cursor=pointer]:
+          - button [ref=f4e70]
+    - generic [ref=f4e71]:
+      - generic [ref=f4e72] [cursor=pointer]:
+        - generic [ref=f4e73]: 应届生
+        - generic [ref=f4e76]:
+          - generic [ref=f4e77]: 管理培训生
+          - generic [ref=f4e78]: 储备干部
+          - generic [ref=f4e79]: 综合服务
+          - generic [ref=f4e80]: 助理
+      - generic [ref=f4e81] [cursor=pointer]: 热门职位
+      - generic [ref=f4e85] [cursor=pointer]: 热门行业
+  - generic [ref=f4e89]:
+    - generic [ref=f4e90]:
+      - generic [ref=f4e91]: 知名企业
+      - generic [ref=f4e95]:
+        - link [ref=f4e96] [cursor=pointer]:
+          - /url: https://www.chinahr.com/company/homepage/62b9572e3a8cca05e0f65595
+        - generic [ref=f4e98]:
+          - link [ref=f4e99] [cursor=pointer]:
+            - /url: "https://campus.chinahr.com/xiaozhao/hljrs2025/index.html "
+            - link [ref=f4e100]:
+              - /url: "/https://campus.chinahr.com/xiaozhao/hljrs2025/index.html "
+              - heading "中国人寿保险股份有限公司黑龙江省分公司" [level=2] [ref=f4e102]
+          - link [ref=f4e103] [cursor=pointer]:
+            - /url: https://campus.chinahr.com/xiaozhao/hljrs2024/index.html
+            - link [ref=f4e104]:
+              - /url: /https://campus.chinahr.com/xiaozhao/hljrs2024/index.html
+              - heading "中国人寿黑龙江省分公司" [level=2] [ref=f4e106]
+          - link [ref=f4e107] [cursor=pointer]:
+            - /url: https://zhaopin.chinahr.com/zhaopin/rshlj/index.html
+            - link [ref=f4e108]:
+              - /url: /https://zhaopin.chinahr.com/zhaopin/rshlj/index.html
+              - heading "中国人寿黑龙江省分公司" [level=2] [ref=f4e110]
+          - link [ref=f4e111] [cursor=pointer]:
+            - /url: https://p.kdocs.cn/s/7ZXXABIA5M
+            - link [ref=f4e112]:
+              - /url: /https://p.kdocs.cn/s/7ZXXABIA5M
+              - heading "恒丰银行股份有限公司北京分行" [level=2] [ref=f4e114]
+          - link [ref=f4e115] [cursor=pointer]:
+            - /url: https://www.chinahr.com/company/homepage/62b9659d3a8cca05e0f656aa
+            - link [ref=f4e116]:
+              - /url: /https://www.chinahr.com/company/homepage/62b9659d3a8cca05e0f656aa
+              - heading "福州金拱门食品有限公司" [level=2] [ref=f4e118]
+          - link [ref=f4e119] [cursor=pointer]:
+            - /url: https://www.chinahr.com/company/homepage/643e3ddf3f04a708a6430c0e
+            - link [ref=f4e120]:
+              - /url: /https://www.chinahr.com/company/homepage/643e3ddf3f04a708a6430c0e
+              - heading "山东鲁花集团有限公司" [level=2] [ref=f4e122]
+          - link [ref=f4e123] [cursor=pointer]:
+            - /url: https://www.chinahr.com/company/homepage/64b8eef0e4b0a8d69241ded1
+            - link [ref=f4e124]:
+              - /url: /https://www.chinahr.com/company/homepage/64b8eef0e4b0a8d69241ded1
+              - heading "武汉瑜岿科技有限公司" [level=2] [ref=f4e126]
+          - link [ref=f4e127] [cursor=pointer]:
+            - /url: https://www.chinahr.com/company/homepage/63bd25cfe4b0bb9611c7af17
+            - link [ref=f4e128]:
+              - /url: /https://www.chinahr.com/company/homepage/63bd25cfe4b0bb9611c7af17
+              - heading "宁波月球超商贸易有限公司" [level=2] [ref=f4e130]
+    - generic [ref=f4e131]:
+      - generic [ref=f4e132]: 推荐职位
+      - generic [ref=f4e136] [cursor=pointer]: 查看更多职位 >
+    - list [ref=f4e137]
+  - generic [ref=f4e138]:
+    - generic [ref=f4e139]:
+      - generic [ref=f4e140]:
+        - generic [ref=f4e142]:
+          - generic [ref=f4e143]: 客户服务/投诉及违法举报热线
+          - generic [ref=f4e144]: 10105858转1转2再转3
+        - generic:
+          - generic [ref=f4e145] [cursor=pointer]: 公众号
+          - generic [ref=f4e148] [cursor=pointer]: 小程序
+      - generic [ref=f4e151]:
+        - list [ref=f4e152]:
+          - listitem [ref=f4e153]: 找工作
+          - listitem [ref=f4e154]:
+            - link "搜索职位" [ref=f4e155] [cursor=pointer]:
+              - /url: /job
+          - listitem [ref=f4e156]:
+            - link "实习招聘" [ref=f4e157] [cursor=pointer]:
+              - /url: /internship
+          - listitem [ref=f4e158]:
+            - link "校园招聘" [ref=f4e159] [cursor=pointer]:
+              - /url: /campusRecruitment
+        - list [ref=f4e160]:
+          - listitem [ref=f4e161]: 企业服务
+          - listitem [ref=f4e162]:
+            - link "招聘管家" [ref=f4e163] [cursor=pointer]:
+              - /url: https://ats.chinahr.com/index.html
+          - listitem [ref=f4e164]:
+            - link "在线测评" [ref=f4e165] [cursor=pointer]:
+              - /url: https://campus.chinahr.com/pages/cn/evaluation
+          - listitem [ref=f4e166]:
+            - link "在线笔试" [ref=f4e167] [cursor=pointer]:
+              - /url: https://campus.chinahr.com/pages/cn/exame
+        - list [ref=f4e168]:
+          - listitem [ref=f4e169]: 用户帮助
+          - listitem [ref=f4e170]:
+            - link "隐私政策" [ref=f4e171] [cursor=pointer]:
+              - /url: /agreement/privacy
+          - listitem [ref=f4e172]:
+            - link "用户协议" [ref=f4e173] [cursor=pointer]:
+              - /url: /agreement/register
+    - generic [ref=f4e174]:
+      - paragraph [ref=f4e175]:
+        - link "ICP经营许可证编号" [ref=f4e176] [cursor=pointer]:
+          - /url: javascript:void(0)
+        - link "京ICP证060405号" [ref=f4e177] [cursor=pointer]:
+          - /url: https://rocketmgr012.58wos.com.cn/iJkFeDcBiJiJ/rocket/5Rox6AFxc1780904008267.png
+        - link "京ICP备10012705号-12" [ref=f4e178] [cursor=pointer]:
+          - /url: //beian.miit.gov.cn/#/Integrated/index
+        - link "京公网安备11010502042743号" [ref=f4e179] [cursor=pointer]:
+          - /url: //www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502042743
+        - link "营业执照" [ref=f4e180] [cursor=pointer]:
+          - /url: https://rocketmgr012.58wos.com.cn/iJkFeDcBiJiJ/rocket/oaGkc4G1780903979137.jpg
+        - link "违法信息/未成年人举报：YCjubao@58.com" [ref=f4e181] [cursor=pointer]:
+          - /url: javascript:void(0)
+      - paragraph [ref=f4e182]: Copyright 北京五八信息技术有限公司 版权所有
+      - generic [ref=f4e183]:
+        - link [ref=f4e184] [cursor=pointer]:
+          - /url: //www.12377.cn
+        - link [ref=f4e186] [cursor=pointer]:
+          - /url: //pic2.58cdn.com.cn/nowater/cxnomark/n_v29d9bae4756bc49dca409364f8a3b983e.png
+        - link [ref=f4e188] [cursor=pointer]:
+          - /url: https://rocketmgr012.58wos.com.cn/iJkFeDcBiJiJ/rocket/ARIXfElct1780904134881.jpg

@@ -21,7 +21,8 @@ concurrency:
 jobs:
   search:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # agent 平台每轮多关键词 × 受限并发(3)，实际耗时可能 1h+；30min 装完依赖就不剩多少
+    timeout-minutes: 120
 
     steps:
       - name: Checkout
@@ -38,10 +39,22 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
+      # Camoufox 二进制按平台缓存（Firefox fork ~100MB，避免每轮重新下载）
+      - name: Cache Camoufox binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/camoufox
+          key: camoufox-${{ runner.os }}
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          playwright install chromium --with-deps
+          # 11 个普通平台走 Chromium（含系统依赖）
+          python -m playwright install chromium --with-deps
+          # Camoufox 是 Firefox 源码级 fork：需要 Firefox 系统库（libgtk 等）
+          python -m playwright install-deps firefox
+          # 下载 Camoufox Linux 二进制（CI 在 GitHub 网络，无本地 GFW 下载问题）
+          python -m camoufox fetch
 
       - name: Run tests
         run: python -m pytest tests/ -v

@@ -1,0 +1,65 @@
+[BOSS直聘] 预导航失败: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+[32m[INFO] 2026-08-03 23:12:47,053 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:12:47,113 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:12:47,113 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:12:47,185 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:12:47,187 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:12:47,206 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:12:47,282 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:12:47,328 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[32m[INFO] 2026-08-03 23:12:47,328 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[33m[WARNING] 2026-08-03 23:12:48,800 [RapidOCR] main.py:132: The text detection result is empty[0m
+[33m[WARNING] 2026-08-03 23:12:52,658 [RapidOCR] main.py:132: The text detection result is empty[0m
+[agent] 视觉提取返回空
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [BOSS直聘] agent 结束: 空页面（无内容无元素，跳过此平台）（0 步）
+  [51Job] agent 结束: 已找到岗位列表（2 步）
+      step 1 [OK] click 成都招聘 - 点击元素[19] a @1092,1022
+      step 2 [OK] extract  - 终止动作: extract
+  [智联招聘] agent 结束: 已找到岗位列表（实际为空），页面已到底部且无更多岗位展示（10 步）
+      step 1 [OK] scroll 页面中部 - 向下滚动 602px
+      step 2 [OK] scroll 页面中部 - 向下滚动 869px
+      step 3 [OK] scroll 页面中部 - 向下滚动 544px
+      step 4 [OK] scroll 页面中部 - 向下滚动 822px
+      step 5 [OK] scroll 页面中部 - 向下滚动 446px
+      step 6 [OK] scroll 页面中部 - 向下滚动 867px
+      step 7 [OK] scroll 页面中部 - 向下滚动 706px
+      step 8 [OK] scroll 页面中部 - 向下滚动 447px
+      step 9 [OK] scroll 页面中部 - 向下滚动 806px
+      step10 [OK] extract  - 终止动作: extract
+SMOKE_RESULT total=36
+ - 51Job | 雷达应用产品算法（高级）工程师 | 成都 | 1.8-2.2万 13薪
+ - 51Job | 天线工程师 | 成都 武侯区 | 1.5-2.8万
+ - 51Job | AI算法工程师 | 成都 高新区 | 8千-1.5万
+ - 51Job | 售前技术支持工程师 | 成都 武侯区 | 1.3-2.6万
+ - 51Job | 检验工程师 | 成都 | 5-8千 15薪
+ - 51Job | 低空勘察设计工程师(J10056) | 成都 武侯区 | 1.5-2.5万
+ - 51Job | 战场仿真开发工程师(军事仿真方向) | 成都 青羊区 | 5千-1万
+ - 51Job | 技术支持工程师 | 成都 | 8千-1.5万
+ - 51Job | 电力系统工程师（算法实施方向）(J10629) | 成都 | 18-28万/年
+ - 51Job | 铁路行业解决方案经理（反无人机） | 成都 新都区 | 1-1.5万
+ - 51Job | 解决方案工程师 | 成都 锦江区 | 8千-1.5万 13薪
+ - 51Job | 无人机系统工程师 | 成都 | 1.3-2.5万 13薪

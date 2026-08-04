@@ -1,0 +1,769 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link [ref=e5] [cursor=pointer]:
+      - /url: https://www.zhaopin.com
+      - img "logo" [ref=e6]
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "首页" [ref=e9] [cursor=pointer]:
+          - /url: https://www.zhaopin.com
+      - listitem [ref=e10]:
+        - link "职位" [ref=e11] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/recommend
+      - listitem [ref=e12]:
+        - link "乌鲁木齐站" [ref=e891] [cursor=pointer]:
+          - /url: //www.zhaopin.com/wulumuqi/
+      - listitem [ref=e14]:
+        - link "找副业" [ref=e15] [cursor=pointer]:
+          - /url: https://xiancai.zhaopin.com
+      - listitem [ref=e16]:
+        - link "政企" [ref=e17] [cursor=pointer]:
+          - /url: https://govjob.zhaopin.com
+      - listitem [ref=e18]:
+        - link "校招" [ref=e19] [cursor=pointer]:
+          - /url: //xiaoyuan.zhaopin.com
+      - listitem [ref=e20]:
+        - link "高薪" [ref=e21] [cursor=pointer]:
+          - /url: https://highpin.zhaopin.com/?fromType=1132
+      - listitem [ref=e22]:
+        - link "海归" [ref=e23] [cursor=pointer]:
+          - /url: https://overseas.zhaopin.com
+      - listitem [ref=e24]:
+        - link "驻外" [ref=e25] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/foreign
+      - listitem [ref=e26]:
+        - link "测评" [ref=e27] [cursor=pointer]:
+          - /url: https://td.zhaopin.com
+      - listitem [ref=e28]:
+        - link "职Q" [ref=e29] [cursor=pointer]:
+          - /url: //zq.zhaopin.com?utm_source=%E9%A6%96%E9%A1%B5&utm_medium=button&utm_campaign=&utm_term=&utm_content=
+    - generic [ref=e30]:
+      - link "消息" [ref=e31] [cursor=pointer]:
+        - /url: javascript:;
+      - link "我要招人" [ref=e32] [cursor=pointer]:
+        - /url: //passport.zhaopin.com/org/login?jl=%E6%88%90%E9%83%BD&kw=%E6%B0%94%E8%B1%A1&jt=&in=&li=&sc=&el=&we=&et=&ct=&cs=&sl=&p=1
+      - link "登录/注册" [ref=e33] [cursor=pointer]:
+        - /url: //passport.zhaopin.com/login?bkUrl=https%3A%2F%2Fwww.zhaopin.com%2Fsou%2Fjl%25E6%2588%2590%25E9%2583%25BD%2FkwDGA8OO8%3Fjl%3D%25E6%2588%2590%25E9%2583%25BD%26kw%3D%25E6%25B0%2594%25E8%25B1%25A1%26jt%3D%26in%3D%26li%3D%26sc%3D%26el%3D%26we%3D%26et%3D%26ct%3D%26cs%3D%26sl%3D%26p%3D1
+  - generic [ref=e35]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - textbox "输入职位、公司等搜索" [ref=e39]: 气象
+        - generic [ref=e40]: 职位类别
+        - generic [ref=e45]: 公司行业
+      - button [ref=e50] [cursor=pointer]
+    - generic [ref=e52]:
+      - generic "地点" [ref=e55] [cursor=pointer]
+      - generic [ref=e943]:
+        - list [ref=e945]:
+          - listitem [ref=e946]:
+            - generic [ref=e947] [cursor=pointer]: 北京
+          - listitem [ref=e948]:
+            - generic [ref=e949] [cursor=pointer]: 上海
+          - listitem [ref=e950]:
+            - generic [ref=e951] [cursor=pointer]: 广州
+          - listitem [ref=e952]:
+            - generic [ref=e953] [cursor=pointer]: 深圳
+          - listitem [ref=e954]:
+            - generic [ref=e955] [cursor=pointer]: 天津
+          - listitem [ref=e956]:
+            - generic [ref=e957] [cursor=pointer]: 武汉
+          - listitem [ref=e958]:
+            - generic [ref=e959] [cursor=pointer]: 西安
+          - listitem [ref=e960]:
+            - generic [ref=e961] [cursor=pointer]: 成都
+          - listitem [ref=e962]:
+            - generic [ref=e963] [cursor=pointer]: 大连
+          - listitem [ref=e964]:
+            - generic [ref=e965] [cursor=pointer]: 长春
+          - listitem [ref=e966]:
+            - generic [ref=e967] [cursor=pointer]: 沈阳
+          - listitem [ref=e968]:
+            - generic [ref=e969] [cursor=pointer]: 南京
+          - listitem [ref=e970]:
+            - generic [ref=e971] [cursor=pointer]: 济南
+          - listitem [ref=e972]:
+            - generic [ref=e973] [cursor=pointer]: 青岛
+          - listitem [ref=e974]:
+            - generic [ref=e975] [cursor=pointer]: 杭州
+          - listitem [ref=e976]:
+            - generic [ref=e977] [cursor=pointer]: 苏州
+          - listitem [ref=e978]:
+            - generic [ref=e979] [cursor=pointer]: 无锡
+          - listitem [ref=e980]:
+            - generic [ref=e981] [cursor=pointer]: 宁波
+          - listitem [ref=e982]:
+            - generic [ref=e983] [cursor=pointer]: 重庆
+          - listitem [ref=e984]:
+            - generic [ref=e985] [cursor=pointer]: 郑州
+          - listitem [ref=e986]:
+            - generic [ref=e987] [cursor=pointer]: 长沙
+          - listitem [ref=e988]:
+            - generic [ref=e989] [cursor=pointer]: 福州
+          - listitem [ref=e990]:
+            - generic [ref=e991] [cursor=pointer]: 厦门
+          - listitem [ref=e992]:
+            - generic [ref=e993] [cursor=pointer]: 哈尔滨
+        - generic [ref=e994]:
+          - text: 其他国内外地区：
+          - textbox "输入地区名称" [ref=e995]
+    - generic [ref=e56]:
+      - generic [ref=e57]: 薪资要求
+      - generic [ref=e62]: 学历要求
+      - generic [ref=e67]: 工作经验
+      - generic [ref=e72]: 职位类型
+      - generic [ref=e77]: 公司性质
+      - generic [ref=e82]: 公司规模
+      - generic [ref=e87] [cursor=pointer]: 清空筛选条件 （1）
+  - generic [ref=e89]:
+    - list [ref=e91]:
+      - listitem [ref=e92] [cursor=pointer]:
+        - generic [ref=e93]: 智能匹配
+      - listitem [ref=e94] [cursor=pointer]:
+        - generic [ref=e95]: 薪酬最高
+      - listitem [ref=e96] [cursor=pointer]:
+        - generic [ref=e97]: 最新发布
+    - generic [ref=e99]:
+      - generic [ref=e100]:
+        - generic [ref=e102] [cursor=pointer]:
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - link "气象雷达软件设计师（二级）" [ref=e106]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022725304.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e107]: 1.5-2.5万
+            - generic [ref=e108]: 气动设计
+            - generic [ref=e110]:
+              - generic [ref=e111]: 无锡·滨湖·雪浪
+              - generic [ref=e113]: 3-5年
+              - generic [ref=e114]: 本科
+          - generic [ref=e115]:
+            - link "航天新气象科技有限公司" [ref=e119]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e120]:
+              - generic [ref=e121]: 国企
+              - generic [ref=e122]: 300-499人
+              - generic [ref=e123]: 专用设备制造
+            - generic [ref=e124]:
+              - generic [ref=e127]: 王莉·人事经理
+              - generic [ref=e128]: 5日内活跃
+              - generic [ref=e129]: 立即沟通
+          - button "立即投递" [ref=e133]
+        - generic [ref=e135] [cursor=pointer]:
+          - generic [ref=e136]:
+            - generic [ref=e137]:
+              - link "气象仪器销售经理" [ref=e139]:
+                - /url: http://www.zhaopin.com/jobdetail/CC509639920J40858425307.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e140]: 3000-6000元
+            - generic [ref=e141]:
+              - generic [ref=e142]: 企业客户
+              - generic [ref=e143]: 政府客户
+              - generic [ref=e144]: 渠道销售
+              - generic [ref=e145]: 区域销售
+            - generic [ref=e146]:
+              - generic [ref=e147]: 长春·南关·鸿城
+              - generic [ref=e149]: 3-5年
+              - generic [ref=e150]: 大专
+          - generic [ref=e151]:
+            - link "长春气象仪器有限公司" [ref=e155]:
+              - /url: https://www.zhaopin.com/companydetail/CC509639923.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e156]:
+              - generic [ref=e157]: 民营
+              - generic [ref=e158]: 20-99人
+              - generic [ref=e159]: 仪器仪表
+            - generic [ref=e160]:
+              - generic [ref=e163]: 李梦蕾·人事经理
+              - generic [ref=e164]: 今日回复50+次
+              - generic [ref=e165]: 立即沟通
+          - button "立即投递" [ref=e169]
+        - generic [ref=e171] [cursor=pointer]:
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - link "气象数据分析工程师" [ref=e175]:
+                - /url: http://www.zhaopin.com/jobdetail/CC371171510J40856759103.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e176]: 8000-16000元
+            - generic [ref=e177]: Python
+            - generic [ref=e179]:
+              - generic [ref=e180]: 天津·西青·张家窝
+              - generic [ref=e182]: 经验不限
+              - generic [ref=e183]: 本科
+          - generic [ref=e184]:
+            - link "天津华云天仪特种气象探测技术有限公司" [ref=e188]:
+              - /url: https://company.zhaopin.com/P2/CC3711/7151/CC371171513.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e189]:
+              - generic [ref=e190]: 国企
+              - generic [ref=e191]: 20-99人
+              - generic [ref=e192]: 仪器仪表
+            - generic [ref=e193]:
+              - generic [ref=e196]: 吴俊兰·人力资源主管
+              - generic [ref=e197]: 立即沟通
+          - button "立即投递" [ref=e201]
+        - generic [ref=e203] [cursor=pointer]:
+          - generic [ref=e204]:
+            - generic [ref=e205]:
+              - link "气象雷达系统设计师（三级）" [ref=e207]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022756004.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e208]: 1.5-3万
+            - generic [ref=e209]: 气动设计
+            - generic [ref=e211]:
+              - generic [ref=e212]: 无锡·滨湖·雪浪
+              - generic [ref=e214]: 3-5年
+              - generic [ref=e215]: 本科
+          - generic [ref=e216]:
+            - link "航天新气象科技有限公司" [ref=e220]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e221]:
+              - generic [ref=e222]: 国企
+              - generic [ref=e223]: 300-499人
+              - generic [ref=e224]: 专用设备制造
+            - generic [ref=e225]:
+              - generic [ref=e228]: 王莉·人事经理
+              - generic [ref=e229]: 5日内活跃
+              - generic [ref=e230]: 立即沟通
+          - button "立即投递" [ref=e234]
+        - generic [ref=e236] [cursor=pointer]:
+          - generic [ref=e237]:
+            - generic [ref=e238]:
+              - link "气象雷达软件工程师（工作地点北京）" [ref=e240]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1526871800J40867924207.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e244]: 1-1.5万·14薪
+            - generic [ref=e245]:
+              - generic [ref=e246]: C++
+              - generic [ref=e247]: 汇编语言
+            - generic [ref=e248]:
+              - generic [ref=e249]: 青岛·胶州·九龙
+              - generic [ref=e251]: 3-5年
+              - generic [ref=e252]: 本科
+          - generic [ref=e253]:
+            - link "北京天域智普科技有限公司" [ref=e257]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1526871800.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e258]:
+              - generic [ref=e259]: 20-99人
+              - generic [ref=e260]: 环保
+            - generic [ref=e261]:
+              - generic [ref=e264]: 王尚尚·人事经理
+              - generic [ref=e265]: 高回复率
+              - generic [ref=e266]: 立即沟通
+          - button "立即投递" [ref=e270]
+        - generic [ref=e272] [cursor=pointer]:
+          - generic [ref=e273]:
+            - generic [ref=e274]:
+              - link "连锁超市营业员（气象台路）" [ref=e276]:
+                - /url: http://www.zhaopin.com/jobdetail/CC836524230J40925780112.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e282]: 3000-4000元
+            - generic [ref=e283]:
+              - generic [ref=e284]: 超市
+              - generic [ref=e285]: 便利店
+              - generic [ref=e286]: 服装店
+            - generic [ref=e287]:
+              - generic [ref=e288]: 天津·河西·马场
+              - generic [ref=e290]: 经验不限
+              - generic [ref=e291]: 学历不限
+          - generic [ref=e292]:
+            - link "渤海津诚(天津)人力资源服务有限公司" [ref=e294]:
+              - /url: https://www.zhaopin.com/companydetail/CZ836524230.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e295]:
+              - generic [ref=e296]: 民营
+              - generic [ref=e297]: 20人以下
+              - generic [ref=e298]: 人力资源
+            - generic [ref=e299]:
+              - generic [ref=e302]: 杨女士·人事经理
+              - generic [ref=e303]: 12小时内回复可能性大
+              - generic [ref=e304]: 立即沟通
+          - button "立即投递" [ref=e308]
+        - generic [ref=e310] [cursor=pointer]:
+          - generic [ref=e311]:
+            - generic [ref=e312]:
+              - link "气象雷达信号处理设计师" [ref=e314]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022765204.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e315]: 1.5-3万
+            - generic [ref=e316]: 气动设计
+            - generic [ref=e318]:
+              - generic [ref=e319]: 无锡·滨湖·雪浪
+              - generic [ref=e321]: 3-5年
+              - generic [ref=e322]: 本科
+          - generic [ref=e323]:
+            - link "航天新气象科技有限公司" [ref=e327]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e328]:
+              - generic [ref=e329]: 国企
+              - generic [ref=e330]: 300-499人
+              - generic [ref=e331]: 专用设备制造
+            - generic [ref=e332]:
+              - generic [ref=e335]: 王莉·人事经理
+              - generic [ref=e336]: 5日内活跃
+              - generic [ref=e337]: 立即沟通
+          - button "立即投递" [ref=e341]
+        - generic [ref=e343] [cursor=pointer]:
+          - generic [ref=e344]:
+            - generic [ref=e345]:
+              - link "销售经理（民航气象）" [ref=e347]:
+                - /url: http://www.zhaopin.com/jobdetail/CC663860830J40801683704.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e348]: 8000-15000元·13薪
+            - generic [ref=e349]:
+              - generic [ref=e350]: 渠道销售
+              - generic [ref=e351]: 企业客户
+              - generic [ref=e352]: KA大客户
+            - generic [ref=e353]:
+              - generic [ref=e354]: 青岛·崂山·沙子口
+              - generic [ref=e356]: 经验不限
+              - generic [ref=e357]: 大专
+          - generic [ref=e358]:
+            - generic [ref=e359]:
+              - link "青岛镭测创芯科技有限公司" [ref=e362]:
+                - /url: https://www.zhaopin.com/companydetail/CZ663860830.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - generic [ref=e363]: C轮
+            - generic [ref=e364]:
+              - generic [ref=e365]: 民营
+              - generic [ref=e366]: 100-299人
+              - generic [ref=e367]: 仪器仪表
+            - generic [ref=e368]:
+              - generic [ref=e371]: 李女士·HRBP
+              - generic [ref=e372]: 30分钟内回复可能性大
+              - generic [ref=e373]: 立即沟通
+          - button "立即投递" [ref=e377]
+        - generic [ref=e379] [cursor=pointer]:
+          - generic [ref=e380]:
+            - generic [ref=e381]:
+              - link "气象/海洋环境数据分析师" [ref=e383]:
+                - /url: http://www.zhaopin.com/jobdetail/CC600906530J40804541510.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e384]: 8000-16000元
+            - generic [ref=e385]:
+              - generic [ref=e386]: 大连·沙河口·黑石礁
+              - generic [ref=e388]: 1-3年
+              - generic [ref=e389]: 硕士
+          - generic [ref=e390]:
+            - link "大连海洋明天科技有限公司" [ref=e394]:
+              - /url: https://www.zhaopin.com/companydetail/CZ600906530.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e395]:
+              - generic [ref=e396]: 民营
+              - generic [ref=e397]: 20-99人
+              - generic [ref=e398]: 学术/科研
+            - generic [ref=e399]:
+              - generic [ref=e402]: 宋先生·hr
+              - generic [ref=e403]: 今日回复1次
+              - generic [ref=e404]: 立即沟通
+          - button "立即投递" [ref=e408]
+        - generic [ref=e410] [cursor=pointer]:
+          - generic [ref=e411]:
+            - generic [ref=e412]:
+              - link "气象雷达系统设计师（三级）" [ref=e414]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022810204.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e415]: 1.5-3万
+            - generic [ref=e416]: 气动设计
+            - generic [ref=e418]:
+              - generic [ref=e419]: 北京·海淀·永定路
+              - generic [ref=e421]: 3-5年
+              - generic [ref=e422]: 本科
+          - generic [ref=e423]:
+            - link "航天新气象科技有限公司" [ref=e427]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e428]:
+              - generic [ref=e429]: 国企
+              - generic [ref=e430]: 300-499人
+              - generic [ref=e431]: 专用设备制造
+            - generic [ref=e432]:
+              - generic [ref=e435]: 王莉·人事经理
+              - generic [ref=e436]: 5日内活跃
+              - generic [ref=e437]: 立即沟通
+          - button "立即投递" [ref=e441]
+        - generic [ref=e443] [cursor=pointer]:
+          - generic [ref=e444]:
+            - generic [ref=e445]:
+              - link "气象算法工程师" [ref=e447]:
+                - /url: http://www.zhaopin.com/jobdetail/CC201057710J40828118301.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e448]: 1.3-2.6万
+            - generic [ref=e449]:
+              - generic [ref=e450]: 深度学习
+              - generic [ref=e451]: 气象
+              - generic [ref=e452]: 测雨
+            - generic [ref=e453]:
+              - generic [ref=e454]: 长沙·岳麓·麓谷
+              - generic [ref=e456]: 经验不限
+              - generic [ref=e457]: 硕士
+          - generic [ref=e458]:
+            - link "华诺星空技术股份有限公司" [ref=e462]:
+              - /url: https://www.zhaopin.com/companydetail/CZ201057710.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e463]:
+              - generic [ref=e464]: 股份制企业
+              - generic [ref=e465]: 500-999人
+              - generic [ref=e466]: 软件/IT服务
+            - generic [ref=e467]:
+              - generic [ref=e470]: 周咪·人力资源
+              - generic [ref=e471]: 6小时内回复可能性大
+              - generic [ref=e472]: 立即沟通
+          - button "立即投递" [ref=e476]
+        - generic [ref=e478] [cursor=pointer]:
+          - generic [ref=e479]:
+            - generic [ref=e480]:
+              - link "气象算法工程师" [ref=e482]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1482815940J40944334015.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e483]: 6000-12000元·13薪
+            - generic [ref=e484]:
+              - generic [ref=e485]: 深度学习
+              - generic [ref=e486]: 图像算法
+            - generic [ref=e487]:
+              - generic [ref=e488]: 洛阳·涧西
+              - generic [ref=e490]: 经验不限
+              - generic [ref=e491]: 硕士
+          - generic [ref=e492]:
+            - link "洛阳聚恒智能装备有限公司" [ref=e496]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1482815940.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e497]:
+              - generic [ref=e498]: 民营
+              - generic [ref=e499]: 100-299人
+              - generic [ref=e500]: 仪器仪表
+            - generic [ref=e501]:
+              - generic [ref=e504]: 张女士·人事专员
+              - generic [ref=e505]: 12小时内回复可能性大
+              - generic [ref=e506]: 立即沟通
+          - button "立即投递" [ref=e510]
+        - generic [ref=e512] [cursor=pointer]:
+          - generic [ref=e513]:
+            - generic [ref=e514]:
+              - link "气象雷达软件设计师（二级）" [ref=e516]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022809704.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e517]: 1.5-2.5万
+            - generic [ref=e518]: 气动设计
+            - generic [ref=e520]:
+              - generic [ref=e521]: 北京·海淀·永定路
+              - generic [ref=e523]: 3-5年
+              - generic [ref=e524]: 本科
+          - generic [ref=e525]:
+            - link "航天新气象科技有限公司" [ref=e529]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e530]:
+              - generic [ref=e531]: 国企
+              - generic [ref=e532]: 300-499人
+              - generic [ref=e533]: 专用设备制造
+            - generic [ref=e534]:
+              - generic [ref=e537]: 王莉·人事经理
+              - generic [ref=e538]: 5日内活跃
+              - generic [ref=e539]: 立即沟通
+          - button "立即投递" [ref=e543]
+        - generic [ref=e545] [cursor=pointer]:
+          - generic [ref=e546]:
+            - generic [ref=e547]:
+              - link "气象算法工程师" [ref=e549]:
+                - /url: http://www.zhaopin.com/jobdetail/CC199232620J40772310816.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e550]: 1.5-2.2万
+            - generic [ref=e551]: WRF
+            - generic [ref=e553]:
+              - generic [ref=e554]: 芜湖·鸠江区·湾里街道
+              - generic [ref=e556]: 3-5年
+              - generic [ref=e557]: 本科
+          - generic [ref=e558]:
+            - generic [ref=e559]:
+              - link "信义光伏产业(安徽)控股有限公司" [ref=e562]:
+                - /url: https://www.zhaopin.com/companydetail/CC199232625.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - generic [ref=e563]: 已上市
+            - generic [ref=e564]:
+              - generic [ref=e565]: 上市公司
+              - generic [ref=e566]: 10000人以上
+              - generic [ref=e567]: 化学原料/化学制品
+            - generic [ref=e568]:
+              - generic [ref=e571]: 王家建·HR
+              - generic [ref=e572]: 12小时内回复可能性大
+              - generic [ref=e573]: 立即沟通
+          - button "立即投递" [ref=e577]
+        - generic [ref=e579] [cursor=pointer]:
+          - generic [ref=e580]:
+            - generic [ref=e581]:
+              - link "气象应用工程师" [ref=e583]:
+                - /url: http://www.zhaopin.com/jobdetail/CC673445620J40853613205.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e584]: 1.5-2.5万·14薪
+            - generic [ref=e585]:
+              - generic [ref=e586]: 深度学习
+              - generic [ref=e587]: 大模型算法
+              - generic [ref=e588]: 多模态算法
+              - generic [ref=e589]: Python
+              - generic [ref=e590]: C++
+              - generic [ref=e591]: C#
+              - generic [ref=e592]: 数据处理
+              - generic [ref=e593]: 大气科学
+              - generic [ref=e594]: 气象
+            - generic [ref=e595]:
+              - generic [ref=e596]: 珠海·香洲区·唐家湾镇
+              - generic [ref=e598]: 经验不限
+              - generic [ref=e599]: 硕士
+          - generic [ref=e600]:
+            - generic [ref=e601]:
+              - link "广东纳睿雷达科技股份有限公司" [ref=e604]:
+                - /url: https://www.zhaopin.com/companydetail/CZ673445620.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - generic [ref=e605]: 已上市
+            - generic [ref=e606]:
+              - generic [ref=e607]: 上市公司
+              - generic [ref=e608]: 300-499人
+              - generic [ref=e609]: 半导体/芯片
+            - generic [ref=e610]:
+              - generic [ref=e613]: 黎女士·HR
+              - generic [ref=e614]: 高回复率
+              - generic [ref=e615]: 立即沟通
+          - button "立即投递" [ref=e619]
+        - generic [ref=e621] [cursor=pointer]:
+          - generic [ref=e622]:
+            - generic [ref=e623]:
+              - link "气象雷达信号处理设计师" [ref=e625]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1230484700J41022813104.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e626]: 1.5-3万
+            - generic [ref=e627]:
+              - generic [ref=e628]: C语言
+              - generic [ref=e629]: C++
+            - generic [ref=e630]:
+              - generic [ref=e631]: 北京·海淀·永定路
+              - generic [ref=e633]: 3-5年
+              - generic [ref=e634]: 本科
+          - generic [ref=e635]:
+            - link "航天新气象科技有限公司" [ref=e639]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1230484700.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e640]:
+              - generic [ref=e641]: 国企
+              - generic [ref=e642]: 300-499人
+              - generic [ref=e643]: 专用设备制造
+            - generic [ref=e644]:
+              - generic [ref=e647]: 王莉·人事经理
+              - generic [ref=e648]: 5日内活跃
+              - generic [ref=e649]: 立即沟通
+          - button "立即投递" [ref=e653]
+        - generic [ref=e655] [cursor=pointer]:
+          - generic [ref=e656]:
+            - generic [ref=e657]:
+              - link "气象工程师" [ref=e659]:
+                - /url: http://www.zhaopin.com/jobdetail/CC540068531J00220969506.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e660]: 7000-14000元
+            - generic [ref=e661]:
+              - generic [ref=e662]: 西安·长安·郭杜
+              - generic [ref=e664]: 经验不限
+              - generic [ref=e665]: 硕士
+          - generic [ref=e666]:
+            - link "北方天穹信息技术(西安)有限公司" [ref=e670]:
+              - /url: https://www.zhaopin.com/companydetail/CC540068531.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e671]:
+              - generic [ref=e672]: 国企
+              - generic [ref=e673]: 20-99人
+              - generic [ref=e674]: 半导体/芯片
+            - generic [ref=e675]:
+              - generic [ref=e678]: 李女士·人事主管
+              - generic [ref=e679]: 12小时内回复可能性大
+              - generic [ref=e680]: 立即沟通
+          - button "立即投递" [ref=e684]
+        - generic [ref=e686] [cursor=pointer]:
+          - generic [ref=e687]:
+            - generic [ref=e688]:
+              - link "气象算法工程师" [ref=e690]:
+                - /url: http://www.zhaopin.com/jobdetail/CC673445620J40853369005.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e691]: 1.5-3万·14薪
+            - generic [ref=e692]:
+              - generic [ref=e693]: 图像算法
+              - generic [ref=e694]: 大模型算法
+              - generic [ref=e695]: 多模态算法
+              - generic [ref=e696]: 气象算法
+              - generic [ref=e697]: 数据处理
+              - generic [ref=e698]: 数值模式
+              - generic [ref=e699]: PyTorch
+              - generic [ref=e700]: Python
+              - generic [ref=e701]: C++
+              - generic [ref=e702]: MATLAB
+              - generic [ref=e703]: 建模
+              - generic [ref=e704]: 数据清洗
+              - generic [ref=e705]: 气象
+            - generic [ref=e706]:
+              - generic [ref=e707]: 珠海·香洲区·唐家湾镇
+              - generic [ref=e709]: 经验不限
+              - generic [ref=e710]: 硕士
+          - generic [ref=e711]:
+            - generic [ref=e712]:
+              - link "广东纳睿雷达科技股份有限公司" [ref=e715]:
+                - /url: https://www.zhaopin.com/companydetail/CZ673445620.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - generic [ref=e716]: 已上市
+            - generic [ref=e717]:
+              - generic [ref=e718]: 上市公司
+              - generic [ref=e719]: 300-499人
+              - generic [ref=e720]: 半导体/芯片
+            - generic [ref=e721]:
+              - generic [ref=e724]: 黎女士·HR
+              - generic [ref=e725]: 高回复率
+              - generic [ref=e726]: 立即沟通
+          - button "立即投递" [ref=e730]
+        - generic [ref=e732] [cursor=pointer]:
+          - generic [ref=e733]:
+            - generic [ref=e734]:
+              - link "人工智能算法工程师（气候气象实习生）" [ref=e736]:
+                - /url: http://www.zhaopin.com/jobdetail/CC624435430J40870140303.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e737]: 100-200元/天
+            - generic [ref=e738]:
+              - generic [ref=e739]: 深度学习
+              - generic [ref=e740]: Transformer
+              - generic [ref=e741]: PyTorch
+              - generic [ref=e742]: TensorFlow
+              - generic [ref=e743]: Python
+              - generic [ref=e744]: 大模型算法
+            - generic [ref=e745]:
+              - generic [ref=e746]: 无锡·滨湖·蠡园
+              - generic [ref=e748]: 经验不限
+              - generic [ref=e749]: 硕士
+          - generic [ref=e750]:
+            - link "国家超级计算无锡中心" [ref=e754]:
+              - /url: https://www.zhaopin.com/companydetail/CZ624435430.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e755]:
+              - generic [ref=e756]: 国企
+              - generic [ref=e757]: 100-299人
+              - generic [ref=e758]: 学术/科研
+            - generic [ref=e759]:
+              - generic [ref=e762]: 陈女士·人事专员
+              - generic [ref=e763]: 今日活跃
+              - generic [ref=e764]: 立即沟通
+          - button "立即投递" [ref=e768]
+        - generic [ref=e770] [cursor=pointer]:
+          - generic [ref=e771]:
+            - generic [ref=e772]:
+              - link "气象解决方案经理" [ref=e774]:
+                - /url: http://www.zhaopin.com/jobdetail/CCL1467756470J40923570312.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+              - paragraph [ref=e775]: 1.2-2万
+            - generic [ref=e776]: 智慧产品
+            - generic [ref=e778]:
+              - generic [ref=e779]: 重庆·两江新区
+              - generic [ref=e781]: 经验不限
+              - generic [ref=e782]: 本科
+          - generic [ref=e783]:
+            - link "华夏飞滴科技有限公司" [ref=e787]:
+              - /url: https://www.zhaopin.com/companydetail/CZL1467756470.htm?refcode=4019&srccode=401903&preactionid=2ed333e2-5250-4a94-b30e-62c2f3a757ce
+            - generic [ref=e788]:
+              - generic [ref=e789]: 民营
+              - generic [ref=e790]: 100-299人
+              - generic [ref=e791]: 船舶/航空/航天/军工
+            - generic [ref=e792]:
+              - generic [ref=e795]: 许女士·人力资源经理
+              - generic [ref=e796]: 5小时前有回复
+              - generic [ref=e797]: 立即沟通
+          - button "立即投递" [ref=e801]
+      - generic [ref=e804]:
+        - link "上一页":
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8
+        - link "1" [ref=e805] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p1
+        - link "2" [ref=e806] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p2
+        - link "3" [ref=e807] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p3
+        - link "4" [ref=e808] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p4
+        - link "5" [ref=e809] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p5
+        - link "下一页" [ref=e810] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl成都/kwDGA8OO8/p2
+        - generic [ref=e811]:
+          - generic [ref=e812]: 到
+          - textbox [ref=e813]
+          - button "确定" [ref=e814] [cursor=pointer]
+    - generic [ref=e815]:
+      - generic [ref=e892]:
+        - generic [ref=e900]:
+          - list [ref=e901]:
+            - listitem [ref=e902] [cursor=pointer]: 验证码登录/注册
+          - generic [ref=e905]:
+            - generic [ref=e906]:
+              - generic [ref=e908]:
+                - generic [ref=e909]: + 86
+                - generic [ref=e911]:
+                  - textbox "手机号" [ref=e913]
+                  - paragraph [ref=e915]
+              - generic [ref=e917]:
+                - generic [ref=e918]:
+                  - textbox "短信验证码" [ref=e920]
+                  - paragraph [ref=e922]
+                - button "获取验证码" [ref=e924] [cursor=pointer]
+            - button "登录/注册" [ref=e927] [cursor=pointer]
+            - generic [ref=e930]:
+              - checkbox [ref=e931] [cursor=pointer]
+              - generic [ref=e932]: 已阅读并同意
+              - link "《用户服务协议》" [ref=e933] [cursor=pointer]:
+                - /url: //rd6.zhaopin.com/aboutus/legal/service?fromClient=CH5
+              - generic [ref=e934]: 和
+              - link "《隐私政策》" [ref=e935] [cursor=pointer]:
+                - /url: //rd6.zhaopin.com/aboutus/legal/privacy?fromClient=CH5
+            - generic [ref=e938] [cursor=pointer]:
+              - img "nationalIcon" [ref=e939]
+              - generic [ref=e940]: 国家网络身份认证登录
+        - generic [ref=e941]: 我要招人 >
+        - link [ref=e942] [cursor=pointer]:
+          - /url: https://passport.zhaopin.com/org/login?
+      - generic [ref=e819]:
+        - img "简历模版" [ref=e821] [cursor=pointer]
+        - img "简历置顶" [ref=e823] [cursor=pointer]
+        - list [ref=e824]:
+          - listitem [ref=e825]:
+            - generic [ref=e827]: 智联招聘APP
+          - listitem [ref=e828]:
+            - generic [ref=e830]: 官方微信
+  - generic [ref=e831]:
+    - generic [ref=e832]:
+      - generic [ref=e833]:
+        - generic [ref=e834]:
+          - term [ref=e835]: 关于我们
+          - definition [ref=e836]:
+            - link "公司介绍" [ref=e837] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/
+          - definition [ref=e838]:
+            - link "联系我们" [ref=e839] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/contact/index.html
+          - definition [ref=e840]:
+            - link "诚聘英才" [ref=e841] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/join/index.html
+        - generic [ref=e842]:
+          - term [ref=e843]: 产品与服务
+          - definition [ref=e844]:
+            - link "人才招聘" [ref=e845] [cursor=pointer]:
+              - /url: //https://www.zhaopin.com/jobs/
+          - definition [ref=e846]:
+            - link "企业招聘" [ref=e847] [cursor=pointer]:
+              - /url: //passport.zhaopin.com/org/login?bkurl=https%3A%2F%2Frd5.zhaopin.com%2F
+        - generic [ref=e848]:
+          - term [ref=e849]: 使用与帮助
+          - definition [ref=e850]: 账号注销
+          - definition [ref=e851]:
+            - link "发票制度" [ref=e852] [cursor=pointer]:
+              - /url: https://www.zhaopin.com/invoice-system
+          - definition [ref=e853]:
+            - link "防骗指南" [ref=e854] [cursor=pointer]:
+              - /url: //110.zhaopin.com/
+          - definition [ref=e855]:
+            - link "法律协议" [ref=e856] [cursor=pointer]:
+              - /url: https://rd6.zhaopin.com/aboutus/legal
+          - definition [ref=e857]:
+            - link "资质公示" [ref=e858] [cursor=pointer]:
+              - /url: https://rd6.zhaopin.com/aboutus
+        - generic [ref=e859]:
+          - term [ref=e860]: 联系方式
+          - definition [ref=e861]: 电话：400-885-9898
+          - definition [ref=e862]:
+            - link "客服中心" [ref=e863] [cursor=pointer]:
+              - /url: //dianping.zhaopin.com/jobseeker
+      - generic [ref=e864]:
+        - paragraph [ref=e865]: 智联招聘，更懂你的价值
+        - generic [ref=e866]:
+          - generic [ref=e867]: 官方微信
+          - generic [ref=e868]: 企业版APP
+          - generic [ref=e869]: 智联APP
+          - generic [ref=e870]: 小程序
+    - generic [ref=e872]:
+      - generic [ref=e873]:
+        - paragraph [ref=e874]: 未经 Zhaopin.com 同意，不得转载本网站之所有招聘信息及作品 智联招聘网版权所有
+        - paragraph [ref=e875]:
+          - link "京ICP备12025925号" [ref=e876] [cursor=pointer]:
+            - /url: https://beian.miit.gov.cn
+          - link "京ICP证010207号" [ref=e877] [cursor=pointer]:
+            - /url: https://rd6.zhaopin.com/aboutus?tab=value-added-telecom
+        - paragraph [ref=e878]:
+          - link "京公网安备 11010502059392号" [ref=e879] [cursor=pointer]:
+            - /url: https://beian.mps.gov.cn/#/query/webSearch?code=11010502059392
+          - link "人力资源许可证:1101051996081号" [ref=e880] [cursor=pointer]:
+            - /url: https://rd6.zhaopin.com/aboutus?tab=human-resource-service
+        - paragraph [ref=e881]:
+          - link "网上有害信息举报专区" [ref=e882] [cursor=pointer]:
+            - /url: https://www.12377.cn
+          - text: 违法不良信息举报电话:400-885-9898 关爱未成年举报热线:400-885-9898-3
+        - paragraph [ref=e883]: 朝阳区人力资源与社会保障局监督电话
+      - generic [ref=e884]:
+        - link "网络110报警服务" [ref=e885] [cursor=pointer]:
+          - /url: http://cyberpolice.mps.gov.cn/wfjb
+        - link "电子营业执照" [ref=e888] [cursor=pointer]:
+          - /url: https://rd6.zhaopin.com/aboutus?tab=electronic-business

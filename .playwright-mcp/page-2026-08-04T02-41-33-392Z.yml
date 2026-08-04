@@ -1,0 +1,529 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e4]:
+      - generic [ref=f5e5] [cursor=pointer]: 
+      - generic [ref=f5e8]:
+        - generic: 新闻
+        - generic:
+          - generic [ref=f5e10] [cursor=pointer]: 招聘 
+          - generic [ref=f5e12]:
+            - term [ref=f5e13]:
+              - link "北极星招聘" [ref=f5e15] [cursor=pointer]:
+                - /url: https://hr.bjx.com.cn
+            - term [ref=f5e16]:
+              - link "电力" [ref=f5e18] [cursor=pointer]:
+                - /url: https://dljob.bjx.com.cn
+            - definition [ref=f5e19]:
+              - link "火电" [ref=f5e20] [cursor=pointer]:
+                - /url: https://hdjob.bjx.com.cn
+              - link "环保发电" [ref=f5e21] [cursor=pointer]:
+                - /url: https://hbfdjob.bjx.com.cn
+              - link "电力工程" [ref=f5e22] [cursor=pointer]:
+                - /url: https://dlgcjob.bjx.com.cn
+              - link "输配电设备" [ref=f5e23] [cursor=pointer]:
+                - /url: https://spdsbjob.bjx.com.cn
+              - link "水电" [ref=f5e24] [cursor=pointer]:
+                - /url: https://sdjob.bjx.com.cn
+              - link "核电" [ref=f5e25] [cursor=pointer]:
+                - /url: https://hedjob.bjx.com.cn
+              - link "氢能" [ref=f5e26] [cursor=pointer]:
+                - /url: https://qnjob.bjx.com.cn
+              - link "售电" [ref=f5e27] [cursor=pointer]:
+                - /url: https://shdjob.bjx.com.cn
+              - link "碳管理" [ref=f5e28] [cursor=pointer]:
+                - /url: https://tanjob.bjx.com.cn
+            - term [ref=f5e29]:
+              - link "风电" [ref=f5e31] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn
+            - definition [ref=f5e32]:
+              - link "风电场投资及运营" [ref=f5e33] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/flfd/
+              - link "风电整机" [ref=f5e34] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/fdzj/
+              - link "叶片及材料" [ref=f5e35] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/ypjcl/
+              - link "风电工程" [ref=f5e36] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/fedgc/
+              - link "发电机及元件" [ref=f5e37] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/fdjjyj/
+              - link "塔筒/塔架" [ref=f5e38] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/tttj/
+              - link "控制系统" [ref=f5e39] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/kzxt/
+              - link "风电运维" [ref=f5e40] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/fdyw/
+              - link "变流器" [ref=f5e41] [cursor=pointer]:
+                - /url: https://fdjob.bjx.com.cn/industry/blq/
+            - term [ref=f5e42]:
+              - link "光伏" [ref=f5e44] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn
+            - definition [ref=f5e45]:
+              - link "光伏电池组件" [ref=f5e46] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfdcjzj/
+              - link "光伏电站及运维" [ref=f5e47] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfdz/
+              - link "光伏逆变器" [ref=f5e48] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfnbq/
+              - link "分布式光伏" [ref=f5e49] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/fbsgf/
+              - link "光伏系统工程" [ref=f5e50] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfgc/
+              - link "光伏零部件" [ref=f5e51] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfxtlbj/
+              - link "光伏原材料及辅料" [ref=f5e52] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfcljsb/
+              - link "光伏设备" [ref=f5e53] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/gfusb/
+              - link "光热发电" [ref=f5e54] [cursor=pointer]:
+                - /url: https://gfjob.bjx.com.cn/industry/grfd/
+            - term [ref=f5e55]:
+              - link "电力市场" [ref=f5e57] [cursor=pointer]:
+                - /url: https://dlscjob.bjx.com.cn
+            - definition [ref=f5e58]:
+              - link "售电" [ref=f5e59] [cursor=pointer]:
+                - /url: https://shdjob.bjx.com.cn
+              - link "虚拟电厂" [ref=f5e60] [cursor=pointer]:
+                - /url: https://xndcjob.bjx.com.cn
+              - link "综合能源服务" [ref=f5e61] [cursor=pointer]:
+                - /url: https://zhnyfwjob.bjx.com.cn
+              - link "源网荷储" [ref=f5e62] [cursor=pointer]:
+                - /url: https://ywhcjob.bjx.com.cn
+              - link "数据/软件" [ref=f5e63] [cursor=pointer]:
+                - /url: https://sjrjjob.bjx.com.cn
+            - term [ref=f5e64]:
+              - link "储能" [ref=f5e66] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn
+            - definition [ref=f5e67]:
+              - link "储能电池" [ref=f5e68] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/cndc/
+              - link "储能系统" [ref=f5e69] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/cnjs/
+              - link "储能电站" [ref=f5e70] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/cndz/
+              - link "工商业储能" [ref=f5e71] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/gsycn/
+              - link "储能工程" [ref=f5e72] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/cngc/
+              - link "储能材料及零部件" [ref=f5e73] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/dccl/
+              - link "光储充一体化" [ref=f5e74] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/xnyqc/
+              - link "户用储能" [ref=f5e75] [cursor=pointer]:
+                - /url: https://cnjob.bjx.com.cn/industry/cnyy/
+            - term [ref=f5e76]:
+              - link "输配电" [ref=f5e78] [cursor=pointer]:
+                - /url: https://spdjob.bjx.com.cn
+            - definition [ref=f5e79]:
+              - link "输配电设备" [ref=f5e80] [cursor=pointer]:
+                - /url: https://spdsbjob.bjx.com.cn
+              - link "配网配电工程" [ref=f5e81] [cursor=pointer]:
+                - /url: https://dlgcjob.bjx.com.cn/industry/pwpdgc/
+              - link "配电运维" [ref=f5e82] [cursor=pointer]:
+                - /url: https://pdywjob.bjx.com.cn
+              - link "智能微电网" [ref=f5e83] [cursor=pointer]:
+                - /url: https://znwdwjob.bjx.com.cn
+            - term [ref=f5e84]:
+              - link "工程" [ref=f5e86] [cursor=pointer]:
+                - /url: https://gcjob.bjx.com.cn
+            - definition [ref=f5e87]:
+              - link "电力工程" [ref=f5e88] [cursor=pointer]:
+                - /url: https://dlgcjob.bjx.com.cn
+              - link "工程设计" [ref=f5e89] [cursor=pointer]:
+                - /url: https://sjjob.bjx.com.cn
+              - link "工程监理" [ref=f5e90] [cursor=pointer]:
+                - /url: https://jljob.bjx.com.cn
+              - link "工程造价" [ref=f5e91] [cursor=pointer]:
+                - /url: https://gczjjob.bjx.com.cn
+              - link "环保工程" [ref=f5e92] [cursor=pointer]:
+                - /url: https://hbgcjob.bjx.com.cn
+              - link "市政路桥工程" [ref=f5e93] [cursor=pointer]:
+                - /url: https://szlqjob.bjx.com.cn
+              - link "建筑工程" [ref=f5e94] [cursor=pointer]:
+                - /url: https://jzjob.bjx.com.cn
+              - link "轨道工程" [ref=f5e95] [cursor=pointer]:
+                - /url: https://gdjob.bjx.com.cn
+              - link "机电工程" [ref=f5e96] [cursor=pointer]:
+                - /url: https://jdjob.bjx.com.cn
+            - term [ref=f5e97]:
+              - link "电池" [ref=f5e99] [cursor=pointer]:
+                - /url: https://dcjob.bjx.com.cn
+            - definition [ref=f5e100]:
+              - link "电池材料" [ref=f5e101] [cursor=pointer]:
+                - /url: https://dccljob.bjx.com.cn
+              - link "电池生产" [ref=f5e102] [cursor=pointer]:
+                - /url: https://dcscjob.bjx.com.cn
+              - link "电池应用" [ref=f5e103] [cursor=pointer]:
+                - /url: https://dcyyjob.bjx.com.cn
+              - link "电池回收" [ref=f5e104] [cursor=pointer]:
+                - /url: https://dchsjob.bjx.com.cn
+              - link "电池技术" [ref=f5e105] [cursor=pointer]:
+                - /url: https://dcjsjob.bjx.com.cn
+            - term [ref=f5e106]:
+              - link "电气" [ref=f5e108] [cursor=pointer]:
+                - /url: https://dqjob.bjx.com.cn
+            - definition [ref=f5e109]:
+              - link "自动化" [ref=f5e110] [cursor=pointer]:
+                - /url: https://zdhjob.bjx.com.cn
+              - link "电力信息化" [ref=f5e111] [cursor=pointer]:
+                - /url: https://xxhjob.bjx.com.cn
+            - term [ref=f5e112]:
+              - link "环保" [ref=f5e114] [cursor=pointer]:
+                - /url: https://hbjob.bjx.com.cn
+            - definition [ref=f5e115]:
+              - link "水处理" [ref=f5e116] [cursor=pointer]:
+                - /url: https://scljob.bjx.com.cn
+              - link "固废处理" [ref=f5e117] [cursor=pointer]:
+                - /url: https://gfcljob.bjx.com.cn
+              - link "环保发电" [ref=f5e118] [cursor=pointer]:
+                - /url: https://hbfdjob.bjx.com.cn
+              - link "大气治理" [ref=f5e119] [cursor=pointer]:
+                - /url: https://dqzljob.bjx.com.cn
+              - link "检测环评" [ref=f5e120] [cursor=pointer]:
+                - /url: https://jchpjob.bjx.com.cn
+              - link "环保工程" [ref=f5e121] [cursor=pointer]:
+                - /url: https://hbgcjob.bjx.com.cn
+              - link "环保设备" [ref=f5e122] [cursor=pointer]:
+                - /url: https://hbsbjob.bjx.com.cn
+              - link "环境修复" [ref=f5e123] [cursor=pointer]:
+                - /url: https://hjxfjob.bjx.com.cn
+              - link "碳管理" [ref=f5e124] [cursor=pointer]:
+                - /url: https://tanjob.bjx.com.cn
+              - link "节能" [ref=f5e125] [cursor=pointer]:
+                - /url: https://jnjob.bjx.com.cn
+        - generic: 直播
+        - generic: 学社
+        - generic: 商务通
+        - generic: 社区
+        - generic: 会展
+        - generic: 专题
+    - link [ref=f5e133] [cursor=pointer]:
+      - /url: /
+      - img "北极星环保招聘网" [ref=f5e134]
+    - generic [ref=f5e136]:
+      - list [ref=f5e137]:
+        - listitem [ref=f5e138]:
+          - link "首页" [ref=f5e139] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=f5e140]:
+          - link " 职位专区" [ref=f5e141] [cursor=pointer]:
+            - /url: javascript:void(0)
+            - generic [ref=f5e142]: 
+            - text: 职位专区
+      - list [ref=f5e143]:
+        - listitem [ref=f5e144]:
+          - link "公司" [ref=f5e145] [cursor=pointer]:
+            - /url: /gongsi/
+        - listitem [ref=f5e146]:
+          - link "校园" [ref=f5e147] [cursor=pointer]:
+            - /url: /xiaoyuan/
+        - listitem [ref=f5e148]:
+          - link "榜单" [ref=f5e149] [cursor=pointer]:
+            - /url: /bangdan/
+        - listitem [ref=f5e150]:
+          - link "猎头" [ref=f5e151] [cursor=pointer]:
+            - /url: https://hunter.bjx.com.cn/
+        - listitem [ref=f5e152]:
+          - link "今日之星" [ref=f5e153] [cursor=pointer]:
+            - /url: https://hr.bjx.com.cn/topic/star/
+        - listitem [ref=f5e154]:
+          - link "双选会" [ref=f5e155] [cursor=pointer]:
+            - /url: /shuangxuan/
+        - listitem [ref=f5e156]:
+          - link "空中宣讲" [ref=f5e157] [cursor=pointer]:
+            - /url: /live/
+        - listitem [ref=f5e158]:
+          - link "技能培训" [ref=f5e159] [cursor=pointer]:
+            - /url: https://edu.bjx.com.cn/
+        - listitem [ref=f5e160]:
+          - link "专题" [ref=f5e161] [cursor=pointer]:
+            - /url: /zhuanti/
+        - listitem [ref=f5e162]:
+          - link "新闻" [ref=f5e163] [cursor=pointer]:
+            - /url: https://www.bjx.com.cn/
+        - listitem [ref=f5e164]:
+          - link " APP" [ref=f5e165] [cursor=pointer]:
+            - /url: https://hr.bjx.com.cn/app/
+            - generic [ref=f5e166]: 
+            - text: APP
+    - list [ref=f5e168]:
+      - listitem [ref=f5e169]: 登录/注册
+  - generic [ref=f5e171]:
+    - generic [ref=f5e173]:
+      - searchbox "请输入职位、公司关键字" [ref=f5e175]: 气象
+      - button "搜索" [ref=f5e177] [cursor=pointer]
+    - generic [ref=f5e178]:
+      - generic [ref=f5e179] [cursor=pointer]: 全部地域
+      - generic [ref=f5e182] [cursor=pointer]: 北京
+      - generic [ref=f5e185] [cursor=pointer]: 广东
+      - generic [ref=f5e188] [cursor=pointer]: 河北
+      - generic [ref=f5e191] [cursor=pointer]: 湖北
+      - generic [ref=f5e194] [cursor=pointer]: 湖南
+      - generic [ref=f5e197] [cursor=pointer]: 江苏
+      - generic [ref=f5e200] [cursor=pointer]: 山东
+      - generic [ref=f5e203] [cursor=pointer]: 上海
+      - generic [ref=f5e206] [cursor=pointer]: 四川
+      - generic [ref=f5e209] [cursor=pointer]: 浙江
+      - generic [ref=f5e214] [cursor=pointer]:
+        - emphasis [ref=f5e215]: 其他
+        - generic [ref=f5e216]: 
+    - generic [ref=f5e217]:
+      - generic [ref=f5e218] [cursor=pointer]: 推荐
+      - generic [ref=f5e220] [cursor=pointer]: 最新
+      - generic [ref=f5e222] [cursor=pointer]:
+        - textbox "职位行业" [ref=f5e223]
+        - generic [ref=f5e224]: 
+      - generic [ref=f5e225] [cursor=pointer]:
+        - textbox "学历要求" [ref=f5e226]
+        - generic [ref=f5e227]: 
+      - generic [ref=f5e228] [cursor=pointer]:
+        - textbox "经验要求" [ref=f5e229]
+        - generic [ref=f5e230]: 
+      - generic [ref=f5e231] [cursor=pointer]:
+        - textbox "薪资待遇" [ref=f5e232]
+        - generic [ref=f5e233]: 
+      - generic [ref=f5e234] [cursor=pointer]:
+        - textbox "企业性质" [ref=f5e235]
+        - generic [ref=f5e236]: 
+      - generic [ref=f5e237] [cursor=pointer]:
+        - textbox "企业规模" [ref=f5e238]
+        - generic [ref=f5e239]: 
+      - button "清空筛选条件" [ref=f5e241] [cursor=pointer]
+  - generic [ref=f5e243]:
+    - generic [ref=f5e245]:
+      - generic [ref=f5e248]:
+        - text: 暂时没有符合该关键词的公司或职位
+        - paragraph [ref=f5e250]: 请重新修改关键词后再进行搜索
+      - generic [ref=f5e251]:
+        - generic [ref=f5e252]:
+          - emphasis [ref=f5e253]
+          - text: 你也许还对这些感兴趣
+        - generic [ref=f5e255]:
+          - link "气象学招聘" [ref=f5e256] [cursor=pointer]:
+            - /url: /hotword/85984/
+          - link "气象学专业招聘" [ref=f5e257] [cursor=pointer]:
+            - /url: /hotword/85986/
+          - link "应用气象学大气科学招聘" [ref=f5e258] [cursor=pointer]:
+            - /url: /hotword/472414/
+          - link "内蒙古气象学院招聘" [ref=f5e259] [cursor=pointer]:
+            - /url: /hotword/2584224/
+          - link "兰州气象学校招聘" [ref=f5e260] [cursor=pointer]:
+            - /url: /hotword/2756745/
+          - link "湖北气象学校招聘" [ref=f5e261] [cursor=pointer]:
+            - /url: /hotword/2902784/
+          - link "气象学院招聘" [ref=f5e262] [cursor=pointer]:
+            - /url: /hotword/3007443/
+          - link "广西气象学校招聘" [ref=f5e263] [cursor=pointer]:
+            - /url: /hotword/3016263/
+          - link "江西气象学校招聘" [ref=f5e264] [cursor=pointer]:
+            - /url: /hotword/3110601/
+          - link "自然地理学气象学方向招聘" [ref=f5e265] [cursor=pointer]:
+            - /url: /hotword/3246716/
+          - link "城市气象学招聘" [ref=f5e266] [cursor=pointer]:
+            - /url: /hotword/3336374/
+          - link "原南京气象学院招聘" [ref=f5e267] [cursor=pointer]:
+            - /url: /hotword/3413061/
+          - link "江西省空军气象学院招聘" [ref=f5e268] [cursor=pointer]:
+            - /url: /hotword/3465506/
+          - link "湛江气象学校招聘" [ref=f5e269] [cursor=pointer]:
+            - /url: /hotword/3519740/
+          - link "河北省气象学校招聘" [ref=f5e270] [cursor=pointer]:
+            - /url: /hotword/3745160/
+          - link "广东省湛江市气象学校招聘" [ref=f5e271] [cursor=pointer]:
+            - /url: /hotword/4010569/
+          - link "大气物理和气象学招聘" [ref=f5e272] [cursor=pointer]:
+            - /url: /hotword/4167076/
+          - link "山东省气象学校招聘" [ref=f5e273] [cursor=pointer]:
+            - /url: /hotword/4203558/
+          - link "湖北省气象学校招聘" [ref=f5e274] [cursor=pointer]:
+            - /url: /hotword/4439086/
+          - link "成都市气象学院招聘" [ref=f5e275] [cursor=pointer]:
+            - /url: /hotword/4450142/
+          - link "应用气象学招聘" [ref=f5e276] [cursor=pointer]:
+            - /url: /hotword/86006/
+          - link "西安气象学校招聘" [ref=f5e277] [cursor=pointer]:
+            - /url: /hotword/2519086/
+          - link "生态与农业气象学招聘" [ref=f5e278] [cursor=pointer]:
+            - /url: /hotword/2858887/
+          - link "兰州气象学院招聘" [ref=f5e279] [cursor=pointer]:
+            - /url: /hotword/3057352/
+          - link "濝江气象学校招聘" [ref=f5e280] [cursor=pointer]:
+            - /url: /hotword/3380520/
+    - generic [ref=f5e281]:
+      - img "北极星APP" [ref=f5e283]
+      - generic [ref=f5e286]:
+        - link [ref=f5e289] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/specials/100161.html
+          - img "测试" [ref=f5e290]
+        - link [ref=f5e293] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/specials/102157.html
+          - img "内蒙古夏日求职季，国企高薪一网打尽" [ref=f5e294]
+        - link [ref=f5e297] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/specials/100161.html
+          - img "测试" [ref=f5e298]
+        - link [ref=f5e301] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/specials/102157.html
+          - img "内蒙古夏日求职季，国企高薪一网打尽" [ref=f5e302]
+      - generic [ref=f5e306]:
+        - generic [ref=f5e307]:
+          - emphasis [ref=f5e308]
+          - text: 热点新闻
+        - generic [ref=f5e309]:
+          - link "2.398亿！龙源环保中标重庆万州电厂脱硫及脱硝EPC" [ref=f5e312] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1507030.shtml
+          - link "总投资3.1万亿元！2026年新疆 523 个重点项目落地，疆内园区和重点用能企业绿色用能、节能改造、能源保障需求持续释放" [ref=f5e315] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1507029.shtml
+          - link "2380万！大维高新预中标国能宣威电除尘器改造EPC" [ref=f5e318] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1507023.shtml
+          - link "上海地标《制药工业水污染物排放标准》发布" [ref=f5e321] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1507011.shtml
+          - link "广西工程建设地标《生活垃圾焚烧厂运营管理规程》发布" [ref=f5e324] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506991.shtml
+          - link "江苏省退役锂电池回收利用风险评估技术规范（征求意见稿）" [ref=f5e327] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506986.shtml
+          - link "碧水源聘任财务总监" [ref=f5e330] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506973.shtml
+          - link "百色市中心城区首个生活垃圾焚烧发电项目送出线路工程投运" [ref=f5e333] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506971.shtml
+          - link "兴源环境董事长辞职" [ref=f5e336] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506968.shtml
+          - link "2026年度佛山市绿色工业园区公示" [ref=f5e339] [cursor=pointer]:
+            - /url: https://huanbao.bjx.com.cn/news/20260804/1506962.shtml
+  - generic [ref=f5e340]:
+    - list [ref=f5e341]:
+      - listitem [ref=f5e342]:
+        - link [ref=f5e344] [cursor=pointer]:
+          - /url: https://my.bjx.com.cn/collections/
+      - listitem [ref=f5e347]:
+        - link [ref=f5e349] [cursor=pointer]:
+          - /url: https://my.bjx.com.cn/im/
+      - listitem [ref=f5e352]:
+        - link [ref=f5e354] [cursor=pointer]:
+          - /url: https://my.bjx.com.cn/outbox/?state=0
+      - listitem [ref=f5e357]:
+        - link [ref=f5e359] [cursor=pointer]:
+          - /url: https://my.bjx.com.cn/interview/
+    - list [ref=f5e362]:
+      - listitem [ref=f5e363]:
+        - link [ref=f5e365] [cursor=pointer]:
+          - /url: javascript:;
+      - listitem [ref=f5e368]:
+        - link [ref=f5e370] [cursor=pointer]:
+          - /url: "#"
+  - generic [ref=f5e374]:
+    - generic [ref=f5e377]:
+      - paragraph [ref=f5e378]: 企业服务热线
+      - list [ref=f5e379]:
+        - listitem [ref=f5e380]:
+          - generic [ref=f5e382]: 李先生
+          - generic [ref=f5e383]: 0335-3578898
+          - generic [ref=f5e384]: "15733510863"
+    - generic [ref=f5e385]:
+      - list:
+        - listitem [ref=f5e386]:
+          - generic [ref=f5e387] [cursor=pointer]: 登录
+        - listitem [ref=f5e388]:
+          - generic [ref=f5e389] [cursor=pointer]: 注册
+  - generic [ref=f5e391]:
+    - generic [ref=f5e392]:
+      - term [ref=f5e393]: 关于北极星
+      - definition [ref=f5e394]:
+        - link "关于我们" [ref=f5e395] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/about/
+      - definition [ref=f5e396]:
+        - link "产品服务" [ref=f5e397] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/#service
+      - definition [ref=f5e398]:
+        - link "联系我们" [ref=f5e399] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/contact/
+      - definition [ref=f5e400]:
+        - link "加入我们" [ref=f5e401] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/job/
+      - definition [ref=f5e402]:
+        - link "成功案例" [ref=f5e403] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/example/
+      - definition [ref=f5e404]:
+        - link "企业VI" [ref=f5e405] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/about/vi/
+    - generic [ref=f5e406]:
+      - term [ref=f5e407]: 咨询服务
+      - definition [ref=f5e408]:
+        - link "售前咨询" [ref=f5e409] [cursor=pointer]:
+          - /url: javascript:;
+      - definition [ref=f5e410]:
+        - link "会员客服" [ref=f5e411] [cursor=pointer]:
+          - /url: javascript:;
+      - definition [ref=f5e412]:
+        - link "技术支持" [ref=f5e413] [cursor=pointer]:
+          - /url: javascript:;
+      - definition [ref=f5e414]:
+        - link "错误反馈" [ref=f5e415] [cursor=pointer]:
+          - /url: javascript:;
+      - definition [ref=f5e416]:
+        - link "交换链接" [ref=f5e417] [cursor=pointer]:
+          - /url: javascript:;
+      - definition [ref=f5e418]:
+        - link "投诉建议" [ref=f5e419] [cursor=pointer]:
+          - /url: javascript:;
+    - generic [ref=f5e420]:
+      - term [ref=f5e421]: 使用与帮助
+      - definition [ref=f5e422]:
+        - link "用户协议" [ref=f5e423] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/Agreement/PlatformAgreement.html
+      - definition [ref=f5e424]:
+        - link "信息保护" [ref=f5e425] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/Agreement/PersonalInformationProtection.html
+      - definition [ref=f5e426]:
+        - link "增值服务" [ref=f5e427] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/Agreement/Increment.html
+      - definition [ref=f5e428]:
+        - link "职位规范" [ref=f5e429] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/Agreement/PositionReleaseRules.html
+      - definition [ref=f5e430]:
+        - link "侵权举报" [ref=f5e431] [cursor=pointer]:
+          - /url: https://hr.bjx.com.cn/Agreement/Reporting.html
+    - generic [ref=f5e432]:
+      - term [ref=f5e433]: 网站运营
+      - definition [ref=f5e434]: 北京火山动力网络技术有限公司
+      - definition [ref=f5e435]: 北京市朝阳区管庄周家井1号新华世通中心C座12层
+      - definition [ref=f5e436]: 联系电话 010-85759016
+    - generic [ref=f5e437]:
+      - term [ref=f5e438]
+      - definition [ref=f5e440]: 求职者服务热线 0335-3923811
+      - definition [ref=f5e441]: 工作日 9:00 - 18:00
+      - definition
+  - generic [ref=f5e443]:
+    - paragraph [ref=f5e444]:
+      - text: Copyright ©1999-2026 北极星环保招聘版权所有
+      - link "京ICP证080169号" [ref=f5e445] [cursor=pointer]:
+        - /url: https://img.mybjx.net/theme/default/images/common/renzeng/icp1.jpg
+      - link "京ICP备09003304号-2" [ref=f5e446] [cursor=pointer]:
+        - /url: https://beian.miit.gov.cn/#/Integrated/index
+      - link "京公网安备11010502034458号" [ref=f5e447] [cursor=pointer]:
+        - /url: http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502034458
+      - link "电子公告服务专项备案" [ref=f5e449] [cursor=pointer]:
+        - /url: https://www.bjx.com.cn/icp.html
+    - paragraph [ref=f5e450]:
+      - link "广播电视节目制作经营许可证 (京) 字第13229号" [ref=f5e451] [cursor=pointer]:
+        - /url: http://img.mybjx.net/theme/default/images/common/renzeng/gbjmzz.jpg
+      - link "出版物经营许可证新出发京批字第直200384号" [ref=f5e452] [cursor=pointer]:
+        - /url: http://img.mybjx.net/theme/default/images/common/renzeng/cbwjy.jpg
+      - link "人力资源服务许可证1101052014340号" [ref=f5e453] [cursor=pointer]:
+        - /url: http://img.mybjx.net/theme/default/images/common/renzeng/hrrlzyxk.jpg
+    - paragraph [ref=f5e454]:
+      - link "网上有害信息举报专区" [ref=f5e455] [cursor=pointer]:
+        - /url: https://www.12377.cn
+      - text: 朝阳区人社局监督电话：(010)57596212，(010)65090445
+    - list [ref=f5e456]:
+      - listitem [ref=f5e457]:
+        - link [ref=f5e458] [cursor=pointer]:
+          - /url: javascript:;
+      - listitem [ref=f5e460]:
+        - link [ref=f5e461] [cursor=pointer]:
+          - /url: javascript:;
+      - listitem [ref=f5e463]:
+        - link [ref=f5e464] [cursor=pointer]:
+          - /url: javascript:;
+      - listitem [ref=f5e466]:
+        - link [ref=f5e467] [cursor=pointer]:
+          - /url: http://weibo.com/bjxweibo
+  - text:                            

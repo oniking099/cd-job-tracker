@@ -8,9 +8,9 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from src.config import DATA_DIR
+from src.config import DATA_DIR, GAODE_API_KEY, PLATFORM_BUDGET_AGENT, PLATFORM_BUDGET_HTML
 from src.models import CompanyType, Job, SearchRound
-from src.scrapers import ALL_SCRAPERS
+from src.scrapers import AGENT_SCRAPERS, ALL_SCRAPERS
 from src.filters.salary import filter_salary
 from src.filters.major import match_major
 from src.filters.qualification import filter_qualification
@@ -126,38 +126,79 @@ ROUND_KEYWORDS: dict[str, dict] = {
 }
 
 
+# 平台并发上限：每轮 12 个平台各自启动无头浏览器，
+# 全量并发会抢爆 CPU/内存（预导航超时、截图失败），限流后 agent 平台才能正常出数。
+PLATFORM_CONCURRENCY = 3
+_platform_semaphore = asyncio.Semaphore(PLATFORM_CONCURRENCY)
+
+
+async def _run_platform(
+    active_class: type,
+    keyword: str,
+    round_label: str,
+) -> list[Job]:
+    """打开平台爬虫并执行一次搜索。"""
+    async with active_class() as scraper:
+        return await scraper.search(keyword, round_label)
+
+
 async def search_single_platform(
     scraper_class: type,
     keyword: str,
     round_label: str,
 ) -> list[Job]:
-    """在单个平台上搜索单个关键词"""
-    try:
-        async with scraper_class() as scraper:
-            return await scraper.search(keyword, round_label)
-    except Exception as e:
-        print(f"  [{scraper_class.platform_name}] 异常: {e}")
-        return []
+    """在单个平台上搜索单个关键词。
+    若该平台有 Agent 智能体适配器，则优先用 Agent 模拟人类操作，否则走 HTML 爬虫。
+    信号量限制并发浏览器数；时间预算防止慢速 HTML 爬虫拖垮整轮。
+    """
+    active_class = AGENT_SCRAPERS.get(scraper_class.platform_name, scraper_class)
+    is_agent = scraper_class.platform_name in AGENT_SCRAPERS
+    budget = PLATFORM_BUDGET_AGENT if is_agent else PLATFORM_BUDGET_HTML
+
+    async with _platform_semaphore:
+        try:
+            return await asyncio.wait_for(
+                _run_platform(active_class, keyword, round_label),
+                timeout=budget,
+            )
+        except asyncio.TimeoutError:
+            print(f"  [{active_class.platform_name}] 超过 {budget}s 预算，跳过")
+            return []
+        except Exception as e:
+            print(f"  [{active_class.platform_name}] 异常: {e}")
+            return []
 
 
 async def search_all_platforms(
     keyword: str,
     round_label: str,
 ) -> list[Job]:
-    """在所有平台上搜索单个关键词（并发）"""
-    tasks = []
-    for name, scraper_class in ALL_SCRAPERS.items():
-        tasks.append(search_single_platform(scraper_class, keyword, round_label))
+    """在所有平台上搜索单个关键词（受限并发）"""
+    # 优先 agent 平台：先建任务先拿并发槽，避免被慢速/失败的 HTML 爬虫挤占
+    platforms = sorted(
+        ALL_SCRAPERS.items(),
+        key=lambda item: item[0] not in AGENT_SCRAPERS,
+    )
+    tasks = [search_single_platform(cls, keyword, round_label) for _, cls in platforms]
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
     all_jobs: list[Job] = []
-    for i, r in enumerate(results):
+    for (name, _), r in zip(platforms, results):
         if isinstance(r, list):
             all_jobs.extend(r)
         elif isinstance(r, Exception):
-            print(f"  [{list(ALL_SCRAPERS.keys())[i]}] 错误: {r}")
+            print(f"  [{name}] 错误: {r}")
 
     return all_jobs
+
+
+def _keep_chengdu(jobs: list[Job]) -> list[Job]:
+    """数据层硬性兜底：只保留工作地点为成都的岗位（用户约束：地点必须只有成都）。
+
+    agent 适配器内部已做城市过滤，这里兜住所有来源（含 HTML 爬虫），
+    确保非成都岗位绝不可能进入报告。
+    """
+    return [j for j in jobs if "成都" in (j.location or "")]
 
 
 async def run_search_round(round_label: str) -> SearchRound:
@@ -217,6 +258,12 @@ async def run_search_round(round_label: str) -> SearchRound:
     # 应用过滤器
     print("应用过滤器...")
     raw_count = len(all_jobs)
+
+    # [0] 城市硬性过滤：只保留成都（用户硬约束）
+    non_chengdu = [j for j in all_jobs if "成都" not in (j.location or "")]
+    all_jobs = _keep_chengdu(all_jobs)
+    if non_chengdu:
+        print(f"  城市过滤: 剔除 {len(non_chengdu)} 条非成都岗位")
 
     # [1] 薪资过滤
     all_jobs = filter_salary(all_jobs)
@@ -286,6 +333,29 @@ async def run_report():
 
     # 保存去重结果
     save_deduped(valid_jobs)
+
+    # 离家距离补充（高德地理编码，按地点缓存；无 Key 自动跳过，不影响主流程）
+    from src.geo.gaode import get_distance
+    if GAODE_API_KEY:
+        loc_cache: dict[str, tuple[float, float, float]] = {}
+        for j in valid_jobs:
+            if j.distance_km is not None or not j.location:
+                continue
+            loc = j.location
+            if loc not in loc_cache:
+                try:
+                    res = await get_distance(loc)
+                except Exception as e:
+                    print(f"  距离计算失败 [{loc}]: {e}")
+                    continue
+                if not res:
+                    continue
+                loc_cache[loc] = res
+            lng, lat, dist = loc_cache[loc]
+            j.lng, j.lat, j.distance_km = lng, lat, dist
+        print(f"离家距离: 地理编码 {len(loc_cache)} 个地点")
+    else:
+        print("高德 Key 未配置，跳过离家距离计算")
 
     # 生成 HTML 报告
     from src.report.generator import generate_report

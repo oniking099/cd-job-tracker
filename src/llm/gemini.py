@@ -8,47 +8,57 @@ import base64
 import logging
 from openai import AsyncOpenAI
 
-from src.config import GEMINI_API_KEY, GEMINI_MODEL
+from src.config import (
+    AGENT_EXTRACT_TIMEOUT,
+    AGENT_LLM_TIMEOUT,
+    GEMINI_API_KEY,
+    GEMINI_MODEL,
+)
 
 logger = logging.getLogger(__name__)
 
 
-def _create_client() -> AsyncOpenAI:
+def _create_client(timeout: float = AGENT_LLM_TIMEOUT) -> AsyncOpenAI:
     return AsyncOpenAI(
         api_key=GEMINI_API_KEY,
         base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        timeout=timeout,
     )
 
 
 async def extract_jobs_from_screenshot(
-    screenshot_bytes: bytes,
+    screenshot_bytes: bytes | list[bytes],
     platform: str,
 ) -> list[dict]:
     """
-    从招聘网站截图中提取结构化岗位信息（Gemini 备用通道）。
+    从招聘网站截图（PNG bytes）中提取结构化岗位信息（Gemini 备用通道）。
+    支持单图（bytes）或多图（list[bytes]）。
     """
     if not GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY 未设置")
 
-    image_b64 = base64.b64encode(screenshot_bytes).decode("utf-8")
-    image_url = f"data:image/png;base64,{image_b64}"
+    screenshots = [screenshot_bytes] if isinstance(screenshot_bytes, bytes) else list(screenshot_bytes)
+    if not screenshots:
+        return []
 
-    client = _create_client()
+    client = _create_client(timeout=AGENT_EXTRACT_TIMEOUT)
+
+    content: list[dict] = [{
+        "type": "text",
+        "text": f"""Extract all job listings from these {platform} search results screenshots (Chengdu area, {len(screenshots)} images top-to-bottom, may overlap; dedupe).
+For each job return JSON with: title, company, salary_text, location, requirements, responsibilities, url, hr_active (boolean), posted_date.
+Return ONLY a JSON array, no markdown formatting.""",
+    }]
+    for sb in screenshots:
+        image_b64 = base64.b64encode(sb).decode("utf-8")
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/png;base64,{image_b64}"},
+        })
 
     response = await client.chat.completions.create(
         model=GEMINI_MODEL,
-        messages=[{
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": f"""Extract all job listings from this {platform} search results screenshot (Chengdu area).
-For each job return JSON with: title, company, salary_text, location, requirements, responsibilities, url, hr_active (boolean), posted_date.
-Return ONLY a JSON array, no markdown formatting.""",
-                },
-                {"type": "image_url", "image_url": {"url": image_url}},
-            ],
-        }],
+        messages=[{"role": "user", "content": content}],
         temperature=0.1,
         max_tokens=4000,
     )

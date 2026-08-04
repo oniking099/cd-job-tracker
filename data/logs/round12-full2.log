@@ -1,0 +1,207 @@
+开始执行搜索轮次: 12
+当前时间: 2026-08-03 23:22:47 BJT
+
+==================================================
+第 12 轮搜索 — 气象/大气科学
+==================================================
+搜索: 成都 气象工程师
+  [BOSS直聘] agent 结束: 空页面（无内容无元素，跳过此平台）（0 步）
+  [智联招聘] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [51Job] agent 结束: 已找到岗位列表（3 步）
+      step 1 [OK] wait  - 已等待 1.5s
+      step 2 [OK] scroll 页面中部 - 向下滚动 480px
+      step 3 [OK] extract  - 终止动作: extract
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象工程师&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [应届生求职网] 超过 40s 预算，跳过
+  获取 36 条
+搜索: 成都 大气科学
+  [智联招聘] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [51Job] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [BOSS直聘] agent 结束: 登录墙（2 步）
+      step 1 [OK] wait  - 已等待 1.5s
+      step 2 [OK] done  - 终止动作: done
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 大气科学&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E5%A4%A7%E6%B0%94%E7%A7%91%E5%AD%A6&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [应届生求职网] 超过 40s 预算，跳过
+  获取 24 条
+搜索: 成都 数值预报
+  [BOSS直聘] agent 结束: 空页面（无内容无元素，跳过此平台）（0 步）
+  [智联招聘] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [51Job] agent 结束: 已找到岗位列表（2 步）
+      step 1 [OK] wait  - 已等待 1.5s
+      step 2 [OK] extract  - 终止动作: extract
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 数值预报&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 数值预报&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 数值预报&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 数值预报&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 数值预报&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%95%B0%E5%80%BC%E9%A2%84%E6%8A%A5&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [应届生求职网] 超过 40s 预算，跳过
+  获取 39 条
+搜索: 成都 气象局
+  [BOSS直聘] agent 结束: 登录墙（6 步）
+      step 1 [OK] wait  - 已等待 1.5s
+      step 2 [OK] wait  - 已等待 1.5s
+      step 3 [OK] wait  - 已等待 1.5s
+      step 4 [OK] wait  - 已等待 1.5s
+      step 5 [OK] wait  - 已等待 1.5s
+      step 6 [OK] done  - 终止动作: done
+  [智联招聘] agent 结束: 已多次滚动但未出现岗位列表，页面可能无内容或加载异常，且底部已到达（8 步）
+      step 1 [OK] wait  - 已等待 1.5s
+      step 2 [OK] scroll 页面主体区域 - 向下滚动 619px
+      step 3 [OK] scroll 页面主体区域 - 向下滚动 544px
+      step 4 [OK] scroll 页面主体区域 - 向下滚动 707px
+      step 5 [OK] scroll 页面主体区域 - 向下滚动 747px
+      step 6 [OK] scroll 页面主体区域 - 向下滚动 500px
+      step 7 [OK] scroll 页面主体区域 - 向下滚动 578px
+      step 8 [OK] done  - 终止动作: done
+[32m[INFO] 2026-08-03 23:28:09,800 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:28:09,860 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:28:09,860 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_det_small.onnx[0m
+[32m[INFO] 2026-08-03 23:28:09,968 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:28:09,970 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:28:09,970 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-08-03 23:28:10,207 [RapidOCR] base.py:23: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-08-03 23:28:10,268 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[32m[INFO] 2026-08-03 23:28:10,268 [RapidOCR] main.py:63: Using C:\Users\28308\AppData\Roaming\Python\Python314\site-packages\rapidocr\models\PP-OCRv6_rec_small.onnx[0m
+[agent] 视觉提取返回空
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象局&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象局&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气象局&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气象局&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [51Job] agent 结束: 达到最大步数 15（15 步）
+      step 1 [OK] click 2 - 点击元素[2] a @406,30
+      step 2 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 655px
+      step 3 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 886px
+      step 4 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 443px
+      step 5 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 782px
+      step 6 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 701px
+      step 7 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 417px
+      step 8 [OK] wait  - 已等待 1.5s
+      step 9 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 577px
+      step10 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 468px
+      step11 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 813px
+      step12 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 688px
+      step13 [OK] wait  - 已等待 1.5s
+      step14 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 787px
+      step15 [OK] scroll 向下滚动页面以查看更多岗位 - 向下滚动 762px
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气象局&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E8%B1%A1%E5%B1%80&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [应届生求职网] 超过 40s 预算，跳过
+  [51Job] 城市过滤: 7 -> 6（仅保留成都）
+  获取 10 条
+搜索: 成都 气候
+  [51Job] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [智联招聘] agent 结束: 已找到岗位列表（1 步）
+      step 1 [OK] extract  - 终止动作: extract
+  [BOSS直聘] agent 结束: 登录墙（5 步）
+      step 1 [OK] click 4 - 点击元素[4] input @666,240
+      step 2 [OK] type 4 - 在 4 输入 '成都 气候'
+      step 3 [OK] click 搜索 - 点击元素[3] button @1348,240
+      step 4 [OK] wait  - 已等待 1.5s
+      step 5 [OK] done  - 终止动作: done
+  [BOSS直聘] 城市过滤: 10 -> 0（仅保留成都）
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气候&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气候&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第3次): https://search.yingjiesheng.com/search?keyword=成都 气候&city=%E6%88%90%E9%83%BD&page=1, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=1", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第1次): https://search.yingjiesheng.com/search?keyword=成都 气候&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+[应届生求职网] 请求失败(第2次): https://search.yingjiesheng.com/search?keyword=成都 气候&city=%E6%88%90%E9%83%BD&page=2, 原因: Page.goto: net::ERR_CONNECTION_CLOSED at https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=2
+Call log:
+  - navigating to "https://search.yingjiesheng.com/search?keyword=%E6%88%90%E9%83%BD%20%E6%B0%94%E5%80%99&city=%E6%88%90%E9%83%BD&page=2", waiting until "domcontentloaded"
+
+  [应届生求职网] 超过 40s 预算，跳过
+  获取 33 条
+已超 120 条，停止主搜索
+
+第12轮共获取 142 条原始结果
+应用过滤器...
+过滤后: 26 条 (排除 116 条)
+已保存: D:\project\chengdu-job-tracker\data\2026-08-03\round-12.json
+
+完成！获取 142 条，有效 26 条

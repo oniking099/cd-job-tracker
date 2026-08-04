@@ -1,0 +1,4 @@
+[    4325ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?7fa4effa4233f03d11c7e2c710749600:0
+[    4326ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://zz.bdstatic.com/linksubmit/push.js:0
+[    8105ms] [LOG] 获取到IP定位city, province 乌鲁木齐市 新疆维吾尔自治区 @ https://fecdn1.zhaopin.cn/www_zhaopin_com/sou/chunk-vendors.web.d7133ba072624a6e695e08e4933c6c7d.js:0
+[    9120ms] [ERROR] WebSocket connection to 'wss://www.zhaopin.com/sou/jl%E6%88%90%E9%83%BD/kwDGA8OO8/itsgonnafail' failed: Error during WebSocket handshake: Unexpected response code: 200 @ :0

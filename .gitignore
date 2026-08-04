@@ -8,6 +8,9 @@ dist/
 .env
 .env.local
 
+# 登录态（含真实会话 Cookie，绝不能提交）
+.sessions/
+
 # IDE
 .idea/
 .vscode/

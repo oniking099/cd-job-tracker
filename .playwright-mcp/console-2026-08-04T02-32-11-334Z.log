@@ -1,0 +1,22 @@
+[    1341ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://tracklog.58.com/referrer4.js:0
+[    3296ms] [LOG] navData [Object, Object, Object, Object, Object] @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[    8338ms] [INFO] spa performance start... time: 8318.59999999404, supportSpaPaint: true @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[    8342ms] [INFO] [erwa-perf-spa] router change, first visit, skip... @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[   63013ms] [LOG] handleChange InputEvent @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[   75538ms] [INFO] [erwa-perf-spa] router change 75518.59999999404, start page view...  @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[   77793ms] [INFO] [erwa-perf] {current: 75518.59999999404, viewId: 1785810806871_391489, router: {
+  "url": "https://www.chinahr.com/job?value=%E6%…rch": "?value=%E6%B0%94%E8%B1%A1",
+  "hash": ""
+}, metrics: {
+  "spa_load": 645.7000000029802,
+  "spa_fcp": null,
+  "spa_lcp": null
+}, metricsExtInfo: Object} @ https://h5-cdn.58.com/git/sdk/hrg-fe/zp-component/ems-client/Erwa.js:5
+[   77841ms] Uncaught (in promise) TypeError: Cannot read properties of undefined (reading '0')
+    at <anonymous> (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/11.00c666bf.js:0:12754)
+    at v (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/19.fe6bf866.js:25:39581)
+    at <anonymous> (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/19.fe6bf866.js:25:39334)
+    at forEach.e.<computed> (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/19.fe6bf866.js:25:39761)
+    at n (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/11.00c666bf.js:0:12960)
+    at <anonymous> (https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/11.00c666bf.js:0:13055)
+[  144508ms] [INFO] Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading: https://img.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/font/element-icons.535877f.woff @ https://j1.58cdn.com.cn/git/hrg-fe/chinahr-fe/new-chinahr/pc/vue-ssr/client/js/19.fe6bf866.js:6

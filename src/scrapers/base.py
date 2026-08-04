@@ -61,6 +61,34 @@ VIEWPORT_POOL: list[dict] = [
 ]
 
 
+async def apply_stealth(context: BrowserContext) -> None:
+    """注入 playwright-stealth 反检测（模块级，供爬虫与登录态采集脚本复用）。
+
+    登录态采集脚本必须用与爬虫完全相同的 stealth 配置，否则 BOSS 等强风控平台
+    检测到裸自动化浏览器会无限刷新/跳转验证，页面根本出不来。
+    """
+    stealth = Stealth(
+        navigator_webdriver=True,   # 1.x 的 webdriver → navigator_webdriver
+        webgl_vendor=True,
+        chrome_app=True,
+        chrome_csi=True,
+        chrome_load_times=True,
+        chrome_runtime=True,
+        iframe_content_window=True,
+        media_codecs=True,
+        navigator_hardware_concurrency=4,
+        navigator_languages=True,
+        navigator_permissions=True,
+        navigator_platform=True,
+        navigator_plugins=True,
+        navigator_user_agent=False,
+        navigator_vendor=True,
+        hairline=True,
+        # outerdimensions 在 2.x 已移除
+    )
+    await stealth.apply_stealth_async(context)
+
+
 class BaseScraper(ABC):
     """平台爬虫基类"""
 
@@ -74,7 +102,7 @@ class BaseScraper(ABC):
 
     async def __aenter__(self):
         self._playwright = await async_playwright().start()
-        self.browser = await self._playwright.chromium.launch(
+        launch_kwargs = dict(
             headless=True,
             args=[
                 "--disable-blink-features=AutomationControlled",
@@ -85,7 +113,17 @@ class BaseScraper(ABC):
                 "--disable-web-security",
                 "--disable-features=IsolateOrigins,site-per-process",
             ],
+            # 移除 playwright 默认的 --enable-automation 自动化标志，
+            # 否则 BOSS 等强风控平台检测到 CDP 自动化特征会把页面跳到 about:blank
+            ignore_default_args=["--enable-automation"],
         )
+        try:
+            # 本地优先系统真实 Chrome：指纹（GPU/字体/canvas）全真，能过 BOSS 的 CDP 检测
+            self.browser = await self._playwright.chromium.launch(channel="chrome", **launch_kwargs)
+        except Exception as e:
+            # CI（GitHub Actions runner）无系统 Chrome → 回退内置 Chromium
+            logger.info(f"[{self.platform_name}] 无系统 Chrome，回退内置 Chromium: {e}")
+            self.browser = await self._playwright.chromium.launch(**launch_kwargs)
         return self
 
     async def __aexit__(self, *args):
@@ -94,12 +132,20 @@ class BaseScraper(ABC):
         if self._playwright:
             await self._playwright.stop()
 
+    def _storage_state_path(self) -> str:
+        """登录态文件路径（.sessions/{platform}.json）。返回空字符串表示该平台无需登录态。
+
+        登录态由 scripts/capture_session.py 手动登录一次后导出；
+        存在时 newContext 自动加载 Cookie/localStorage，实现免登录访问。
+        """
+        return ""
+
     async def _new_context(self) -> BrowserContext:
-        """创建带 stealth 注入的浏览器上下文"""
+        """创建带 stealth 注入的浏览器上下文（可选加载登录态）"""
         ua = random.choice(UA_POOL)
         vp = random.choice(VIEWPORT_POOL)
 
-        context = await self.browser.new_context(
+        context_kwargs = dict(
             user_agent=ua,
             viewport=vp,
             locale="zh-CN",
@@ -108,27 +154,15 @@ class BaseScraper(ABC):
             geolocation={"latitude": 30.5728, "longitude": 104.0668},  # 成都
         )
 
-        # Stealth 注入（playwright-stealth 2.x API）
-        stealth = Stealth(
-            navigator_webdriver=True,   # 1.x 的 webdriver → navigator_webdriver
-            webgl_vendor=True,
-            chrome_app=True,
-            chrome_csi=True,
-            chrome_load_times=True,
-            chrome_runtime=True,
-            iframe_content_window=True,
-            media_codecs=True,
-            navigator_hardware_concurrency=4,
-            navigator_languages=True,
-            navigator_permissions=True,
-            navigator_platform=True,
-            navigator_plugins=True,
-            navigator_user_agent=False,
-            navigator_vendor=True,
-            hairline=True,
-            # outerdimensions 在 2.x 已移除
-        )
-        await stealth.apply_stealth_async(context)
+        # 登录态复用：子类指定 storage_state 文件且存在时加载（免登录访问，绕过登录墙）
+        storage_path = self._storage_state_path()
+        if storage_path and Path(storage_path).exists():
+            context_kwargs["storage_state"] = str(storage_path)
+
+        context = await self.browser.new_context(**context_kwargs)
+
+        # Stealth 注入（与 apply_stealth 复用同一套配置，保证登录态指纹一致）
+        await apply_stealth(context)
 
         return context
 

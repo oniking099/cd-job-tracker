@@ -9,42 +9,48 @@ import base64
 import logging
 from openai import AsyncOpenAI
 
-from src.config import QWENVL_API_KEY, QWENVL_BASE_URL, QWENVL_MODEL
+from src.config import (
+    AGENT_EXTRACT_TIMEOUT,
+    AGENT_LLM_TIMEOUT,
+    QWENVL_API_KEY,
+    QWENVL_BASE_URL,
+    QWENVL_MODEL,
+)
 
 logger = logging.getLogger(__name__)
 
 
-def _create_client() -> AsyncOpenAI:
+def _create_client(timeout: float = AGENT_LLM_TIMEOUT) -> AsyncOpenAI:
     return AsyncOpenAI(
         api_key=QWENVL_API_KEY,
         base_url=QWENVL_BASE_URL,
+        timeout=timeout,
     )
 
 
 async def extract_jobs_from_screenshot(
-    screenshot_bytes: bytes,
+    screenshot_bytes: bytes | list[bytes],
     platform: str,
 ) -> list[dict]:
     """
     从招聘网站截图（PNG bytes）中提取结构化岗位信息。
+    screenshot_bytes 支持单图（bytes）或多图（list[bytes]，滚动后的多个视口截图）。
     将图片转为 base64，通过 Qwen-VL-Max 视觉提取。
     """
     if not QWENVL_API_KEY:
         raise ValueError("QWENVL_API_KEY 未设置")
 
-    image_b64 = base64.b64encode(screenshot_bytes).decode("utf-8")
-    image_url = f"data:image/png;base64,{image_b64}"
+    # 统一为多图列表
+    screenshots = [screenshot_bytes] if isinstance(screenshot_bytes, bytes) else list(screenshot_bytes)
+    if not screenshots:
+        return []
 
-    client = _create_client()
+    client = _create_client(timeout=AGENT_EXTRACT_TIMEOUT)
 
-    response = await client.chat.completions.create(
-        model=QWENVL_MODEL,
-        messages=[{
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": f"""这是 {platform} 的搜索结果页面截图。请从中提取所有成都地区招聘岗位的信息。
+    content: list[dict] = [{
+        "type": "text",
+        "text": f"""这是 {platform} 的搜索结果页面截图（共 {len(screenshots)} 张，按页面从上到下排列，可能有重叠）。
+请从中提取所有成都地区招聘岗位的信息，多张截图里的同一岗位只保留一次。
 
 对每个岗位，提取以下字段：
 - title: 岗位名称
@@ -58,10 +64,17 @@ async def extract_jobs_from_screenshot(
 - posted_date: 发布日期
 
 返回纯 JSON 数组格式，不要markdown代码块：""",
-                },
-                {"type": "image_url", "image_url": {"url": image_url}},
-            ],
-        }],
+    }]
+    for sb in screenshots:
+        image_b64 = base64.b64encode(sb).decode("utf-8")
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/png;base64,{image_b64}"},
+        })
+
+    response = await client.chat.completions.create(
+        model=QWENVL_MODEL,
+        messages=[{"role": "user", "content": content}],
         temperature=0.1,
         max_tokens=4000,
     )

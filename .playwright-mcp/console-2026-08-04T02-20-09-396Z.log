@@ -1,0 +1,7 @@
+[     751ms] [ERROR] The source list for the Content Security Policy directive 'frame-src' contains an invalid source: 'bytedance://dispatch_message'. It will be ignored. @ https://www.liepin.com/city-cd/zhaopin/?key=%E6%B0%94%E8%B1%A1%E5%B7%A5%E7%A8%8B%E5%B8%88:0
+[    1685ms] [ERROR] The source list for the Content Security Policy directive 'frame-src' contains an invalid source: 'bytedance://dispatch_message'. It will be ignored. @ about:blank:0
+[    1721ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://zz.bdstatic.com/linksubmit/push.js:0
+[    1724ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://hm.baidu.com/hm.js?a2647413544f5a04f00da7eee0d5e200:0
+[    3716ms] [LOG] /./ @ https://concat.lietou-static.com/fe-lib-pc/v6/security/1.0.0/security.min.js:0
+[    3717ms] [TABLE] [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] @ https://concat.lietou-static.com/fe-lib-pc/v6/security/1.0.0/security.min.js:0
+[    3720ms] [LOG] [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] @ https://concat.lietou-static.com/fe-lib-pc/v6/security/1.0.0/security.min.js:0

@@ -1,0 +1,272 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link [ref=e5] [cursor=pointer]:
+      - /url: https://www.zhaopin.com
+      - img "logo" [ref=e6]
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "首页" [ref=e9] [cursor=pointer]:
+          - /url: https://www.zhaopin.com
+      - listitem [ref=e10]:
+        - link "职位" [ref=e11] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/recommend
+      - listitem [ref=e12]:
+        - link "乌鲁木齐站" [ref=e891] [cursor=pointer]:
+          - /url: //www.zhaopin.com/wulumuqi/
+      - listitem [ref=e14]:
+        - link "找副业" [ref=e15] [cursor=pointer]:
+          - /url: https://xiancai.zhaopin.com
+      - listitem [ref=e16]:
+        - link "政企" [ref=e17] [cursor=pointer]:
+          - /url: https://govjob.zhaopin.com
+      - listitem [ref=e18]:
+        - link "校招" [ref=e19] [cursor=pointer]:
+          - /url: //xiaoyuan.zhaopin.com
+      - listitem [ref=e20]:
+        - link "高薪" [ref=e21] [cursor=pointer]:
+          - /url: https://highpin.zhaopin.com/?fromType=1132
+      - listitem [ref=e22]:
+        - link "海归" [ref=e23] [cursor=pointer]:
+          - /url: https://overseas.zhaopin.com
+      - listitem [ref=e24]:
+        - link "驻外" [ref=e25] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/foreign
+      - listitem [ref=e26]:
+        - link "测评" [ref=e27] [cursor=pointer]:
+          - /url: https://td.zhaopin.com
+      - listitem [ref=e28]:
+        - link "职Q" [ref=e29] [cursor=pointer]:
+          - /url: //zq.zhaopin.com?utm_source=%E9%A6%96%E9%A1%B5&utm_medium=button&utm_campaign=&utm_term=&utm_content=
+    - generic [ref=e30]:
+      - link "消息" [ref=e31] [cursor=pointer]:
+        - /url: javascript:;
+      - link "我要招人" [ref=e32] [cursor=pointer]:
+        - /url: //passport.zhaopin.com/org/login?jl=%E6%88%90%E9%83%BD&kw=%E6%B0%94%E8%B1%A1&jt=&in=&li=&sc=&el=&we=&et=&ct=&cs=&sl=&p=1
+      - link "登录/注册" [ref=e33] [cursor=pointer]:
+        - /url: //passport.zhaopin.com/login?bkUrl=https%3A%2F%2Fwww.zhaopin.com%2Fsou%2Fjl%25E6%2588%2590%25E9%2583%25BD%2FkwDGA8OO8%3Fjl%3D%25E6%2588%2590%25E9%2583%25BD%26kw%3D%25E6%25B0%2594%25E8%25B1%25A1%26jt%3D%26in%3D%26li%3D%26sc%3D%26el%3D%26we%3D%26et%3D%26ct%3D%26cs%3D%26sl%3D%26p%3D1
+  - generic [ref=e35]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - textbox "输入职位、公司等搜索" [ref=e39]: 气象
+        - generic [ref=e40]: 职位类别
+        - generic [ref=e45]: 公司行业
+      - button [ref=e50] [cursor=pointer]
+    - generic [ref=e53]:
+      - generic "成都" [ref=e997] [cursor=pointer]
+      - generic "行政区" [ref=e999] [cursor=pointer]
+      - generic "地铁沿线" [ref=e1001] [cursor=pointer]
+    - generic [ref=e56]:
+      - generic [ref=e57]: 薪资要求
+      - generic [ref=e62]: 学历要求
+      - generic [ref=e67]:
+        - generic [ref=e68]: 工作经验
+        - list [ref=e1002]:
+          - listitem [ref=e1003]:
+            - generic [ref=e1004] [cursor=pointer]: 全部
+          - listitem [ref=e1005]:
+            - generic [ref=e1006] [cursor=pointer]: 经验不限
+          - listitem [ref=e1007]:
+            - generic [ref=e1008] [cursor=pointer]: 1年以下
+          - listitem [ref=e1009]:
+            - generic [ref=e1010] [cursor=pointer]: 1-3年
+          - listitem [ref=e1011]:
+            - generic [ref=e1012] [cursor=pointer]: 3-5年
+          - listitem [ref=e1013]:
+            - generic [ref=e1014] [cursor=pointer]: 5-10年
+          - listitem [ref=e1015]:
+            - generic [ref=e1016] [cursor=pointer]: 10年以上
+      - generic [ref=e72]: 职位类型
+      - generic [ref=e77]: 公司性质
+      - generic [ref=e82]: 公司规模
+      - generic [ref=e87] [cursor=pointer]: 清空筛选条件 （1）
+  - generic [ref=e89]:
+    - list [ref=e91]:
+      - listitem [ref=e92] [cursor=pointer]:
+        - generic [ref=e93]: 智能匹配
+      - listitem [ref=e94] [cursor=pointer]:
+        - generic [ref=e95]: 薪酬最高
+      - listitem [ref=e96] [cursor=pointer]:
+        - generic [ref=e97]: 最新发布
+    - generic [ref=e99]:
+      - generic [ref=e100]:
+        - generic [ref=e1018] [cursor=pointer]:
+          - generic [ref=e1019]:
+            - generic [ref=e1020]:
+              - link "气象实习生 (新能源电力系统分析与优化研究所）" [ref=e1022]:
+                - /url: http://www.zhaopin.com/jobdetail/CC336758630J40729736806.htm?refcode=4019&srccode=401903&preactionid=510648ec-cde3-4427-9a34-5ed6744d0404
+              - paragraph [ref=e1023]: 120-150元/天
+            - generic [ref=e1024]:
+              - generic [ref=e1025]: MATLAB
+              - generic [ref=e1026]: Pandas
+              - generic [ref=e1027]: NumPy
+              - generic [ref=e1028]: TensorFlow
+              - generic [ref=e1029]: pytorch
+              - generic [ref=e1030]: Sklearn
+            - generic [ref=e1031]:
+              - generic [ref=e1032]: 成都·双流·正兴
+              - generic [ref=e1034]: 经验不限
+              - generic [ref=e1035]: 硕士
+          - generic [ref=e1036]:
+            - link "清华四川能源互联网研究院" [ref=e1040]:
+              - /url: https://www.zhaopin.com/companydetail/CZ336758630.htm?refcode=4019&srccode=401903&preactionid=510648ec-cde3-4427-9a34-5ed6744d0404
+            - generic [ref=e1041]:
+              - generic [ref=e1042]: 事业单位
+              - generic [ref=e1043]: 100-299人
+              - generic [ref=e1044]: 电力/水利/热力/燃气
+            - generic [ref=e1045]:
+              - generic [ref=e1048]: 向琪琪·人事经理
+              - generic [ref=e1049]: 高回复率
+              - generic [ref=e1050]: 立即沟通
+          - button "立即投递" [ref=e1054]
+        - generic [ref=e1056] [cursor=pointer]:
+          - generic [ref=e1057]:
+            - generic [ref=e1058]:
+              - link "政府（智慧、应急、气象等）销售总监" [ref=e1060]:
+                - /url: http://www.zhaopin.com/jobdetail/CC327668010J40577027404.htm?refcode=4019&srccode=401903&preactionid=510648ec-cde3-4427-9a34-5ed6744d0404
+              - paragraph [ref=e1061]: 1.2-1.5万·13薪
+            - generic [ref=e1062]:
+              - generic [ref=e1063]: 华南大区
+              - generic [ref=e1064]: 西南大区
+              - generic [ref=e1065]: 华中大区
+              - generic [ref=e1066]: 渠道销售
+            - generic [ref=e1067]:
+              - generic [ref=e1068]: 成都·武侯·桂溪
+              - generic [ref=e1070]: 3-5年
+              - generic [ref=e1071]: 本科
+          - generic [ref=e1072]:
+            - link "四川省明厚天信息技术股份有限公司" [ref=e1076]:
+              - /url: https://www.zhaopin.com/companydetail/CZ327668010.htm?refcode=4019&srccode=401903&preactionid=510648ec-cde3-4427-9a34-5ed6744d0404
+            - generic [ref=e1077]:
+              - generic [ref=e1078]: 民营
+              - generic [ref=e1079]: 20人以下
+              - generic [ref=e1080]: 软件/IT服务
+            - generic [ref=e1081]:
+              - generic [ref=e1084]: 王女士·行政人事经理
+              - generic [ref=e1085]: 今日活跃
+              - generic [ref=e1086]: 立即沟通
+          - button "立即投递" [ref=e1090]
+      - generic [ref=e804]:
+        - link "上一页":
+          - /url: https://www.zhaopin.com/sou/jl801/kwDGA8OO8
+        - link "1" [ref=e805] [cursor=pointer]:
+          - /url: https://www.zhaopin.com/sou/jl801/kwDGA8OO8/p1
+        - link "下一页":
+          - /url: https://www.zhaopin.com/sou/jl801/kwDGA8OO8/p2
+        - generic [ref=e811]:
+          - generic [ref=e812]: 到
+          - textbox [ref=e813]
+          - button "确定" [ref=e814] [cursor=pointer]
+      - button "登录" [ref=e1092] [cursor=pointer]
+    - generic [ref=e815]:
+      - generic [ref=e892]:
+        - generic [ref=e900]:
+          - list [ref=e901]:
+            - listitem [ref=e902] [cursor=pointer]: 验证码登录/注册
+          - generic [ref=e905]:
+            - generic [ref=e906]:
+              - generic [ref=e908]:
+                - generic [ref=e909]: + 86
+                - generic [ref=e911]:
+                  - textbox "手机号" [ref=e913]
+                  - paragraph [ref=e915]
+              - generic [ref=e917]:
+                - generic [ref=e918]:
+                  - textbox "短信验证码" [ref=e920]
+                  - paragraph [ref=e922]
+                - button "获取验证码" [ref=e924] [cursor=pointer]
+            - button "登录/注册" [ref=e927] [cursor=pointer]
+            - generic [ref=e930]:
+              - checkbox [ref=e931] [cursor=pointer]
+              - generic [ref=e932]: 已阅读并同意
+              - link "《用户服务协议》" [ref=e933] [cursor=pointer]:
+                - /url: //rd6.zhaopin.com/aboutus/legal/service?fromClient=CH5
+              - generic [ref=e934]: 和
+              - link "《隐私政策》" [ref=e935] [cursor=pointer]:
+                - /url: //rd6.zhaopin.com/aboutus/legal/privacy?fromClient=CH5
+            - generic [ref=e938] [cursor=pointer]:
+              - img "nationalIcon" [ref=e939]
+              - generic [ref=e940]: 国家网络身份认证登录
+        - generic [ref=e941]: 我要招人 >
+        - link [ref=e942] [cursor=pointer]:
+          - /url: https://passport.zhaopin.com/org/login?
+      - generic [ref=e819]:
+        - img "简历模版" [ref=e821] [cursor=pointer]
+        - img "简历置顶" [ref=e823] [cursor=pointer]
+        - list [ref=e824]:
+          - listitem [ref=e825]:
+            - generic [ref=e827]: 智联招聘APP
+          - listitem [ref=e828]:
+            - generic [ref=e830]: 官方微信
+  - generic [ref=e831]:
+    - generic [ref=e832]:
+      - generic [ref=e833]:
+        - generic [ref=e834]:
+          - term [ref=e835]: 关于我们
+          - definition [ref=e836]:
+            - link "公司介绍" [ref=e837] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/
+          - definition [ref=e838]:
+            - link "联系我们" [ref=e839] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/contact/index.html
+          - definition [ref=e840]:
+            - link "诚聘英才" [ref=e841] [cursor=pointer]:
+              - /url: //webapp.zhaopin.com/2024/hd/zzgyw0201ZL68537/join/index.html
+        - generic [ref=e842]:
+          - term [ref=e843]: 产品与服务
+          - definition [ref=e844]:
+            - link "人才招聘" [ref=e845] [cursor=pointer]:
+              - /url: //https://www.zhaopin.com/jobs/
+          - definition [ref=e846]:
+            - link "企业招聘" [ref=e847] [cursor=pointer]:
+              - /url: //passport.zhaopin.com/org/login?bkurl=https%3A%2F%2Frd5.zhaopin.com%2F
+        - generic [ref=e848]:
+          - term [ref=e849]: 使用与帮助
+          - definition [ref=e850]: 账号注销
+          - definition [ref=e851]:
+            - link "发票制度" [ref=e852] [cursor=pointer]:
+              - /url: https://www.zhaopin.com/invoice-system
+          - definition [ref=e853]:
+            - link "防骗指南" [ref=e854] [cursor=pointer]:
+              - /url: //110.zhaopin.com/
+          - definition [ref=e855]:
+            - link "法律协议" [ref=e856] [cursor=pointer]:
+              - /url: https://rd6.zhaopin.com/aboutus/legal
+          - definition [ref=e857]:
+            - link "资质公示" [ref=e858] [cursor=pointer]:
+              - /url: https://rd6.zhaopin.com/aboutus
+        - generic [ref=e859]:
+          - term [ref=e860]: 联系方式
+          - definition [ref=e861]: 电话：400-885-9898
+          - definition [ref=e862]:
+            - link "客服中心" [ref=e863] [cursor=pointer]:
+              - /url: //dianping.zhaopin.com/jobseeker
+      - generic [ref=e864]:
+        - paragraph [ref=e865]: 智联招聘，更懂你的价值
+        - generic [ref=e866]:
+          - generic [ref=e867]: 官方微信
+          - generic [ref=e868]: 企业版APP
+          - generic [ref=e869]: 智联APP
+          - generic [ref=e870]: 小程序
+    - generic [ref=e872]:
+      - generic [ref=e873]:
+        - paragraph [ref=e874]: 未经 Zhaopin.com 同意，不得转载本网站之所有招聘信息及作品 智联招聘网版权所有
+        - paragraph [ref=e875]:
+          - link "京ICP备12025925号" [ref=e876] [cursor=pointer]:
+            - /url: https://beian.miit.gov.cn
+          - link "京ICP证010207号" [ref=e877] [cursor=pointer]:
+            - /url: https://rd6.zhaopin.com/aboutus?tab=value-added-telecom
+        - paragraph [ref=e878]:
+          - link "京公网安备 11010502059392号" [ref=e879] [cursor=pointer]:
+            - /url: https://beian.mps.gov.cn/#/query/webSearch?code=11010502059392
+          - link "人力资源许可证:1101051996081号" [ref=e880] [cursor=pointer]:
+            - /url: https://rd6.zhaopin.com/aboutus?tab=human-resource-service
+        - paragraph [ref=e881]:
+          - link "网上有害信息举报专区" [ref=e882] [cursor=pointer]:
+            - /url: https://www.12377.cn
+          - text: 违法不良信息举报电话:400-885-9898 关爱未成年举报热线:400-885-9898-3
+        - paragraph [ref=e883]: 朝阳区人力资源与社会保障局监督电话
+      - generic [ref=e884]:
+        - link "网络110报警服务" [ref=e885] [cursor=pointer]:
+          - /url: http://cyberpolice.mps.gov.cn/wfjb
+        - link "电子营业执照" [ref=e888] [cursor=pointer]:
+          - /url: https://rd6.zhaopin.com/aboutus?tab=electronic-business

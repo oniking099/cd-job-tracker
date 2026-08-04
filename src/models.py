@@ -24,12 +24,14 @@ class SourcePlatform(str, Enum):
     LAGOU = "拉勾"
     BOSS = "BOSS直聘"
     YUPAO = "鱼泡直聘"
-    YINGJIESHENG = "应届生求职网"
     WUBA = "58同城"
-    GANJI = "赶集直招"
     JOBUI = "职友集"
-    MAIMAI = "脉脉"
     CHINAHR = "中华英才网"
+    # 专业垂直平台（点3 新增）
+    IGUOPIN = "国聘网"
+    QIXIANG = "气象人才网"
+    BJX_HUANBAO = "北极星环保招聘"
+    GAOXIAOJOB = "高校人才网"
 
 
 @dataclass
