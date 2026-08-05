@@ -1,0 +1,28 @@
+{
+  "round_label": "5",
+  "keywords_used": [],
+  "total_raw": 0,
+  "total_after_filter": 0,
+  "errors": [
+    "超过截止时间"
+  ],
+  "stats": {
+    "confirmation": {
+      "valid_count": 0,
+      "total_count": 0,
+      "threshold": 5,
+      "quantity_pass": false,
+      "review": {
+        "reviewed": 0,
+        "relevant": true,
+        "jd_complete": false,
+        "reason": "无有效 JD 可评审"
+      },
+      "passed": false,
+      "result": "FAIL",
+      "reason": "有效 JD 数 0 低于门槛 5"
+    }
+  },
+  "scraped_at": "2026-08-05T13:19:19.007253",
+  "jobs": []
+}
