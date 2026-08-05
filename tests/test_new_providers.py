@@ -104,15 +104,21 @@ class TestModelScope:
             await modelscope.extract_jobs_from_screenshot(b"fake", "智联招聘")
 
     def test_priority_list_vl_default(self):
-        # 未配置时默认先进优先（实测仅 Qwen3-VL 三兄弟可用）
+        # 未配置时默认能力优先、非思考在前（实测 Qwen3-VL 五模型可用）
         models = modelscope.model_priority_list("vl")
         assert models[0] == "Qwen/Qwen3-VL-235B-A22B-Instruct"
+        assert models[1] == "Qwen/Qwen3-VL-30B-A3B-Instruct"
         assert "Qwen/Qwen3-VL-30B-A3B-Thinking" in models
         assert "Qwen/Qwen3-VL-8B-Instruct" in models
+        assert "Qwen/Qwen3-VL-8B-Thinking" in models
 
     def test_priority_list_text_default(self):
+        # 决策兜底链：匹配度×能力排序，能力顶级在前，flash 收尾兜底
         models = modelscope.model_priority_list("text")
-        assert models[0] == "Qwen/Qwen3.5-397B-A17B"
+        assert models[0] == "deepseek-ai/DeepSeek-V4-Pro"
+        assert "Qwen/Qwen3-Next-80B-A3B-Instruct" in models
+        assert "Qwen/Qwen3-235B-A22B-Thinking-2507" in models
+        assert models[-1] == "deepseek-ai/DeepSeek-V4-Flash-0731"
 
     def test_priority_list_parses_comma_env(self, monkeypatch):
         monkeypatch.setattr(modelscope, "MODELSCOPE_VL_MODELS", "A/Model1, B/Model2 ,C/Model3")
@@ -159,6 +165,26 @@ class TestModelScope:
         monkeypatch.setattr(modelscope, "_create_client", lambda timeout: _FailClient())
         with pytest.raises(RuntimeError, match="全部模型失败"):
             await modelscope.chat([{"role": "user", "content": "hi"}], kind="vl")
+
+    @pytest.mark.asyncio
+    async def test_chat_switches_model_on_empty_content(self, monkeypatch):
+        """200 但空内容（实测 DeepSeek-V4-Pro 偶发）视同失败，切下一个模型。"""
+        monkeypatch.setattr(modelscope, "MODELSCOPE_API_KEY", "sk-test")
+        first = modelscope.model_priority_list("vl")[0]
+
+        class _EmptyCompletions:
+            async def create(self, **kwargs):
+                if kwargs.get("model") == first:
+                    return _ok_response("")  # 空内容
+                return _ok_response('{"from": "fallback"}')
+
+        class _EmptyClient:
+            def __init__(self, *a, **k):
+                self.chat = type("_C", (), {"completions": _EmptyCompletions()})()
+
+        monkeypatch.setattr(modelscope, "_create_client", lambda timeout: _EmptyClient())
+        raw = await modelscope.chat([{"role": "user", "content": "hi"}], kind="vl")
+        assert '"from": "fallback"' in raw
 
 
 # ---------- 决策链：文本优先 ----------

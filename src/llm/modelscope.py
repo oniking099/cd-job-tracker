@@ -6,11 +6,14 @@ ModelScope 魔搭 api-inference 客户端（阿里云百炼托管，OpenAI 兼�
 - 因此**不做单选**：把可用模型全部列进优先列表，429/额度不足自动切下一个。
 
 两套模型链（都用同一 fallback 机制）：
-- `MODELSCOPE_VL_MODELS`   视觉链（VL 模型才能读图）：Qwen3-VL-235B-A22B 优先，
-                           429 降级到 Qwen3-VL-30B-A3B-Thinking → Qwen3-VL-8B。
-                           （实测 Qwen2.5-VL 系列在百炼托管下报 no provider supported）
-- `MODELSCOPE_TEXT_MODELS` 文本链（决策兜底，DeepSeek 失败时）：Qwen3.5-397B-A17B
-                           优先，429 降级到 35B-A3B / 27B。
+- `MODELSCOPE_VL_MODELS`   视觉链（VL 模型才能读图）：Qwen3-VL-235B-A22B-Instruct 优先，
+                           429/空内容降级到 30B-A3B-Instruct → 30B-A3B-Thinking → 8B-Instruct
+                           → 8B-Thinking。（实测 Qwen2.5-VL 全系与 235B-Thinking 报 no provider；
+                           中文「千问/」前缀全部 400 Invalid，英文 Qwen/ 是唯一正确写法）
+- `MODELSCOPE_TEXT_MODELS` 文本链（决策兜底，DeepSeek 失败时）：DeepSeek-V4-Pro 优先，
+                           429/空内容降级到 Qwen3-Next-80B-A3B-Instruct → Qwen3-235B-A22B-Thinking-2507
+                           → Qwen3-30B-A3B-Thinking-2507 → Qwen3.5-397B-A17B → Qwen3.5-35B-A3B
+                           → DeepSeek-V4-Flash-0731（flash 兜底收尾）。
 """
 from __future__ import annotations
 
@@ -55,11 +58,21 @@ def model_priority_list(kind: str = "vl") -> list[str]:
         models = (
             [
                 "Qwen/Qwen3-VL-235B-A22B-Instruct",
+                "Qwen/Qwen3-VL-30B-A3B-Instruct",
                 "Qwen/Qwen3-VL-30B-A3B-Thinking",
                 "Qwen/Qwen3-VL-8B-Instruct",
+                "Qwen/Qwen3-VL-8B-Thinking",
             ]
             if kind == "vl"
-            else ["Qwen/Qwen3.5-397B-A17B", "Qwen/Qwen3.5-35B-A3B", "Qwen/Qwen3.5-27B"]
+            else [
+                "deepseek-ai/DeepSeek-V4-Pro",
+                "Qwen/Qwen3-Next-80B-A3B-Instruct",
+                "Qwen/Qwen3-235B-A22B-Thinking-2507",
+                "Qwen/Qwen3-30B-A3B-Thinking-2507",
+                "Qwen/Qwen3.5-397B-A17B",
+                "Qwen/Qwen3.5-35B-A3B",
+                "deepseek-ai/DeepSeek-V4-Flash-0731",
+            ]
         )
     return models
 
@@ -91,6 +104,10 @@ async def chat(
                 max_tokens=max_tokens,
             )
             content = response.choices[0].message.content or ""
+            if not content.strip():
+                # 200 但空内容（实测 DeepSeek-V4-Pro 偶发）：视同失败切下一个模型。
+                # 否则空串会让上层 parse 失败、整条链白跑而跳过其余模型。
+                raise RuntimeError("返回空内容")
             logger.info(f"[modelscope] {kind} 链模型 {model} 调用成功")
             return content
         except Exception as e:

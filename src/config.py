@@ -55,17 +55,28 @@ GEMINI_MODEL = "gemini-3.1-flash-lite"  # 2.5-flash-lite 已废弃（404）
 # → 把可用模型全部列进优先列表，429/额度不足时自动切下一个，不做单选。
 MODELSCOPE_API_KEY = _env("MODELSCOPE_API_KEY")
 MODELSCOPE_BASE_URL = _env("MODELSCOPE_BASE_URL", "https://api-inference.modelscope.cn/v1")
-# 视觉链（只有 VL 模型能读图）：先进优先，429 逐级降
-# 实测（2026-08-05 逐模型探测）：仅 Qwen3-VL 三兄弟可用；Qwen2.5-VL 系列
-# 在阿里云百炼托管下报 "has no provider supported"，暂不列入，等支持后再加。
+# 视觉链（只有 VL 模型能读图）：能力优先、非思考在前，429/空内容逐级降
+# 实测（2026-08-05 全量复测）：Qwen3-VL 五模型可用（235B-I/30B-I/30B-T/8B-I/8B-T）；
+# Qwen2.5-VL 全系与 Qwen3-VL-235B-Thinking 报 no provider；中文「千问/」前缀全部 400 Invalid。
 MODELSCOPE_VL_MODELS = _env(
     "MODELSCOPE_VL_MODELS",
-    "Qwen/Qwen3-VL-235B-A22B-Instruct,Qwen/Qwen3-VL-30B-A3B-Thinking,Qwen/Qwen3-VL-8B-Instruct",
+    "Qwen/Qwen3-VL-235B-A22B-Instruct,"
+    "Qwen/Qwen3-VL-30B-A3B-Instruct,"
+    "Qwen/Qwen3-VL-30B-A3B-Thinking,"
+    "Qwen/Qwen3-VL-8B-Instruct,"
+    "Qwen/Qwen3-VL-8B-Thinking",
 )
-# 文本链（决策兜底，DeepSeek 失败时用）：先进优先，429 逐级降
+# 文本链（决策兜底，DeepSeek 失败时用）：匹配度×能力排序——决策任务延迟关键，
+# 故快且稳的模型在前，能力顶级但偶发空内容/慢的居中，DeepSeek-V4-Flash-0731 收尾兜底。
 MODELSCOPE_TEXT_MODELS = _env(
     "MODELSCOPE_TEXT_MODELS",
-    "Qwen/Qwen3.5-397B-A17B,Qwen/Qwen3.5-35B-A3B,Qwen/Qwen3.5-27B",
+    "deepseek-ai/DeepSeek-V4-Pro,"
+    "Qwen/Qwen3-Next-80B-A3B-Instruct,"
+    "Qwen/Qwen3-235B-A22B-Thinking-2507,"
+    "Qwen/Qwen3-30B-A3B-Thinking-2507,"
+    "Qwen/Qwen3.5-397B-A17B,"
+    "Qwen/Qwen3.5-35B-A3B,"
+    "deepseek-ai/DeepSeek-V4-Flash-0731",
 )
 # 兼容旧版单模型变量（列表为空时的兜底，不再作为主配置）
 MODELSCOPE_VL_MODEL = _env("MODELSCOPE_VL_MODEL", "")
