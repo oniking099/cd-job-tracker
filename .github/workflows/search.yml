@@ -3,17 +3,12 @@ name: Job Search
 on:
   workflow_dispatch:
   schedule:
-    # 北京时间 12:00~17:00，每小时一轮
-    # UTC = BJT - 8h
-    - cron: '0 4 * * *'    # 12:00 BJT → round 12
-    - cron: '0 5 * * *'    # 13:00 BJT → round 13
-    - cron: '0 6 * * *'    # 14:00 BJT → round 14
-    - cron: '0 7 * * *'    # 15:00 BJT → round 15
-    - cron: '0 8 * * *'    # 16:00 BJT → round 16
-    - cron: '0 9 * * *'    # 17:00 BJT → round 17
+    # 北京时间 01:00 开始顺序跑 5 轮（UTC = BJT - 8h）
+    # GitHub 调度有 ~2.5h 延迟风险：即使 01:00 被延迟到 04:00 才触发，
+    # 仍是第一轮先跑、确认后立即下一轮；真正的停止在脚本内 21:00 BJT 截止兜底。
+    - cron: '0 17 * * *'
 
-# 注意：使用 concurrency group 防止同一轮次重复执行
-# cancel-in-progress: false 确保即使前一轮延迟也排队执行
+# 防止同一工作流重叠执行；cancel-in-progress: false 确保排队执行而非中断
 concurrency:
   group: chengdu-job-search
   cancel-in-progress: false
@@ -21,8 +16,8 @@ concurrency:
 jobs:
   search:
     runs-on: ubuntu-latest
-    # agent 平台每轮多关键词 × 受限并发(3)，实际耗时可能 1h+；30min 装完依赖就不剩多少
-    timeout-minutes: 120
+    # 5 轮 × 每轮 ~2h 上界 + 依赖安装；脚本内 21:00 BJT 截止会提前退出，这里是最后一层保险
+    timeout-minutes: 1200
 
     steps:
       - name: Checkout
@@ -49,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          # 11 个普通平台走 Chromium（含系统依赖）
+          # 普通平台走 Chromium（含系统依赖）
           python -m playwright install chromium --with-deps
           # Camoufox 是 Firefox 源码级 fork：需要 Firefox 系统库（libgtk 等）
           python -m playwright install-deps firefox
@@ -59,20 +54,101 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/ -v
 
-      - name: Run search round
-        run: python scripts/search.py
-        env:
+      # ---- 顺序制 5 轮：一轮跑完→确认→提交→下一轮 ----
+      # continue-on-error: true —— 单轮失败/超时（21:00 BJT 截止）不阻断后续轮次
+      # 逐轮 git-auto-commit 保证 21:30 报告能融合到已完成轮次（用户要的"中断后融合"）
+      # 登录 Cookie 注入：BOSS_COOKIE / YUPAO_COOKIE 为可选 GitHub Secret，
+      # 未配置时平台自动降级（免登录链路），不失败。
+      - name: Round 1 (气象/大气科学)
+        continue-on-error: true
+        run: python scripts/search.py --round 1
+        env: &job_env
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           QWENVL_API_KEY: ${{ secrets.QWENVL_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # 视觉降级链：ModelScope(免费2000/天) → SiliconFlow → Gemini → Qwen-VL
+          MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+          SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
           GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
+          BOSS_COOKIE: ${{ secrets.BOSS_COOKIE }}
+          YUPAO_COOKIE: ${{ secrets.YUPAO_COOKIE }}
+          SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
 
-      # [skip ci] 防止 GH_PAT commit 触发新的 workflow，形成无限循环
-      - name: Commit search data
+      - name: Commit round 1 data
         if: always()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "data: search results [skip ci]"
+          commit_message: "data: round-1 search results [skip ci]"
           file_pattern: 'data/'
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Round 2 (环境/生态)
+        continue-on-error: true
+        run: python scripts/search.py --round 2
+        env:
+          <<: *job_env
+
+      - name: Commit round 2 data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "data: round-2 search results [skip ci]"
+          file_pattern: 'data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Round 3 (AI/大模型 + 补充长尾)
+        continue-on-error: true
+        run: python scripts/search.py --round 3
+        env:
+          <<: *job_env
+
+      - name: Commit round 3 data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "data: round-3 search results [skip ci]"
+          file_pattern: 'data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Round 4 (AI Agent/应用)
+        continue-on-error: true
+        run: python scripts/search.py --round 4
+        env:
+          <<: *job_env
+
+      - name: Commit round 4 data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "data: round-4 search results [skip ci]"
+          file_pattern: 'data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Round 5 (交叉学科)
+        continue-on-error: true
+        run: python scripts/search.py --round 5
+        env:
+          <<: *job_env
+
+      - name: Commit round 5 data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "data: round-5 search results [skip ci]"
+          file_pattern: 'data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      # ---- 检索完成后立即生成报告并推送（不固定 21:30）----
+      # 5 轮跑完（或 21:00 BJT 截止提前结束）即融合已完成轮次 → HTML + ServerChan 推送。
+      # 若用 sleep 撑到 21:30 会持续占用 runner → 每天约 20h 计费分钟（免费额度 2000/月），
+      # 故改为"检索完直接推送"（用户 2026-08-05 拍板；检索自然跑满则在 ~21:00 推送）。
+      - name: Generate report & push
+        if: always()
+        run: python scripts/report.py
+        env:
+          <<: *job_env

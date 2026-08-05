@@ -99,9 +99,10 @@ class Job:
 @dataclass
 class SearchRound:
     """一轮搜索的结果"""
-    round_label: str                 # 轮次标签
+    round_label: str                 # 轮次标签（1~5）
     keywords_used: list[str] = field(default_factory=list)
     total_raw: int = 0               # 原始采集数
     total_after_filter: int = 0      # 过滤后数量
     jobs: list[Job] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    stats: dict = field(default_factory=dict)   # 覆盖率/每平台有效数/确认结果（确认后写入）

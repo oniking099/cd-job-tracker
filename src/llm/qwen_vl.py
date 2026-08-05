@@ -57,12 +57,13 @@ async def extract_jobs_from_screenshot(
 - company: 企业名称
 - salary_text: 原始薪资文本（完整保留）
 - location: 工作地点
-- requirements: 岗位要求（简要概括）
-- responsibilities: 岗位职责（简要概括）
+- requirements: 岗位要求（完整原文，不要概括，不要省略）
+- responsibilities: 岗位职责（完整原文，不要概括，不要省略）
 - url: 如果有详情页链接，提取完整 URL
 - hr_active: HR是否活跃，根据页面上的"活跃""刚刚在线""今日回复"等标记判断，有则true
 - posted_date: 发布日期
 
+注意：若截图中没有岗位职责/要求正文，对应字段返回空字符串，绝对禁止编造。
 返回纯 JSON 数组格式，不要markdown代码块：""",
     }]
     for sb in screenshots:

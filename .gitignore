@@ -24,3 +24,5 @@ Thumbs.db
 playwright-report/
 .claude/settings.local.json
 .mcp.json
+# Claude Code / Playwright MCP 本地产物（浏览器快照、控制台日志）
+.playwright-mcp/

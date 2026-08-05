@@ -8,7 +8,9 @@ LLM Agent 驱动爬虫基类 + 试点平台适配器。
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
+import os
 from pathlib import Path
 
 from playwright.async_api import async_playwright
@@ -136,6 +138,10 @@ class CamoufoxAgentScraperBase(AgentScraperBase):
 
     # 子类指定平台 key（对应 .sessions/profiles/{key} 与 capture_session --platform）
     platform_key: str = ""
+    # 环境变量名：保存登录 Cookie（JSON 数组，Playwright add_cookies 格式）。
+    # CI 上没有 .sessions 登录态，凭此 GitHub Secret 也能免登录访问；
+    # 未配置时详情页遇登录墙降级为列表摘要，不影响整轮。
+    cookie_env: str = ""
 
     @property
     def camoufox_user_dir(self) -> str:
@@ -153,7 +159,29 @@ class CamoufoxAgentScraperBase(AgentScraperBase):
             user_data_dir=self.camoufox_user_dir,
         )
         self.context = await self._camoufox.__aenter__()
+        await self._inject_cookie_if_configured()
         return self
+
+    async def _inject_cookie_if_configured(self) -> None:
+        """把 GitHub Secret 里的登录 Cookie 注入 Camoufox persistent context。
+
+        Cookie 格式：Playwright add_cookies 的 JSON 数组，例如
+        [{"name":"zpw_index","value":"...","domain":".zhipin.com","path":"/"}]
+        """
+        if not self.cookie_env:
+            return
+        raw = os.environ.get(self.cookie_env, "").strip()
+        if not raw:
+            return
+        try:
+            cookies = json.loads(raw)
+            if not isinstance(cookies, list) or not cookies:
+                logger.warning(f"[{self.platform_name}] {self.cookie_env} 为空 JSON，跳过注入")
+                return
+            await self.context.add_cookies(cookies)
+            logger.info(f"[{self.platform_name}] 已注入 {len(cookies)} 条 {self.cookie_env} 登录 Cookie")
+        except Exception as e:
+            logger.warning(f"[{self.platform_name}] {self.cookie_env} 注入失败: {e}")
 
     async def __aexit__(self, *args):
         if self._camoufox:
@@ -240,6 +268,7 @@ class BossAgentScraper(CamoufoxAgentScraperBase):
     platform_name = "BOSS直聘"
     start_url = "https://www.zhipin.com/web/geek/job"
     platform_key = "boss"
+    cookie_env = "BOSS_COOKIE"  # GitHub Secret：BOSS 登录 Cookie（JSON 数组）
     BOSS_CITY_CHENGDU = "101270100"
 
     def build_start_url(self, keyword: str) -> str:
@@ -364,6 +393,7 @@ class YupaoAgentScraper(CamoufoxAgentScraperBase):
     platform_name = "鱼泡直聘"
     start_url = "https://www.yupao.com/chengdu/"
     platform_key = "yupao"
+    cookie_env = "YUPAO_COOKIE"  # GitHub Secret：鱼泡登录 Cookie（JSON 数组）
 
     def build_start_url(self, keyword: str) -> str:
         from urllib.parse import quote

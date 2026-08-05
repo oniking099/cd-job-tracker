@@ -13,7 +13,7 @@ import re
 from datetime import datetime
 
 from src.agent.perceive import capture_screenshot
-from src.config import AGENT_EXTRACT_TIMEOUT
+from src.config import AGENT_EXTRACT_TIMEOUT, DETAIL_JD_TEXT_LIMIT
 from src.models import Job
 
 logger = logging.getLogger(__name__)
@@ -119,14 +119,19 @@ async def _collect_viewport_screenshots(page, max_viewports: int) -> list[bytes]
 
 
 async def _extract_with_vision(screenshots: list[bytes], platform: str) -> list[dict]:
-    """OCR 优先提取链：RapidOCR 读字 → DeepSeek 文本结构化 → 规则解析 → 视觉兜底。
+    """OCR 优先提取链：本地 RapidOCR → 云端 OCR 兜底 → DeepSeek 结构化 → 规则解析 → 视觉兜底。
 
-    用户约束：OCR 文字识别准确率极高，截图文字提取应以 RapidOCR 为主，
-    避免占用多模态视觉大模型的额度/延时。因此视觉 API（Qwen-VL/Gemini）只做最后兜底。
-    结构化解码优先用便宜的文本 LLM（DeepSeek），离线/失败时退回规则解析。
+    用户约束：OCR 文字识别准确率极高，截图文字提取应以 OCR 为主，避免占用多模态
+    视觉大模型的额度/延时。视觉 API 只做最后兜底。
+    - 读字：本地 RapidOCR（离线免费）优先；空/失败 → SiliconFlow PaddleOCR-VL-1.5（免费）
+    - 结构化：便宜文本 LLM（DeepSeek）→ 规则解析离线兜底
+    - 视觉兜底：ModelScope（免费 2000/天）→ SiliconFlow → Gemini → Qwen-VL(DashScope)
     """
-    # ① RapidOCR 读字（本地离线、免费）
+    # ① 读字：本地 RapidOCR 优先，空/失败补云端 OCR（免费）
     ocr_text = await _ocr_text(screenshots)
+    if not ocr_text:
+        ocr_text = await _cloud_ocr_text(screenshots)
+
     if ocr_text:
         # ② DeepSeek 文本结构化（分毫成本，无视觉额度问题）
         try:
@@ -148,18 +153,22 @@ async def _extract_with_vision(screenshots: list[bytes], platform: str) -> list[
 
     # ③ 视觉兜底：OCR 无文本或两级解析全空时才动用多模态 API
     raw: list[dict] = []
-    try:
-        from src.llm.qwen_vl import extract_jobs_from_screenshot as qwen_extract
-        raw = await qwen_extract(screenshots, platform)
-    except Exception as e:
-        logger.warning(f"[agent] Qwen-VL 提取失败: {e}")
-
-    if not raw:
+    for name, mod in (
+        ("ModelScope", "src.llm.modelscope"),
+        ("SiliconFlow", "src.llm.siliconflow"),
+        ("Gemini", "src.llm.gemini"),
+        ("Qwen-VL", "src.llm.qwen_vl"),
+    ):
+        if raw:
+            break
         try:
-            from src.llm.gemini import extract_jobs_from_screenshot as gemini_extract
-            raw = await gemini_extract(screenshots, platform)
+            from importlib import import_module
+            extractor = getattr(import_module(mod), "extract_jobs_from_screenshot")
+            raw = await extractor(screenshots, platform)
+            if raw:
+                logger.info(f"[agent] {name} 视觉提取出 {len(raw)} 条")
         except Exception as e:
-            logger.warning(f"[agent] Gemini 提取失败: {e}")
+            logger.warning(f"[agent] {name} 提取失败: {e}")
 
     return raw
 
@@ -175,6 +184,22 @@ async def _ocr_text(screenshots: list[bytes]) -> str:
         return text
     except Exception as e:
         logger.warning(f"[agent] OCR 读取失败: {e}")
+        return ""
+
+
+async def _cloud_ocr_text(screenshots: list[bytes]) -> str:
+    """云端 OCR 兜底：本地 RapidOCR 空/失败时用 SiliconFlow PaddleOCR-VL-1.5（免费）。"""
+    try:
+        from src.llm.siliconflow import ocr_screenshot_text
+        text = await asyncio.wait_for(
+            ocr_screenshot_text(screenshots),
+            timeout=max(AGENT_EXTRACT_TIMEOUT, 150),
+        )
+        if text:
+            logger.info("[agent] 云端 OCR 读字成功")
+        return text
+    except Exception as e:
+        logger.warning(f"[agent] 云端 OCR 兜底失败: {e}")
         return ""
 
 
@@ -394,8 +419,9 @@ def _dict_to_job(d: dict, platform: str, round_label: str) -> Job:
         company=company,
         salary_text=str(d.get("salary_text", "") or "").strip(),
         location=str(d.get("location", "") or "").strip(),
-        requirements=str(d.get("requirements", "") or "")[:500],
-        responsibilities=str(d.get("responsibilities", "") or "")[:500],
+        # 详情富集会追加更完整正文；这里放宽到 JD 全文上限（原 500 太短，导致 match_major 判专业时文本不足）
+        requirements=str(d.get("requirements", "") or "")[:DETAIL_JD_TEXT_LIMIT],
+        responsibilities=str(d.get("responsibilities", "") or "")[:DETAIL_JD_TEXT_LIMIT],
         hr_active=bool(d.get("hr_active", False)),
         posted_date=str(d.get("posted_date", "") or "").strip(),
         scraped_at=datetime.now().isoformat(),

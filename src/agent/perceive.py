@@ -93,6 +93,19 @@ async def page_text_excerpt(page, limit: int = 300) -> str:
     return re.sub(r"\s+", " ", text or "").strip()[:limit]
 
 
+async def page_full_text(page) -> str:
+    """页面完整可见文本（详情页 JD 正文提取用，不截断）。
+
+    与 page_text_excerpt 的区别：excerpt 供 agent 决策/预检（300 字符足够），
+    这里保留全文供详情富集写入 responsibilities/requirements。
+    """
+    try:
+        text = await page.evaluate("() => document.body ? document.body.innerText : ''")
+    except Exception:
+        return ""
+    return re.sub(r"[ \t]+", " ", (text or "")).strip()
+
+
 async def state_fingerprint(page) -> str:
     """页面状态指纹：元素清单 + 滚动位置哈希，用于检测页面是否变化。"""
     els = await snapshot_elements(page)

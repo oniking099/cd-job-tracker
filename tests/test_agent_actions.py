@@ -11,6 +11,7 @@ from src.agent.actions import AgentAction, parse_action
 from src.agent.agent import _looks_like_job_page
 from src.agent.extract import _dedup_jobs, _dict_to_job
 from src.agent.perceive import detect_login_wall, inventory_to_text
+from src.config import DETAIL_JD_TEXT_LIMIT
 from src.models import Job
 
 
@@ -176,9 +177,15 @@ class TestDictToJob:
         assert j.requirements == ""
         assert j.hr_active is False
 
-    def test_requirements_truncated(self):
+    def test_requirements_truncated_to_limit(self):
+        # 详情富集后 JD 正文上限由 500 提升到 DETAIL_JD_TEXT_LIMIT（默认 3000），
+        # 保证 match_major 有足够文本判专业（根因修复的配套断言）
+        j = _dict_to_job({"title": "t", "company": "c", "requirements": "x" * (DETAIL_JD_TEXT_LIMIT + 1000)}, "51Job", "")
+        assert len(j.requirements) == DETAIL_JD_TEXT_LIMIT
+
+    def test_requirements_short_not_truncated(self):
         j = _dict_to_job({"title": "t", "company": "c", "requirements": "x" * 800}, "51Job", "")
-        assert len(j.requirements) == 500
+        assert len(j.requirements) == 800
 
 
 class TestDedupJobs:

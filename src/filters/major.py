@@ -68,10 +68,22 @@ def match_major(jobs: list[Job]) -> list[Job]:
     专业匹配主函数。
     检查岗位描述和要求中是否包含目标专业关键词。
     不匹配的标记为排除。
+
+    区分两种排除原因：
+    - "JD文本未抓取"：标题+职责+要求全空（详情页未抓到/被登录墙挡）。这不是专业不匹配，
+      而是抓取覆盖缺失，原因单独标记后可量化富集覆盖率（配合 pipeline stats）。
+    - "专业不匹配"：有文本但确实不含目标专业关键词。
     """
     result: list[Job] = []
     for job in jobs:
-        full_text = f"{job.title} {job.requirements} {job.responsibilities}"
+        full_text = f"{job.title} {job.requirements} {job.responsibilities}".strip()
+
+        if not full_text:
+            job.excluded = True
+            job.exclude_reason = "JD文本未抓取"
+            result.append(job)
+            continue
+
         passed, matched = check_major_match(full_text)
 
         if passed:

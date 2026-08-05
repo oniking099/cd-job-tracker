@@ -46,7 +46,8 @@ async def extract_jobs_from_screenshot(
     content: list[dict] = [{
         "type": "text",
         "text": f"""Extract all job listings from these {platform} search results screenshots (Chengdu area, {len(screenshots)} images top-to-bottom, may overlap; dedupe).
-For each job return JSON with: title, company, salary_text, location, requirements, responsibilities, url, hr_active (boolean), posted_date.
+For each job return JSON with: title, company, salary_text, location, requirements (full original text, do not summarize or omit), responsibilities (full original text, do not summarize or omit), url, hr_active (boolean), posted_date.
+If the screenshots contain no job description/requirements body, return empty string for those fields. Never fabricate content.
 Return ONLY a JSON array, no markdown formatting.""",
     }]
     for sb in screenshots:

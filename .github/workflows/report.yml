@@ -1,9 +1,9 @@
-name: Daily Report
+name: Daily Report (manual only)
 
 on:
+  # 仅手动触发：检索+推送已合并进 search.yml（检索完立即推送，避免 sleep 撑时烧计费分钟）。
+  # 保留本文件供需要时手动重生成报告。
   workflow_dispatch:
-  schedule:
-    - cron: '30 13 * * *'   # 21:30 北京时间
 
 jobs:
   report:

@@ -76,11 +76,12 @@ async def parse_job_from_screenshot(
 - company: 企业名称
 - salary_text: 原始薪资文本
 - location: 工作地点
-- requirements: 岗位要求（简要）
-- responsibilities: 岗位职责（简要）
+- requirements: 岗位要求（完整原文，不要概括，不要省略）
+- responsibilities: 岗位职责（完整原文，不要概括，不要省略）
 - url: 详情页链接（如果页面中有）
 - hr_active: HR是否活跃（true/false）
 
+注意：若页面内容中没有岗位职责/要求正文，对应字段返回空字符串，绝对禁止编造。
 只返回 JSON 数组，不要其他内容。"""
 
     raw = await chat(prompt + "\n\n页面内容：\n" + screenshot_markdown, temperature=0.1)

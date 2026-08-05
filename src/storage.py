@@ -6,16 +6,16 @@ from __future__ import annotations
 
 import json
 import hashlib
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Iterator
 
-from src.config import DATA_DIR
+from src.config import DATA_DIR, bjt_today
 from src.models import CompanyType, Job, SearchRound
 
 
 def _today_dir() -> Path:
-    today = date.today().isoformat()
+    today = bjt_today()
     d = DATA_DIR / today
     d.mkdir(parents=True, exist_ok=True)
     return d
@@ -23,7 +23,7 @@ def _today_dir() -> Path:
 
 def save_round(round_data: SearchRound) -> Path:
     """保存一轮搜索结果到 JSON"""
-    today = date.today().isoformat()
+    today = bjt_today()
     path = DATA_DIR / today / f"round-{round_data.round_label}.json"
     data = {
         "round_label": round_data.round_label,
@@ -31,6 +31,7 @@ def save_round(round_data: SearchRound) -> Path:
         "total_raw": round_data.total_raw,
         "total_after_filter": round_data.total_after_filter,
         "errors": round_data.errors,
+        "stats": round_data.stats,
         "scraped_at": datetime.now().isoformat(),
         "jobs": [_job_to_dict(j) for j in round_data.jobs],
     }
@@ -41,7 +42,7 @@ def save_round(round_data: SearchRound) -> Path:
 
 def load_round(round_label: str, target_date: str | None = None) -> SearchRound | None:
     """加载指定轮次的数据"""
-    day = target_date or date.today().isoformat()
+    day = target_date or bjt_today()
     path = DATA_DIR / day / f"round-{round_label}.json"
     if not path.exists():
         return None
@@ -53,12 +54,13 @@ def load_round(round_label: str, target_date: str | None = None) -> SearchRound 
         total_after_filter=data.get("total_after_filter", 0),
         jobs=[_dict_to_job(j) for j in data.get("jobs", [])],
         errors=data.get("errors", []),
+        stats=data.get("stats", {}),
     )
 
 
 def load_all_rounds(target_date: str | None = None) -> list[SearchRound]:
     """加载当天所有轮次的数据"""
-    d = DATA_DIR / (target_date or date.today().isoformat())
+    d = DATA_DIR / (target_date or bjt_today())
     if not d.exists():
         return []
     rounds = []
@@ -71,6 +73,7 @@ def load_all_rounds(target_date: str | None = None) -> list[SearchRound]:
             total_after_filter=data.get("total_after_filter", 0),
             jobs=[_dict_to_job(j) for j in data.get("jobs", [])],
             errors=data.get("errors", []),
+            stats=data.get("stats", {}),
         ))
     return rounds
 
@@ -95,11 +98,12 @@ def deduplicate_all(jobs: list[Job]) -> list[Job]:
 
 def save_deduped(jobs: list[Job], target_date: str | None = None) -> Path:
     """保存去重后的最终结果"""
-    d = DATA_DIR / (target_date or date.today().isoformat())
+    today = target_date or bjt_today()
+    d = DATA_DIR / today
     d.mkdir(parents=True, exist_ok=True)
     path = d / "deduped.json"
     data = {
-        "date": target_date or date.today().isoformat(),
+        "date": today,
         "total": len(jobs),
         "generated_at": datetime.now().isoformat(),
         "jobs": [_job_to_dict(j) for j in jobs],
@@ -110,7 +114,7 @@ def save_deduped(jobs: list[Job], target_date: str | None = None) -> Path:
 
 def load_deduped(target_date: str | None = None) -> list[Job]:
     """加载去重后的结果"""
-    d = DATA_DIR / (target_date or date.today().isoformat())
+    d = DATA_DIR / (target_date or bjt_today())
     path = d / "deduped.json"
     if not path.exists():
         return []

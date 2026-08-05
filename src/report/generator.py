@@ -11,12 +11,11 @@ HTML 报告生成器：使用 Jinja2 模板渲染最终的招聘信息报告。
 from __future__ import annotations
 
 import re
-from datetime import date
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.config import OUTPUT_DIR
+from src.config import OUTPUT_DIR, bjt_today
 from src.models import Job, CompanyType
 
 TEMPLATE_DIR = Path(__file__).parent / "templates"
@@ -175,7 +174,7 @@ def generate_report(
         })
 
     total_jobs = len(jobs)
-    today = target_date or date.today().isoformat()
+    today = target_date or bjt_today()
 
     # 渲染模板
     env = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
