@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from src.models import Job
+from src.filters.common import is_preference
 
 # 行业排除关键词（必须在明确的行业上下文中才算命中）
 INDUSTRY_EXCLUDE: dict[str, list[str]] = {
@@ -21,16 +22,22 @@ INDUSTRY_EXCLUDE: dict[str, list[str]] = {
 AMBIENT_KEYWORDS = ["游戏", "驾驶"]
 
 
-def _check_industry_match(text: str) -> tuple[bool, str]:
+def _check_industry_match(text: str) -> tuple[bool, str, str, int]:
     """
     检查文本是否匹配排除行业。
-    返回 (是否排除, 匹配到的行业)。
+    返回 (是否排除, 匹配到的行业, 命中的关键词, 命中位置)。
+    命中为软性偏好（"X优先"）时不算排除。
     """
     for industry, keywords in INDUSTRY_EXCLUDE.items():
         for kw in keywords:
-            if kw in text:
-                return True, industry
-    return False, ""
+            idx = text.find(kw)
+            if idx == -1:
+                continue
+            # 软性偏好（"游戏行业经验者优先"）→ 非刚性，保留
+            if is_preference(text, idx, idx + len(kw)):
+                continue
+            return True, industry, kw, idx
+    return False, "", "", -1
 
 
 def filter_industry(jobs: list[Job]) -> list[Job]:
@@ -43,7 +50,7 @@ def filter_industry(jobs: list[Job]) -> list[Job]:
 
     for job in jobs:
         full_text = f"{job.title} {job.responsibilities} {job.requirements} {job.company}"
-        exclude, industry = _check_industry_match(full_text)
+        exclude, industry, _kw, _idx = _check_industry_match(full_text)
 
         if exclude:
             job.excluded = True

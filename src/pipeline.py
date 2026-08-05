@@ -353,25 +353,36 @@ async def _enrich_step(all_jobs: list[Job], errors: list[str]) -> None:
 
 
 async def _apply_filters(all_jobs: list[Job]) -> None:
-    """按顺序应用过滤链（就地置 excluded 标记）。"""
-    # [1] 薪资过滤
-    filter_salary(all_jobs)
-    # [2] 岗位类型过滤
-    filter_qualification(all_jobs)
-    # [3] 专业过滤
-    match_major(all_jobs)
-    # [4] 行业排除
-    filter_industry(all_jobs)
-    # [5] 企业分类（规则）
+    """按顺序应用过滤链（就地置 excluded 标记）。
+
+    顺序说明（2026-08-05 修正）：classify_company 必须排在 filter_salary 之前——
+    filter_salary 按企业类型分门槛（国企/央企/外资/合资 ≥1万，其他/未知 ≥1.6万），
+    原顺序把分类放在最后，导致薪资过滤时 company_type 恒为 None、国企 1 万门槛
+    分支成为死代码。先分类，薪资才能按企业类型真正分档（用户：最终保留的必须
+    满足我定的薪资条件）。
+    """
+    # [1] 企业分类（规则）——先分类，薪资门槛才能按企业类型分档
     classify_company(all_jobs)
+    # [2] 薪资过滤
+    filter_salary(all_jobs)
+    # [3] 岗位类型过滤
+    filter_qualification(all_jobs)
+    # [4] 专业过滤
+    match_major(all_jobs)
+    # [5] 行业排除
+    filter_industry(all_jobs)
 
 
 def _compute_stats(round_label: str, jobs: list[Job]) -> dict:
-    """轮次统计：抓取覆盖率（JD 正文非空率）、每平台有效数、排除原因分布。"""
+    """轮次统计：抓取覆盖率（JD 正文非空率）、每平台有效数、排除原因分布。
+
+    用户原则（2026-08-05）：所有没写的信息保留——缺 JD 正文、缺专业要求的岗位都不排除。
+    故不再统计"JD文本未抓取"排除数，改为统计"缺 JD 正文但保留"的有效数。
+    """
     valid = [j for j in jobs if not j.excluded]
-    no_jd = sum(1 for j in jobs if j.exclude_reason == "JD文本未抓取")
     not_matched = sum(1 for j in jobs if j.exclude_reason == "专业不匹配")
     jd_text_count = sum(1 for j in jobs if (j.responsibilities or j.requirements).strip())
+    kept_without_jd_text = sum(1 for j in valid if not (j.responsibilities or j.requirements).strip())
     by_platform: dict[str, int] = {}
     for j in valid:
         by_platform[j.platform] = by_platform.get(j.platform, 0) + 1
@@ -379,10 +390,10 @@ def _compute_stats(round_label: str, jobs: list[Job]) -> dict:
         "round_label": round_label,
         "valid_count": len(valid),
         "excluded_count": len(jobs) - len(valid),
-        "jd_text_coverage": jd_text_count,      # JD 正文非空的岗位数（覆盖率分子）
+        "jd_text_coverage": jd_text_count,          # JD 正文非空的岗位数（覆盖率分子）
         "jd_text_missing": len(jobs) - jd_text_count,
-        "no_jd_text_excluded": no_jd,            # 因"JD文本未抓取"被排除
-        "not_matched_excluded": not_matched,     # 因"专业不匹配"被排除
+        "kept_without_jd_text": kept_without_jd_text,  # 缺 JD 正文但仍保留（缺信息不排除）
+        "not_matched_excluded": not_matched,          # 明确写了其他专业要求被排除
         "by_platform": dict(sorted(by_platform.items(), key=lambda x: -x[1])),
     }
 
@@ -413,6 +424,26 @@ async def run_report():
     # 过滤排除项
     valid_jobs = [j for j in all_jobs if not j.excluded]
     print(f"有效岗位: {len(valid_jobs)} 条")
+
+    # 用户要求（2026-08-05）：JD 正文空白的有效岗位必须去详情页补抓，
+    # 不能"保留但空着"——对最终保留集里的缺正文岗位再跑一次详情富集（不设 60 条上限）。
+    # 抓回后重置排除标记并重跑过滤链，用真实 JD 文本做最终判定。
+    missing_text_jobs = [j for j in valid_jobs if not (j.responsibilities or j.requirements).strip()]
+    if missing_text_jobs:
+        print(f"JD 正文空白: {len(missing_text_jobs)} 条，补抓详情页...")
+        try:
+            enriched, detail_errors = await enrich_job_details(
+                missing_text_jobs, max_jobs=len(missing_text_jobs),
+            )
+            print(f"  详情补抓: {enriched} 条成功，{len(detail_errors)} 条失败/跳过")
+            for j in missing_text_jobs:
+                j.excluded = False
+                j.exclude_reason = ""
+            await _apply_filters(missing_text_jobs)
+            valid_jobs = [j for j in all_jobs if not j.excluded]
+            print(f"  补抓重过滤后有效岗位: {len(valid_jobs)} 条")
+        except Exception as e:
+            print(f"  详情补抓失败: {e}")
 
     # LLM 企业分类（规则未判定的）
     try:
