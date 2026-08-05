@@ -16,8 +16,23 @@ concurrency:
 jobs:
   search:
     runs-on: ubuntu-latest
-    # 5 轮 × 每轮 ~2h 上界 + 依赖安装；脚本内 21:00 BJT 截止会提前退出，这里是最后一层保险
-    timeout-minutes: 1200
+    # 公开仓库 GitHub 单作业超时上限 = 360 分钟（6h）；>360 会被静默钳制。
+    # 5 轮顺序执行实际每轮 ~25min，6h 足够；脚本内 21:00 BJT 截止是最后一层保险。
+    timeout-minutes: 360
+
+    # ⚠️ GitHub Actions 不支持 YAML merge key（<<:），曾经用 env: &job_env + <<: *job_env
+    # 导致 "Invalid workflow file" 秒败。统一放 job 级 env，所有步骤共享，无需锚点/合并键。
+    env:
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      QWENVL_API_KEY: ${{ secrets.QWENVL_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      # 视觉降级链：ModelScope(免费2000/天) → SiliconFlow → Gemini → Qwen-VL
+      MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+      SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+      GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
+      BOSS_COOKIE: ${{ secrets.BOSS_COOKIE }}
+      YUPAO_COOKIE: ${{ secrets.YUPAO_COOKIE }}
+      SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
 
     steps:
       - name: Checkout
@@ -56,23 +71,12 @@ jobs:
 
       # ---- 顺序制 5 轮：一轮跑完→确认→提交→下一轮 ----
       # continue-on-error: true —— 单轮失败/超时（21:00 BJT 截止）不阻断后续轮次
-      # 逐轮 git-auto-commit 保证 21:30 报告能融合到已完成轮次（用户要的"中断后融合"）
+      # 逐轮 git-auto-commit 保证报告能融合到已完成轮次（用户要的"中断后融合"）
       # 登录 Cookie 注入：BOSS_COOKIE / YUPAO_COOKIE 为可选 GitHub Secret，
       # 未配置时平台自动降级（免登录链路），不失败。
       - name: Round 1 (气象/大气科学)
         continue-on-error: true
         run: python scripts/search.py --round 1
-        env: &job_env
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          QWENVL_API_KEY: ${{ secrets.QWENVL_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # 视觉降级链：ModelScope(免费2000/天) → SiliconFlow → Gemini → Qwen-VL
-          MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
-          SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
-          GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
-          BOSS_COOKIE: ${{ secrets.BOSS_COOKIE }}
-          YUPAO_COOKIE: ${{ secrets.YUPAO_COOKIE }}
-          SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
 
       - name: Commit round 1 data
         if: always()
@@ -86,8 +90,6 @@ jobs:
       - name: Round 2 (环境/生态)
         continue-on-error: true
         run: python scripts/search.py --round 2
-        env:
-          <<: *job_env
 
       - name: Commit round 2 data
         if: always()
@@ -101,8 +103,6 @@ jobs:
       - name: Round 3 (AI/大模型 + 补充长尾)
         continue-on-error: true
         run: python scripts/search.py --round 3
-        env:
-          <<: *job_env
 
       - name: Commit round 3 data
         if: always()
@@ -116,8 +116,6 @@ jobs:
       - name: Round 4 (AI Agent/应用)
         continue-on-error: true
         run: python scripts/search.py --round 4
-        env:
-          <<: *job_env
 
       - name: Commit round 4 data
         if: always()
@@ -131,8 +129,6 @@ jobs:
       - name: Round 5 (交叉学科)
         continue-on-error: true
         run: python scripts/search.py --round 5
-        env:
-          <<: *job_env
 
       - name: Commit round 5 data
         if: always()
@@ -150,5 +146,14 @@ jobs:
       - name: Generate report & push
         if: always()
         run: python scripts/report.py
-        env:
-          <<: *job_env
+
+      # 报告产物（output/ HTML + data/<日期>/deduped.json）在 report.py 之后才生成，
+      # 前面的逐轮 commit 只提交了 round JSON，这里必须再补一次提交，否则永远不入库。
+      - name: Commit report & deduped data
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "report: daily report + deduped data [skip ci]"
+          file_pattern: 'output/ data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
