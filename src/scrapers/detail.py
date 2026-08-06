@@ -192,9 +192,21 @@ async def _enrich_with_page(
 
             if not text:
                 errors.append(f"[{platform}] {url}: 详情页正文为空")
+                # 数据层修复（用户 2026-08-06）：仅当岗位缺 JD 正文（本次访问正是为了补全它）
+                # 且详情页打不开/拿不到正文时，才标记"无有效 JD 页面"剔除。
+                # 列表页已有完整职责的岗位不依赖详情页，详情页失败不影响它。
+                for j in jobs:
+                    if not (j.responsibilities or j.requirements).strip():
+                        j.excluded = True
+                        j.exclude_reason = "无有效JD页面: 详情页正文为空"
                 continue
             if not _looks_like_detail_page(text):
                 errors.append(f"[{platform}] {url}: 非岗位详情页（404/登录墙/落地页），跳过")
+                # 同上：访问到的不是真岗位详情页（404/登录墙/落地页），仅对缺正文岗位剔除。
+                for j in jobs:
+                    if not (j.responsibilities or j.requirements).strip():
+                        j.excluded = True
+                        j.exclude_reason = "无有效JD页面: 非岗位详情页（404/登录墙/落地页）"
                 continue
 
             responsibilities, requirements = _split_job_text(text)

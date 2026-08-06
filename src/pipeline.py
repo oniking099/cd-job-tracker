@@ -129,7 +129,7 @@ ROUND_KEYWORDS: dict[str, dict] = {
 
 
 def _past_deadline() -> bool:
-    """当前 BJT 时刻是否已过截止时间（默认 21:00）。"""
+    """当前 BJT 时刻是否已过截止时间（默认 21:30）。"""
     now = bjt_now()
     return (now.hour, now.minute) >= (SEARCH_DEADLINE_HOUR, SEARCH_DEADLINE_MINUTE)
 
@@ -436,7 +436,12 @@ async def run_report():
                 missing_text_jobs, max_jobs=len(missing_text_jobs),
             )
             print(f"  详情补抓: {enriched} 条成功，{len(detail_errors)} 条失败/跳过")
+            # 数据层修复（用户 2026-08-06）：只重置「成功富集」的岗位。
+            # 富集失败（详情页 404/登录墙/落地页）的岗位已被 detail.py 置 excluded，
+            # 绝不能在这里重置——否则"没有正确 JD 页面的岗位"会重新混入报告。
             for j in missing_text_jobs:
+                if j.exclude_reason.startswith("无有效JD页面"):
+                    continue
                 j.excluded = False
                 j.exclude_reason = ""
             await _apply_filters(missing_text_jobs)
@@ -445,6 +450,16 @@ async def run_report():
         except Exception as e:
             print(f"  详情补抓失败: {e}")
 
+    # 修复3：没有正确 JD 页面的岗位绝对不要（占位/幻觉/空 URL 一律剔除）。
+    # 必须在补抓重过滤之后（补抓会从 all_jobs 重新取值，覆盖前面的过滤），
+    # 保证最终进入报告与推送的每个岗位都能点进真实 JD 页。
+    from src.report.generator import safe_url
+    before_url_filter = len(valid_jobs)
+    valid_jobs = [j for j in valid_jobs if safe_url(j.url)]
+    dropped = before_url_filter - len(valid_jobs)
+    if dropped:
+        print(f"无有效JD页面过滤: 剔除 {dropped} 条，保留 {len(valid_jobs)} 条")
+
     # LLM 企业分类（规则未判定的）
     try:
         from src.llm.deepseek import create_client
@@ -452,9 +467,6 @@ async def run_report():
         valid_jobs = await classify_with_llm(valid_jobs, client)
     except Exception as e:
         print(f"LLM 分类失败: {e}")
-
-    # 保存去重结果
-    save_deduped(valid_jobs)
 
     # 离家距离补充（高德地理编码，按地点缓存；无 Key 自动跳过，不影响主流程）
     from src.geo.gaode import get_distance
@@ -478,6 +490,9 @@ async def run_report():
         print(f"离家距离: 地理编码 {len(loc_cache)} 个地点")
     else:
         print("高德 Key 未配置，跳过离家距离计算")
+
+    # 保存去重结果（必须在距离补全之后，否则 deduped.json 的 distance_km 恒为 null）
+    save_deduped(valid_jobs)
 
     # 生成 HTML 报告
     from src.report.generator import generate_report

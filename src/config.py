@@ -119,7 +119,7 @@ PLATFORM_BUDGET_HTML = int(_env("PLATFORM_BUDGET_HTML", "40"))     # HTML 爬虫
 # ---- 搜索截止（BJT 时刻，>= 则停止本轮并保存已有结果）----
 # 21:30 报告推送前停止检索，避免与报告抢数据/浪费 CI 分钟。
 SEARCH_DEADLINE_HOUR = int(_env("SEARCH_DEADLINE_HOUR", "21"))
-SEARCH_DEADLINE_MINUTE = int(_env("SEARCH_DEADLINE_MINUTE", "0"))
+SEARCH_DEADLINE_MINUTE = int(_env("SEARCH_DEADLINE_MINUTE", "30"))
 
 # ---- 详情页正文富集 ----
 DETAIL_MAX_JOBS = int(_env("DETAIL_MAX_JOBS", "60"))             # 每轮最多富集岗位数（URL 去重后）

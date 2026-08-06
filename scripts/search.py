@@ -50,7 +50,7 @@ async def main():
     print(f"开始执行搜索轮次: round-{round_label}")
     print(f"当前时间: {datetime.now(BJT).strftime('%Y-%m-%d %H:%M:%S')} BJT")
 
-    # 单轮内部已做 21:00 BJT 截止兜底与异常捕获，最多影响本轮数据质量，不抛给 CI
+    # 单轮内部已做 21:30 BJT 截止兜底与异常捕获，最多影响本轮数据质量，不抛给 CI
     round_data = await run_search_round(round_label)
     print(f"\n完成！原始 {round_data.total_raw} 条，有效 {round_data.total_after_filter} 条")
 
