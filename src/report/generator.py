@@ -73,6 +73,9 @@ def safe_url(url: str | None) -> str:
     u = (url or "").strip()
     if not u or not u.startswith(("http://", "https://")) or _FAKE_URL_RE.search(u):
         return ""
+    # 职友集搜索页 URL（/jobs?）不是职位详情页，点开是搜索列表/重定向，不渲染为可点击链接
+    if "jobui.com/jobs" in u:
+        return ""
     return u
 
 # 薪资中的"N薪"提取："6千-1万·14薪" → "14薪"
@@ -148,6 +151,12 @@ def generate_report(
     """
     # 去重过滤
     jobs = [j for j in jobs if not j.excluded]
+
+    # 职友集详情页改用移动版链接：www 版点击会被 valid.php 验证码拦截，
+    # m 版会正常 302 到真实来源站（智联/电梯招聘网等），不触发风控（实测 2026-08-07）。
+    for j in jobs:
+        if j.platform == "职友集" and j.url.startswith("https://www.jobui.com/job/"):
+            j.url = "https://m.jobui.com/job/" + j.url[len("https://www.jobui.com/job/"):]
 
     # 按公司聚合 + 按类型分组
     grouped = _group_by_company(jobs)

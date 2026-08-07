@@ -243,6 +243,8 @@ async def _collect_card_urls(page, platform: str = "", max_links: int = 600) -> 
     """
     if platform == "51Job":
         return await _collect_job51_urls(page)
+    if platform == "职友集":
+        return await _collect_jobui_urls(page)
 
     try:
         data = await page.evaluate(f"""() => {{
@@ -333,6 +335,33 @@ async def _collect_job51_urls(page, max_cards: int = 100) -> list[dict]:
         }}""")
     except Exception as e:
         logger.warning(f"[agent] 51Job 卡片链接采集失败: {e}")
+        return []
+    return data or []
+
+
+async def _collect_jobui_urls(page, max_links: int = 600) -> list[dict]:
+    """职友集专属：只采集真实职位详情页锚点（/job/数字/），过滤搜索页锚点。
+
+    jobui 搜索页含大量"相关搜索"锚点（href=/jobs?jobKw=...），其文本恰好是
+    岗位标题，通用通道按文本匹配会把搜索页 URL 当详情回填，产生正文为空的垃圾岗。
+    这里只收 /job/数字/ 形态的详情锚点，从源头杜绝。
+    """
+    try:
+        data = await page.evaluate(f"""() => {{
+            const out = [];
+            const re = /^https?:\\/\\/[^\\/]*jobui\\.com\\/job\\/\\d+\\/?/;
+            const anchors = document.querySelectorAll('a[href*="/job/"]');
+            for (const a of anchors) {{
+                const href = a.href || '';
+                if (!re.test(href)) continue;
+                const text = (a.innerText || a.textContent || '').trim().replace(/\\s+/g, ' ');
+                if (!text || text.length > 40) continue;
+                out.push({{ text, href }});
+            }}
+            return out.slice(0, {max_links});
+        }}""")
+    except Exception as e:
+        logger.warning(f"[agent] 职友集 DOM 链接采集失败: {e}")
         return []
     return data or []
 

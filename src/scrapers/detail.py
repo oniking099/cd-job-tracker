@@ -202,9 +202,12 @@ async def _enrich_with_page(
                 continue
             if not _looks_like_detail_page(text):
                 errors.append(f"[{platform}] {url}: 非岗位详情页（404/登录墙/落地页），跳过")
-                # 同上：访问到的不是真岗位详情页（404/登录墙/落地页），仅对缺正文岗位剔除。
+                # 同上：访问到的不是真岗位详情页（404/登录墙/落地页）。
+                # 详情页无效时，列表残留的少量正文（常是 OCR 噪音）不足以做专业/行业筛选，
+                # 正文 <50 字的一并剔除，避免风控重定向没抓到正文的岗混入报告。
                 for j in jobs:
-                    if not (j.responsibilities or j.requirements).strip():
+                    body = (j.responsibilities or j.requirements).strip()
+                    if len(body) < 50:
                         j.excluded = True
                         j.exclude_reason = "无有效JD页面: 非岗位详情页（404/登录墙/落地页）"
                 continue
