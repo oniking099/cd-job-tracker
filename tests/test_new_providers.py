@@ -66,6 +66,8 @@ class TestSiliconFlowParse:
 class TestSiliconFlowOcr:
     @pytest.mark.asyncio
     async def test_loc_markers_stripped(self, monkeypatch):
+        # 设上 key，否则 ocr_screenshot_text 会在 API_KEY 守卫处直接返回空，走不到 mock client
+        monkeypatch.setattr(siliconflow, "SILICONFLOW_API_KEY", "sk-test")
         monkeypatch.setattr(siliconflow, "_create_client", lambda timeout: _FakeClient())
         _FakeClient.content = '岗位：气象工程师\n薪资：15-25K<|LOC_1|>\n经验：3-5年<|LOC_2|>'
         text = await siliconflow.ocr_screenshot_text(b"\x89PNG fake")
