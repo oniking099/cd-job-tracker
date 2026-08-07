@@ -46,6 +46,22 @@ DETAIL_SELECTORS: dict[str, str] = {
     "猎聘": ".job-intro",
 }
 
+# 职友集 m 版跳转的来源站域名 -> JD 容器 selector。
+# jobui www 版详情页被 valid.php 验证码拦截，改 m 版后会 302 到真实来源站（智联/51job/
+# 北极星/电梯招聘网等）；多数来源站（智联/北极星/电梯招聘网）为服务端渲染，body 全文
+# 已含完整 JD，无需专用 selector 走通用回退即可。仅 51job 是 SPA 需等 .job_msg 渲染。
+_LANDING_DOMAIN_SELECTORS: dict[str, str] = {
+    "jobs.51job.com": ".job_msg",
+}
+
+
+def _selector_for_landing(url: str) -> str | None:
+    """按 m.jobui 跳转后的落地域名选 JD 容器 selector，未知来源站返回 None 走通用回退。"""
+    for domain, sel in _LANDING_DOMAIN_SELECTORS.items():
+        if domain in (url or ""):
+            return sel
+    return None
+
 # 任职要求/岗位要求等段落标记（用于从全文切出 requirements）
 _REQUIREMENT_MARKERS = (
     "任职要求", "岗位要求", "职位要求", "任职资格",
@@ -186,8 +202,15 @@ async def _enrich_with_page(
         selector = DETAIL_SELECTORS.get(platform)
 
         try:
-            await page.goto(url, wait_until="domcontentloaded", timeout=30000)
-            text = await _extract_detail_text(page, selector)
+            # 职友集 www 版详情页被 valid.php 验证码拦截；m 版会 302 到真实来源站
+            # （智联/51job/北极星/电梯招聘网），不触发风控。goto 改 m 版，
+            # 落地后按来源站域名选 JD 容器 selector（各站 DOM 不同）。
+            goto_url = url
+            if platform == "职友集" and "://www.jobui.com/job/" in url:
+                goto_url = url.replace("://www.jobui.com", "://m.jobui.com", 1)
+            await page.goto(goto_url, wait_until="domcontentloaded", timeout=30000)
+            sel = selector or _selector_for_landing(page.url)
+            text = await _extract_detail_text(page, sel)
             text = _clean_text(text)
 
             if not text:
