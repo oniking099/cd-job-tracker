@@ -27,7 +27,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import capture_session
+try:
+    import capture_session
+except ModuleNotFoundError as e:
+    print("❌ 缺依赖:", e)
+    print("   本脚本需要 playwright + camoufox，请用装过依赖的 Python 运行：")
+    print("     py .\\refresh_boss_session.py")
+    print("   （即 C:\\Python313\\python.exe；不要用 conda base 的 python——(base) 环境没装这些依赖）")
+    sys.exit(1)
 from src.config import SESSIONS_DIR
 
 OWNER = "oniking099"
