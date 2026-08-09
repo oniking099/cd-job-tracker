@@ -184,13 +184,21 @@ async def search_single_platform(
 async def search_all_platforms(
     keyword: str,
     round_label: str,
+    skip_boss: bool = False,
 ) -> tuple[list[Job], list[str]]:
-    """在所有平台上搜索单个关键词（受限并发）。返回 (jobs, errors)。"""
+    """在所有平台上搜索单个关键词（受限并发）。返回 (jobs, errors)。
+
+    skip_boss=True 时跳过 BOSS直聘：cookie 预检（verify_extractors 输出）判定登录态
+    已失效时 CI 传入，避免为拉不到的 BOSS 启动 Camoufox 白白烧 GitHub Actions 时长。
+    """
     # 优先 agent 平台：先建任务先拿并发槽，避免被慢速/失败的 HTML 爬虫挤占
     platforms = sorted(
         ALL_SCRAPERS.items(),
         key=lambda item: item[0] not in AGENT_SCRAPERS,
     )
+    if skip_boss:
+        platforms = [(n, c) for n, c in platforms if n != "BOSS直聘"]
+        print("  ⚠️ BOSS cookie 预检未通过 → 跳过 BOSS直聘（省时，其余平台照常）")
     tasks = [search_single_platform(cls, keyword, round_label) for _, cls in platforms]
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -218,13 +226,15 @@ def _keep_chengdu(jobs: list[Job]) -> list[Job]:
     return [j for j in jobs if "成都" in (j.location or "")]
 
 
-async def run_search_round(round_label: str) -> SearchRound:
+async def run_search_round(round_label: str, skip_boss: bool = False) -> SearchRound:
     """
     执行一轮搜索（顺序制轮次，round_label: "1" ~ "5"）。
 
     流程：主关键词（截止检查）→ 扩展 → 借用 → 城市过滤 → 详情页富集（JD 正文）
     → 过滤链 → 有效数不足则补充未搜过的关键词并重过滤 → 统计落盘。
     任何一步异常都不中断整轮：已有数据照常保存，错误写入 errors。
+
+    skip_boss=True 时跳过 BOSS直聘（cookie 预检未通过，见 search_all_platforms）。
     """
     config = ROUND_KEYWORDS.get(round_label)
     if not config:
@@ -250,7 +260,7 @@ async def run_search_round(round_label: str) -> SearchRound:
                 print("已过截止时间，停止搜索，保存已有结果")
                 return
             print(f"搜索({tag}): {kw}")
-            batch, errs = await search_all_platforms(kw, round_label)
+            batch, errs = await search_all_platforms(kw, round_label, skip_boss)
             all_jobs.extend(batch)
             searched_keywords.append(kw)
             errors.extend(errs)

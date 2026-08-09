@@ -43,6 +43,10 @@ async def main():
         "--round", type=str, default="",
         help="顺序制轮次 1~5（缺省按 BJT 时段自动判断）",
     )
+    parser.add_argument(
+        "--skip-boss", action="store_true",
+        help="跳过 BOSS直聘（cookie 预检未通过时 CI 传入，避免为拉不到的 BOSS 烧时长）",
+    )
     args = parser.parse_args()
 
     round_label = args.round or os.environ.get("SEARCH_ROUND") or get_current_round()
@@ -51,7 +55,7 @@ async def main():
     print(f"当前时间: {datetime.now(BJT).strftime('%Y-%m-%d %H:%M:%S')} BJT")
 
     # 单轮内部已做 21:30 BJT 截止兜底与异常捕获，最多影响本轮数据质量，不抛给 CI
-    round_data = await run_search_round(round_label)
+    round_data = await run_search_round(round_label, skip_boss=args.skip_boss)
     print(f"\n完成！原始 {round_data.total_raw} 条，有效 {round_data.total_after_filter} 条")
 
     # 轮次确认：数量门槛 + LLM 评审，结果写回 round JSON

@@ -75,7 +75,10 @@ jobs:
       # BLOCKED（平台风控/登录墙）与 SKIP（无 Camoufox）不计失败；FAIL（提取器 bug）亮黄。
       # ⚠️ continue-on-error：验证只是回归信号，绝不能卡停每日检索（宁可亮黄也要跑出数据）。
       #    严格门槛在 verify.yml（push/PR 强制）。FAIL 现场会落盘 data/verify-diagnostics/ 供排查。
+      # ⚠️ boss_valid 输出：BOSS 被登录墙/风控拦截（cookie 过期）时置 false → 下面各轮
+      #    --skip-boss，不为拉不到的 BOSS 启动 Camoufox 烧时长（用户 2026-08-09 要求）。
       - name: Verify DOM extractors (BOSS直聘/58同城)
+        id: verify
         continue-on-error: true
         run: python scripts/verify_extractors.py
 
@@ -86,7 +89,7 @@ jobs:
       # 未配置时平台自动降级（免登录链路），不失败。
       - name: Round 1 (气象/大气科学)
         continue-on-error: true
-        run: python scripts/search.py --round 1
+        run: python scripts/search.py --round 1 ${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}
 
       - name: Commit round 1 data
         if: always()
@@ -99,7 +102,7 @@ jobs:
 
       - name: Round 2 (环境/生态)
         continue-on-error: true
-        run: python scripts/search.py --round 2
+        run: python scripts/search.py --round 2 ${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}
 
       - name: Commit round 2 data
         if: always()
@@ -112,7 +115,7 @@ jobs:
 
       - name: Round 3 (AI/大模型 + 补充长尾)
         continue-on-error: true
-        run: python scripts/search.py --round 3
+        run: python scripts/search.py --round 3 ${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}
 
       - name: Commit round 3 data
         if: always()
@@ -125,7 +128,7 @@ jobs:
 
       - name: Round 4 (AI Agent/应用)
         continue-on-error: true
-        run: python scripts/search.py --round 4
+        run: python scripts/search.py --round 4 ${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}
 
       - name: Commit round 4 data
         if: always()
@@ -138,7 +141,7 @@ jobs:
 
       - name: Round 5 (交叉学科)
         continue-on-error: true
-        run: python scripts/search.py --round 5
+        run: python scripts/search.py --round 5 ${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}
 
       - name: Commit round 5 data
         if: always()

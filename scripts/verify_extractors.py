@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -216,6 +217,8 @@ async def main() -> int:
 
     platforms = [args.platform] if args.platform else list(PLATFORMS)
     failures: list[str] = []
+    # BOSS cookie 预检结果：默认不跳过（fail-safe——探测异常绝不能误跳过丢数据）
+    boss_valid = True
     print("=" * 68)
     print("DOM 提取器 实页验证（关键词: %s）" % args.keyword)
     print("=" * 68)
@@ -225,11 +228,23 @@ async def main() -> int:
         print(f"{mark} [{verdict:<7}] {name}: {msg}")
         if verdict == "FAIL":
             failures.append(name)
+        # BOSS 被风控/登录墙拦截（BLOCKED）＝ 本轮拉不到 BOSS → CI 各轮跳过省时。
+        # PASS=登录态正常；FAIL/SKIP 保持不跳过（FAIL 是提取器 bug 需暴露，SKIP 是本地没环境）。
+        if name == "BOSS直聘" and verdict == "BLOCKED":
+            boss_valid = False
     print("=" * 68)
     if failures:
         print(f"❌ FAIL 平台: {', '.join(failures)} —— 提取器 bug，需修复")
+        print(f"ℹ️ boss_valid={'false' if not boss_valid else 'true'}")
         return 1
     print("✅ 无 FAIL（BLOCKED=平台风控非bug，SKIP=CI 会跑）")
+    # 写 $GITHUB_OUTPUT：search.yml 各轮据此传 --skip-boss，省掉拉不到 BOSS 的时长
+    gh_out = os.environ.get("GITHUB_OUTPUT")
+    if gh_out:
+        with open(gh_out, "a", encoding="utf-8") as f:
+            f.write(f"boss_valid={'true' if boss_valid else 'false'}\n")
+        print(f"[ci] boss_valid={'true' if boss_valid else 'false'} "
+              "（false → 各轮跳过 BOSS，省时）")
     return 0
 
 
