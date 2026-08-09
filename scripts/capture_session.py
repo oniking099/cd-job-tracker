@@ -39,12 +39,14 @@ from src.scrapers.base import apply_stealth, UA_POOL, VIEWPORT_POOL
 
 # 平台 → 默认入口 URL（打开后自行找登录入口；也可用 --url 指定）
 PLATFORM_URLS = {
-    "boss": "https://www.zhipin.com/",
+    # 直接进 BOSS 扫码登录页：首页会因匿名 cookie 膨胀触发"假登录"自动导出，绝不能用首页
+    "boss": "https://www.zhipin.com/web/user/?ka=header-login",
     "wuba": "https://cd.58.com/job/",
     "yupao": "https://www.yupao.com/chengdu/",  # 成都站（拼音路径，非数字城市码）
 }
 
-LOGIN_MARKERS = ["login", "passport", "verify", "captcha", "sso", "safe"]
+# "仍在登录页"判定：URL 命中任一项就继续等，防止匿名 cookie 造成假登录
+LOGIN_MARKERS = ["login", "passport", "verify", "captcha", "sso", "safe", "web/user"]
 LOGIN_TIMEOUT_S = 600  # 最长等待登录 10 分钟
 
 # 平台 → 导航栏未登录标记文本（登录成功后消失；如鱼泡"登录丨注册"变用户名）。
@@ -127,6 +129,8 @@ async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
         os="windows",
         locale="zh-CN",
         timezone_id="Asia/Shanghai",
+        # 大视口：BOSS 登录页的扫码/滑块验证在页面下方，默认小窗口会贴底够不着
+        viewport={"width": 1560, "height": 940},
         user_data_dir=str(SESSIONS_DIR / "profiles" / platform),
     ) as context:
         page = context.pages[0] if context.pages else await context.new_page()
@@ -134,6 +138,12 @@ async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
         print(f"[1/2] 打开浏览器: {url}")
         await page.goto(url, wait_until="domcontentloaded", timeout=60000)
         await page.wait_for_timeout(2500)
+        # 双保险：强制拉大视口 + 滚到底部，确保扫码/滑块验证一定进视野可操作
+        try:
+            await page.set_viewport_size({"width": 1560, "height": 940})
+            await page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
+        except Exception:
+            pass
         if page.url.startswith("about:blank"):
             print("❌ 被 about:blank 拦截（Camoufox 未生效），检查指纹配置")
             return 1
@@ -155,6 +165,17 @@ async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
         n_cookies = len(state.get("cookies", []))
         print(f"✅ 已导出 {n_cookies} 个 cookie 到 {out_path}")
         print("   爬虫将自动加载该登录态绕过登录墙。")
+
+        # 便捷：同步导出 GitHub secret {PLATFORM}_COOKIE 所需的 cookies 数组，
+        # 用户每天刷新 BOSS_COOKIE 时直接用这个文件，不用手动抠 JSON。
+        secret_name = f"{platform.upper()}_COOKIE"
+        cookie_path = SESSIONS_DIR / f"{platform}_cookie.json"
+        cookie_path.write_text(
+            json.dumps(state.get("cookies", []), ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(f"✅ 已导出 cookies 数组到 {cookie_path}")
+        print(f"   更新 GitHub secret `{secret_name}` 时，把该文件内容整体粘贴进去即可。")
         return 0
 
 
@@ -219,6 +240,17 @@ async def _capture_chromium(platform: str, url: str, manual: bool) -> int:
         n_cookies = len(state.get("cookies", []))
         print(f"✅ 已导出 {n_cookies} 个 cookie 到 {out_path}")
         print("   爬虫将自动加载该登录态绕过登录墙。")
+
+        # 便捷：同步导出 GitHub secret {PLATFORM}_COOKIE 所需的 cookies 数组，
+        # 用户每天刷新 BOSS_COOKIE 时直接用这个文件，不用手动抠 JSON。
+        secret_name = f"{platform.upper()}_COOKIE"
+        cookie_path = SESSIONS_DIR / f"{platform}_cookie.json"
+        cookie_path.write_text(
+            json.dumps(state.get("cookies", []), ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(f"✅ 已导出 cookies 数组到 {cookie_path}")
+        print(f"   更新 GitHub secret `{secret_name}` 时，把该文件内容整体粘贴进去即可。")
         return 0
 
 
