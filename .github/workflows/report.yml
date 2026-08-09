@@ -1,12 +1,19 @@
-name: Daily Report (manual only)
+# ⚠️⚠️ [已废弃 DEPRECATED — 2026-08-09] ⚠️⚠️
+# 本 workflow 已废弃，保留文件仅为存档，请勿手动运行。
+# 废弃原因：报告生成已并入 search.yml（检索完立即生成双 HTML，--no-push），
+# 微信推送已拆到 push.yml（每日 11:00 BJT 推送前一日结果 + BOSS 登录提醒）。
+# 本文件里的 report.py 默认带推送，手动跑会重复推送 → 已整条 job 禁用。
+# 如需重生成报告：本地跑 `python scripts/report.py` 即可。
+name: Daily Report (已废弃，勿运行)
 
 on:
-  # 仅手动触发：检索+推送已合并进 search.yml（检索完立即推送，避免 sleep 撑时烧计费分钟）。
-  # 保留本文件供需要时手动重生成报告。
+  # 仅手动触发：报告生成+推送已合并进 search.yml / push.yml，本文件不再需要。
   workflow_dispatch:
 
 jobs:
   report:
+    # 已废弃：整条 job 恒跳过，即使误点也不会产生任何计算分钟/重复推送
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
