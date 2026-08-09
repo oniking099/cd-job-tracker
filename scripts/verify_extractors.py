@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -31,6 +32,10 @@ from src.scrapers.agent_scraper import (
     BossAgentScraper,
     WubaAgentScraper,
 )
+
+# 诊断落盘目录（FAIL 时把 CI 实页现场写进 data/verify-diagnostics/，
+# search.yml 的 data/ 自动提交会带上仓库，无日志权限也能看到页面结构）
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 # 平台 -> 验证配置：scraper（复用其 context/登录态）、期望 URL 域名、是否需 Camoufox
 PLATFORMS: dict[str, dict] = {
@@ -58,6 +63,29 @@ def _looks_blocked(page_title: str, page_url: str) -> bool:
     if any(f in text for f in _BLOCK_URL_FRAGMENTS):
         return True
     return any(m in text for m in _BLOCK_MARKERS)
+
+
+def _dump_diagnostic(platform: str, keyword: str, title: str, url: str,
+                     body_len: int, ssr: str, dom_cards: int, note: str) -> None:
+    """FAIL 时把 CI 实页现场落盘，供无日志权限时排查页面真实结构。"""
+    try:
+        d = DATA_DIR / "verify-diagnostics"
+        d.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        f = d / f"{platform}-{stamp}.txt"
+        f.write_text(
+            f"[{platform}] verify FAIL ({note})\n"
+            f"keyword:   {keyword}\n"
+            f"page_title: {title}\n"
+            f"page_url:  {url}\n"
+            f"body_len:  {body_len}\n"
+            f"ssr:       {ssr}\n"
+            f"dom_cards: {dom_cards}\n",
+            encoding="utf-8",
+        )
+        print(f"  ⚠️ FAIL 现场已写入 {f}")
+    except Exception as e:
+        print(f"  ⚠️ 诊断写入失败: {e}")
 
 
 def _check_structure(rows: list[dict], domains: tuple[str, ...]) -> tuple[bool, str]:
@@ -117,6 +145,12 @@ async def _verify_platform(platform: str, cfg: dict, keyword: str) -> tuple[str,
             page = await scraper.context.new_page()
             start_url = scraper.build_start_url(keyword)
             await scraper._prewarm(page, start_url)
+            # SPA 平台（BOSS 等）懒加载卡片：等网络空闲 + 余量，避免页面没渲染完就提取 → 假 FAIL
+            try:
+                await page.wait_for_load_state("networkidle", timeout=15000)
+            except Exception:
+                pass
+            await page.wait_for_timeout(2500)
             try:
                 rows = [d for d in (await extractor(page) or []) if d]
             except Exception as e:
@@ -125,8 +159,25 @@ async def _verify_platform(platform: str, cfg: dict, keyword: str) -> tuple[str,
             try:
                 page_title = await page.title()
                 page_url = page.url
+                body_len = await page.evaluate(
+                    "() => document.body ? document.body.innerText.length : 0"
+                )
+                ssr = await page.evaluate("""() => {
+                    try {
+                        const d = window.__NEXT_DATA__ || window.__INITIAL_STATE__ || null;
+                        if (!d) return 'no-ssr';
+                        const p = (d.props && d.props.pageProps) ? d.props.pageProps : d;
+                        const l = p.jobList || (p.searchResult && p.searchResult.jobList) || [];
+                        return 'jobList=' + (l || []).length;
+                    } catch (e) { return 'ssr-read-err'; }
+                }""")
+                dom_cards = await page.evaluate("""() => {
+                    return document.querySelectorAll(
+                        'li.job-card-wrapper, div.job-card-body, div.search-job-result li'
+                    ).length;
+                }""")
             except Exception:
-                page_title, page_url = "", start_url
+                body_len, ssr, dom_cards = 0, "", 0
             await page.close()
     except Exception as e:
         # 浏览器启动失败（Camoufox 依赖/平台风控把连接掐断等）——环境问题，非提取器 bug
@@ -134,10 +185,14 @@ async def _verify_platform(platform: str, cfg: dict, keyword: str) -> tuple[str,
 
     if rows:
         ok, msg = _check_structure(rows, domains)
-        return ("PASS" if ok else "FAIL"), msg
+        verdict = "PASS" if ok else "FAIL"
+        if not ok:
+            _dump_diagnostic(platform, keyword, page_title, page_url, body_len, ssr, dom_cards, msg)
+        return verdict, msg
 
     if _looks_blocked(page_title, page_url):
         return "BLOCKED", f"页面被风控/登录墙拦截（title={page_title[:40]!r}）"
+    _dump_diagnostic(platform, keyword, page_title, page_url, body_len, ssr, dom_cards, "提取 0 条")
     return "FAIL", "页面可加载、无拦截特征，但提取 0 条"
 
 
