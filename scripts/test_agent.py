@@ -7,7 +7,7 @@
   python scripts/test_agent.py --platform boss     --keyword "成都 气象"
   python scripts/test_agent.py --platform iguopin  --keyword "成都 气象"
 
-支持全部 AGENT_SCRAPERS 平台（zhilian/job51/boss/liepin/lagou/wuba/chinahr/yupao/jobui/iguopin/qixiang/bjx_huanbao/gaoxiaojob）。
+支持全部 AGENT_SCRAPERS 平台（zhilian/job51/boss/liepin/wuba/chinahr/yupao/jobui/iguopin/qixiang/bjx_huanbao/gaoxiaojob）。
 前提：.env 里配置 QWENVL_API_KEY（决策+提取主力），GEMINI_API_KEY 兜底。
 操作过程截图存 data/agent-traces/<平台>/<关键词>/ 供人工核对。
 """
@@ -29,7 +29,6 @@ PLATFORMS: dict[str, type] = {
     "job51": AGENT_SCRAPERS["51Job"],
     "boss": AGENT_SCRAPERS["BOSS直聘"],
     "liepin": AGENT_SCRAPERS["猎聘"],
-    "lagou": AGENT_SCRAPERS["拉勾"],
     "wuba": AGENT_SCRAPERS["58同城"],
     "chinahr": AGENT_SCRAPERS["中华英才网"],
     "yupao": AGENT_SCRAPERS["鱼泡直聘"],

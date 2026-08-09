@@ -69,6 +69,12 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/ -v
 
+      # ---- 提取器实页验证门槛：改提取器代码后不再手工重做复核 ----
+      # 真实加载 BOSS/58 页面 → 直接调 DOM 提取器断言（标题填充率/URL真实性/域匹配）。
+      # BLOCKED（平台风控/登录墙）与 SKIP（无 Camoufox）不计失败；FAIL（提取器 bug）亮红。
+      - name: Verify DOM extractors (BOSS直聘/58同城)
+        run: python scripts/verify_extractors.py
+
       # ---- 顺序制 5 轮：一轮跑完→确认→提交→下一轮 ----
       # continue-on-error: true —— 单轮失败/超时（21:30 BJT 截止）不阻断后续轮次
       # 逐轮 git-auto-commit 保证报告能融合到已完成轮次（用户要的"中断后融合"）

@@ -5,7 +5,7 @@
 （Chromium 跳 about:blank），以及登录墙/风控表现。
 
 用法：
-  python scripts/probe_platform.py --url "https://www.lagou.com/wn/jobs?city=成都&kd=气象" --platform lagou
+  python scripts/probe_platform.py --url "https://www.liepin.com/zhaopin/?city=280020&dq=280020&key=气象" --platform liepin
   python scripts/probe_platform.py --url "https://cd.58.com/job/?key=气象" --platform wuba
 """
 from __future__ import annotations

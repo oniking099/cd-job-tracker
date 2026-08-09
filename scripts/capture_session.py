@@ -4,7 +4,7 @@
 
 用法：
   python scripts/capture_session.py --platform boss
-  python scripts/capture_session.py --platform lagou
+  python scripts/capture_session.py --platform wuba
   python scripts/capture_session.py --url https://www.zhipin.com/ --platform boss
 
 流程（自动检测模式，默认）：
@@ -40,7 +40,6 @@ from src.scrapers.base import apply_stealth, UA_POOL, VIEWPORT_POOL
 # 平台 → 默认入口 URL（打开后自行找登录入口；也可用 --url 指定）
 PLATFORM_URLS = {
     "boss": "https://www.zhipin.com/",
-    "lagou": "https://www.lagou.com/",
     "wuba": "https://cd.58.com/job/",
     "yupao": "https://www.yupao.com/chengdu/",  # 成都站（拼音路径，非数字城市码）
 }
@@ -238,7 +237,7 @@ def main() -> int:
             stream.reconfigure(encoding="utf-8", errors="replace")
 
     parser = argparse.ArgumentParser(description="手动登录导出登录态（storage_state）")
-    parser.add_argument("--platform", default="boss", help="平台 key（boss/lagou/wuba/yupao）")
+    parser.add_argument("--platform", default="boss", help="平台 key（boss/wuba/yupao）")
     parser.add_argument("--url", default="", help="自定义登录入口 URL（默认取 PLATFORM_URLS）")
     parser.add_argument("--manual", action="store_true", help="交互模式：登录后按 Enter 再导出")
     parser.add_argument(

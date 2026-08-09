@@ -21,7 +21,6 @@ class SourcePlatform(str, Enum):
     JOB51 = "51Job"
     ZHILIAN = "智联招聘"
     LIEPIN = "猎聘"
-    LAGOU = "拉勾"
     BOSS = "BOSS直聘"
     YUPAO = "鱼泡直聘"
     WUBA = "58同城"

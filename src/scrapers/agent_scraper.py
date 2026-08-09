@@ -324,37 +324,30 @@ class LiepinAgentScraper(AgentScraperBase):
     )
 
 
-class LagouAgentScraper(AgentScraperBase):
-    """拉勾：搜索 URL 带 city=成都，agent 在结果页滚动提取。"""
-    platform_name = "拉勾"
-    start_url = "https://www.lagou.com/wn/jobs?city=成都"
-
-    def build_start_url(self, keyword: str) -> str:
-        from urllib.parse import quote
-        return f"https://www.lagou.com/wn/jobs?city={quote('成都')}&kd={quote(keyword)}&pn=1"
-
-    task_template = (
-        "在拉勾网的{city}岗位搜索结果页查看「{keyword}」岗位。"
-        "页面标题应包含{city}（已按{city}筛选）。"
-        "如果页面出现登录/验证码弹窗，忽略它，不要点击。"
-        "滚动查看岗位卡片列表（卡片含 岗位名/薪资/地点/公司），看到{city}的岗位列表后执行 extract。"
-    )
-
-
 class WubaAgentScraper(AgentScraperBase):
-    """58同城：搜索 URL 已按成都（cd.58.com），agent 在结果页滚动提取。"""
+    """58同城：改走 wap 频道页 m.58.com/cd/job/（无登录墙，2026-08-09 实测）。
+
+    ⚠️ 桌面版 cd.58.com/job/ 对自动化直接 302 到 passport 登录墙（2026-08-09 实测
+    无法访问）；wap 频道页可直开且卡片数据完整（标题/薪资/公司/地点，30 卡 0 缺失）。
+    wap 无关键词搜索入口（key 参数不生效，搜索框提交只重载通用列表）——
+    故 keyword 不再进 URL，agent 直接从成都全职列表页滚动提取，关键词语义由
+    下游 _filter_industry/qualification 等做。地点为"区-商圈"无城市前缀，
+    提取器已统一补 "成都" 前缀，保证 _filter_city 不误剔。
+    """
     platform_name = "58同城"
-    start_url = "https://cd.58.com/job/"
+    start_url = "https://m.58.com/cd/job/"
 
     def build_start_url(self, keyword: str) -> str:
-        from urllib.parse import quote
-        return f"https://cd.58.com/job/?key={quote(keyword)}&final=1&jump=1"
+        # wap 频道页不支持关键词过滤，固定进成都全职列表即可
+        return "https://m.58.com/cd/job/"
 
     task_template = (
-        "在58同城成都站的岗位搜索结果页查看「{keyword}」岗位。"
-        "页面标题应包含{city}（58同城 cd.58.com 为成都站）。"
-        "如果页面出现登录/验证码弹窗，忽略它，不要点击。"
-        "滚动查看岗位卡片列表（卡片含 岗位名/薪资/地点/公司），看到{city}的岗位列表后执行 extract。"
+        "在58同城成都 wap 版（m.58.com/cd/job/）的岗位列表页查看岗位。"
+        "页面是成都全职招聘列表，无需登录。"
+        "不要点击页面顶部的搜索框/搜索按钮（wap 版没有关键词过滤，提交只会重载通用列表）。"
+        "不要点击任何登录/APP 下载/弹窗，忽略它们。"
+        "滚动查看岗位卡片列表（卡片含 岗位名/薪资/地点/公司），"
+        "看到岗位列表后执行 extract。"
     )
 
 

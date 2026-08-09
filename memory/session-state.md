@@ -1,5 +1,52 @@
 # 会话状态（2026-08-09 更新——崩溃恢复已完成 ✅）
 
+# 以下为 2026-08-09 20:30 记录（拉勾完整移除 ✅）
+
+## 拉勾平台完整移除（用户拍板：不花钱 + 不浪费 GitHub Actions 时长）
+- **决定**：拉勾 阿里云行为级滑块 WAF 需付费打码+IP 轮换才可能过；用户明确「不花钱 + 不能浪费 GitHub 云端服务器时长」→ 完整移除，不保留空转占 CI。
+- **删除**：`src/scrapers/lagou.py`（旧 LagouScraper）、`tests/test_lagou_extract.py`（6 测试）
+- **编辑**：models.py 删 LAGOU 枚举；__init__.py 删 4 处注册（import/AGENT 导入/ALL_SCRAPERS/AGENT_SCRAPERS）；agent_scraper.py 删 LagouAgentScraper；extract.py 删 `_extract_lagou_from_dom`+注册表；verify_extractors.py 删 import+平台表；test_agent/capture_session/probe_platform 删 key 与示例；README 13→12 平台删行；report.html 尾部删来源；search.yml/verify.yml 门槛注释与步骤名改「(BOSS直聘/58同城)」；plan.md 标记已放弃
+- **验证**：pytest **224 全绿**（230−6）；YAML 两 workflow 解析 OK；导入冒烟：12 平台 / DOM 提取器 6 个（鱼泡/智联/猎聘/中华英才/58/BOSS）/ verify 平台表仅 58+BOSS
+- **找回**：全部拉勾代码在 git commit **94e3bab**，未来若想复活可 checkout 恢复
+- ⚠️ 未提交：本批次（B1 提取器 + verify 门槛 + 拉勾移除）仍挂在 wip 分支，等用户拍板 commit → 推送后今晚 CI 自动验证 BOSS(Camoufox)/58
+
+---
+
+# 以下为 2026-08-09 19:30 记录（复核沉淀成自动化，结束"每次改代码重做复核"）
+
+## 提取器复核 → 脚本 + CI 门槛（用户拍板选方案A）✅
+- **问题**：验证对象=提取器代码本身，改选择器/逻辑→旧验证对不上新代码，所以感觉"每次改代码都要重做"。根因=复核没沉淀成可复用资产。
+- **方案**：新建 `scripts/verify_extractors.py`（可重跑一条命令）：
+  - 真实加载平台页 → 直接调 `_DOM_EXTRACTORS[platform]`（不经 OCR/视觉兜底，验证提取器本身）
+  - 结构性断言：标题填充率≥90% + URL 真实同域无 javascript: 占位（错配根因检查）
+  - verdict：PASS / BLOCKED(平台风控非bug) / SKIP(本地无Camoufox) / **FAIL(真bug,退出码1)**
+  - 平台表：58同城(domains=58.com, chromium)、BOSS直聘(zhipin.com, Camoufox)（拉勾 20:30 已随移除而删除）
+  - 坑已修：普通 scraper 的 context 是 None，`_new_context()` 后才 new_page；Camoufox `_new_context` 幂等
+- **CI 门槛**：
+  - `search.yml` 加 "Verify DOM extractors" 步骤（每晚 5 轮前跑，FAIL 亮红）
+  - 新建 `.github/workflows/verify.yml`：**push/PR 时跑 pytest+verify_extractors** —— 以后改代码自动复核，不再手工
+- **本地实测 verdict**（2026-08-09）：58=BLOCKED（本机 IP 被 58 按 IP 验证码墙：`请输入验证码 ws:39.144.199.75`，非提取器 bug；早先 Playwright MCP 真浏览器 30 卡 0 缺失已验证过）、BOSS=SKIP（本地无 Camoufox，CI 会跑）、拉勾=BLOCKED（滑动验证 WAF）
+- **关键结论**：58/BOSS/拉勾 的验证都依赖网络/IP（本机 IP 已被 58/BOSS 风控、拉勾 WAF），本地装 Camoufox 也绕不开 → **只有 CI（GitHub runner 干净 IP + Camoufox + BOSS_COOKIE）能验证**，这正是 verify.yml + search.yml 门槛存在的意义。今晚 CI 自动出 verdict。
+- 测试：pytest **230 全绿**；两个 workflow YAML 已 yaml.safe_load 验证合法
+
+---
+
+# 以下为 2026-08-09 18:50 记录（B1 提取器三平台收尾）
+
+## plan B1：拉勾/58/BOSS 提取器收尾 ✅（未提交，等用户拍板）
+- ✅ **58同城实页验证成功**（2026-08-09 Playwright MCP 实测 `m.58.com/cd/job/` 频道页）：
+  - 30 卡片 title/company/url/salary/location **0 缺失**、URL 0 重复/0 非 58.com，详情页真实可达（含完整 JD：岗位职责/任职资格/薪资/公司）
+  - `_extract_wuba_from_dom` 重写为多模式：①wap 频道页 `a.list-item-a.tcb_list_item_link`+`.info-title/.info-salary/.company/.local_quXianName`（**地点补"成都"前缀**，否则 `_filter_city` 会把全站岗位误剔）②wap sou 页 `li>a>dl>dt.tit strong`（无公司/薪资，留空不伪造）③桌面回退旧选择器
+  - `WubaAgentScraper`：`build_start_url` 改 `https://m.58.com/cd/job/`（桌面 cd.58.com 对自动化 302 登录墙）；task_template 提示 agent 别点 wap 搜索框（无关键词过滤，key 参数不生效）
+- ✅ **BOSS提取器实现**：`_extract_boss_from_dom`（SSR `__NEXT_DATA__/__INITIAL_STATE__` jobList 优先，encryptJobId 拼 `job_detail/{eid}.html`，jobLabels→requirements、bossInfo.online→hr_active；DOM `li.job-card-wrapper` 回退），已注册 `_DOM_EXTRACTORS["BOSS直聘"]`
+  - ⚠️ **本机无法实页验证**：出口 IP 被 BOSS 风控拦"当前 IP 地址可能存在异常访问行为"；需 CI/Camoufox 环境实跑复核
+- 拉勾 `_extract_lagou_from_dom`（此前已写）：⚠️ 同样本机无法实页验证（阿里云滑动验证 WAF 全挡），需 CI 复核
+- 测试：`tests/test_wuba_extract.py` 文档更新（已验证）；新建 `tests/test_boss_extract.py`（6 个，mock 镜像 SSR→输出字段映射+内部回退分支）
+- **pytest 230 全绿**
+- ⚠️ 三平台验证状态总结：**58=实页验证成功**；拉勾/BOSS=选择器沿用旧 scraper 已验证路径，但本机 WAF/IP 风控看不到卡片，首次 agent/CI 实跑后需复核命中率（DOM 提取失败自动回退 OCR 兜底，不会比现在差；但 OCR 有幻觉风险=虚假数据，见 Actions 后果说明）
+
+---
+
 ## 恢复结果
 - tmp 残留恢复（猎聘+中华英才提取器）**此前已完成**：extract.py 744 行，`_extract_liepin_from_dom` / `_extract_chinahr_from_dom` 已注册进 `_DOM_EXTRACTORS`，tmp 文件已消失
 - 本会话补齐 plan B3 测试：新建 `tests/test_liepin_chinahr_extract.py`（8 个用例：三元组对齐/异常回退/空返回/集成 DOM 优先 ×2 平台）

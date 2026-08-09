@@ -1,0 +1,57 @@
+name: Extractor Verify
+
+# 提取器改动 → 自动复核门槛：每次 push / PR 都真实加载页面验证 DOM 提取器，
+# 不必再手工重做。每晚的完整检索 + 验证见 search.yml（search 作业里的
+# "Verify DOM extractors" 步骤每晚也跑一遍）。
+#
+# 本工作流轻量：只跑 单元测试 + 提取器实页验证，不跑 5 轮检索。
+# 从 search.yml 复制了同样环境（Python + Chromium + Camoufox），保证本地/CI 一致。
+on:
+  push:
+    branches: [main, 'wip/**']
+  pull_request:
+
+concurrency:
+  group: chengdu-extractor-verify
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # 与 search.yml 保持一致：验证 Camoufox 平台（BOSS）需要登录 Cookie
+      BOSS_COOKIE: ${{ secrets.BOSS_COOKIE }}
+      YUPAO_COOKIE: ${{ secrets.YUPAO_COOKIE }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
+
+      - name: Cache Camoufox binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/camoufox
+          key: camoufox-${{ runner.os }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install chromium --with-deps
+          python -m playwright install-deps firefox
+          python -m camoufox fetch
+
+      - name: Run unit tests
+        run: python -m pytest tests/ -q
+
+      # 提取器实页验证：FAIL 才失败（提取器 bug）；BLOCKED/SKIP 是平台风控/环境，不亮红。
+      # 注意 BOSS 需 Camoufox+Cookie 才能出结果；平台风控 BLOCKED 不计失败。
+      - name: Verify DOM extractors
+        run: python scripts/verify_extractors.py

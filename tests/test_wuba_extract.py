@@ -4,9 +4,11 @@
 - _extract_wuba_from_dom：DOM 直取 title/company/url 三元组、异常安全回退
 - 集成：extract_jobs_from_page 对 58同城走 DOM 优先（不经 OCR/标题匹配回填）
 
-⚠️ 提取器本身未经实页验证（cd.58.com 搜索页对 MCP 浏览器直接跳登录墙，
-2026-08-09 实测）；选择器沿用旧 scrapers/wuba.py 已验证结果。这里 mock
-evaluate 返回值，验证 Python 侧的返回/异常兜底/集成逻辑。
+✅ 提取器已实页验证（2026-08-09 Playwright MCP 实测 m.58.com/cd/job/ 频道页：
+30 卡片 title/company/url/salary/location 0 缺失、URL 0 重复、详情页真实可达；
+桌面 cd.58.com 搜索页对自动化 302 登录墙、wap sou 页无公司/薪资字段 ——
+多模式结构已在提取器内覆盖）。这里 mock evaluate 返回值，验证 Python 侧的
+返回/异常兜底/集成逻辑；JS 结构（含频道页地点补"成都"前缀）已在实页验证。
 """
 from __future__ import annotations
 

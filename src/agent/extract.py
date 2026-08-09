@@ -508,109 +508,73 @@ async def _extract_chinahr_from_dom(page) -> list[dict]:
     return data or []
 
 
-async def _extract_lagou_from_dom(page) -> list[dict]:
-    """拉勾专属提取：优先 window.__INITIAL_STATE__.positionResult SSR JSON（最稳），
-    失败回退 DOM 锚点扫描（/jobs/数字.html 详情链接 + 卡片容器取公司/薪资/地点）。
-
-    为什么必须特化：拉勾同标题多公司普遍，OCR+标题回填会错配别家 URL；
-    SSR JSON 自带 positionId/companyFullName，三元组成组直取，根治错配。
-
-    ⚠️ 未经实页验证（2026-08-09 实测：拉勾搜索页对 MCP 浏览器弹滑动验证，拿不到 DOM）。
-    字段路径沿用旧 scrapers/lagou.py 已验证结果（positionResult.result / companyFullName /
-    /gongsi/ 公司锚点钩子）；首次 agent 环境实跑后需复核选择器，失效时回退 OCR 兜底不丢数据。
-    """
-    # ① 优先 SSR JSON（不依赖选择器）
-    try:
-        data = await page.evaluate("""() => {
-            const s = window.__INITIAL_STATE__;
-            if (!s) return [];
-            const items = (s.positionResult && s.positionResult.result)
-                       || (s.positionList && s.positionList.result) || [];
-            const out = [];
-            for (const it of items) {
-                const title = it.positionName || '';
-                if (!title) continue;
-                const pid = it.positionId || '';
-                out.push({
-                    title,
-                    company: it.companyFullName || it.companyName || '',
-                    url: pid ? 'https://www.lagou.com/jobs/' + pid + '.html' : '',
-                    salary_text: it.salary || '',
-                    location: ((it.city || '') + (it.district || '')),
-                });
-            }
-            return out;
-        }""")
-        if data:
-            return data
-    except Exception as e:
-        logger.warning(f"[agent] 拉勾 SSR JSON 提取失败: {e}")
-
-    # ② 回退 DOM 锚点扫描（旧 _parse_html 选择器 + /gongsi/ 公司锚点钩子）
-    try:
-        data = await page.evaluate("""() => {
-            const out = [];
-            const seen = new Set();
-            const urlRe = /lagou\\.com\\/jobs\\/\\d+\\.html/;
-            const cards = document.querySelectorAll('a[href*="/jobs/"]');
-            for (const a of cards) {
-                const href = (a.href || '').split('?')[0];  // 去追踪参数，净详情 URL
-                if (!urlRe.test(href)) continue;
-                const t = (a.innerText || a.textContent || '').trim().replace(/\\s+/g, ' ');
-                if (!t || t.length > 40) continue;
-                if (seen.has(href)) continue;  // 同卡片多个锚点指向同一详情（标题区/底栏），去重
-                seen.add(href);
-                // 向上找卡片容器取公司/薪资/地点（同标题多公司时三元组必须同卡片取，防错配）
-                let company = '', salary = '', location = '';
-                let p = a.parentElement;
-                for (let i = 0; i < 6 && p; i++) {
-                    if (!company) {
-                        const coA = p.querySelector('a[href*="/gongsi/"], div.company_name a, span.company-name, .company-name');
-                        if (coA) { const ct = (coA.innerText || '').trim(); if (ct && ct.length <= 40) company = ct; }
-                    }
-                    if (!salary) {
-                        const salEl = p.querySelector('span.money, span.salary, .money, .salary');
-                        if (salEl) salary = (salEl.innerText || '').trim();
-                    }
-                    if (!location) {
-                        const locEl = p.querySelector('div.add em, span.work_addr, .work_addr');
-                        if (locEl) location = (locEl.innerText || '').trim();
-                    }
-                    if (company && salary && location) break;
-                    p = p.parentElement;
-                }
-                out.push({ title: t, company, url: href, salary_text: salary, location });
-            }
-            return out;
-        }""")
-    except Exception as e:
-        logger.warning(f"[agent] 拉勾 DOM 提取失败: {e}")
-        return []
-    return data or []
-
-
 async def _extract_wuba_from_dom(page) -> list[dict]:
-    """58同城专属 DOM 提取：卡片容器直取 title/company/url/salary/location。
+    """58同城专属 DOM 提取：三套结构按页面实际渲染命中，直取 title/company/url/salary/location。
 
     为什么必须特化：58 同标题多公司普遍，OCR+标题回填会错配别家 URL；
     卡片容器内三元组成组直取，根治错配。
 
-    ⚠️ 未经实页验证（2026-08-09 实测：cd.58.com 搜索页对 MCP 浏览器直接跳
-    passport.58.com 登录墙，m版重定向错乱，拿不到 DOM）。
-    选择器沿用旧 scrapers/wuba.py 已验证结果；首次 agent 环境实跑后需复核，
-    失效时回退 OCR 兜底不丢数据。
-    DOM 结构（旧版已验证）：
-      li.job_item / div.job-list-item     卡片容器
-        a.t / span.name a / a.job-name    标题锚点+详情链接
-        a.fl / a.comp_name / span.company-name   公司
-        span.salary / b.price / p.salary  薪资
-        span.address / span.area          地点
+    ✅ 实页验证（2026-08-09 Playwright MCP，m.58.com/cd/job/）：30 卡片
+    title/company/url/salary/location 0 缺失、URL 0 重复/0 非 58.com，详情页真实可达
+    （m.58.com/cd/{cat}/{id}.shtml 含完整 JD：岗位职责/任职资格/薪资/公司）。
+    三个页面形态（按渲染命中取一种）：
+    ① wap 频道页（agent 主入口 m.58.com/cd/job/，无登录墙）：
+       a.list-item-a.tcb_list_item_link   整卡链接（href 即详情 URL）
+         .info-title     标题      .info-salary     薪资（3000-4500元/月）
+         .company        公司      .local_quXianName 地点（青羊-万家湾）
+       ⚠️ 地点是"区-商圈"无城市前缀（cd.58.com 即成都站，全站均为成都岗位），
+       提取时统一补 "成都" 前缀，否则下游 _filter_city/_keep_chengdu 会把整站岗位误剔。
+    ② wap sou 搜索页（m.58.com/cd/sou/?key=X，有关键词但无公司/薪资字段）：
+       li > a > dl > dt.tit strong   标题；dd.attr span 末个为地点。
+       该页无公司/薪资，字段留空（宁缺毋滥，不伪造），URL 真实可点进详情。
+    ③ 桌面版回退（旧 scrapers/wuba.py 已验证选择器；桌面被登录墙拦截时命中不了）：
+       li.job_item / div.job-list-item 卡片，a.t / span.name a 标题，等。
     """
     try:
         data = await page.evaluate("""() => {
             const out = [];
-            const cards = document.querySelectorAll('li.job_item, div.job-list-item');
-            for (const c of cards) {
+            // ① wap 频道页卡片（数据全，主路径）
+            for (const c of document.querySelectorAll('a.list-item-a.tcb_list_item_link')) {
+                const titleEl = c.querySelector('.info-title');
+                if (!titleEl) continue;
+                const t = (titleEl.innerText || titleEl.textContent || '').trim().replace(/\\s+/g, ' ');
+                if (!t) continue;
+                const coEl = c.querySelector('.company');
+                const salEl = c.querySelector('.info-salary');
+                const locEl = c.querySelector('.local_quXianName');
+                const loc = locEl ? (locEl.innerText || '').trim() : '';
+                out.push({
+                    title: t,
+                    company: coEl ? (coEl.innerText || '').trim() : '',
+                    url: c.href || '',
+                    salary_text: salEl ? (salEl.innerText || '').trim() : '',
+                    // cd.58.com 即成都站，全站岗位都在成都；wap 地点只有"区-商圈"无城市前缀，
+                    // 补 "成都" 前缀让下游城市过滤能保留（崇州/新都/双流均属成都辖区）
+                    location: loc ? '成都' + loc : '成都',
+                });
+            }
+            if (out.length) return out;
+            // ② wap sou 搜索页（有关键词，但卡片无公司/薪资字段，留空不伪造）
+            for (const li of document.querySelectorAll('li')) {
+                const a = li.querySelector('a[href]');
+                const dt = li.querySelector('dt.tit strong');
+                if (!a || !dt) continue;
+                const t = (dt.innerText || '').trim().replace(/\\s+/g, ' ');
+                if (!t) continue;
+                const href = a.href || '';
+                if (!href || href.startsWith('javascript')) continue;
+                let location = '';
+                for (const dd of li.querySelectorAll('dd.attr')) {
+                    const spans = dd.querySelectorAll('span');
+                    if (!spans.length) continue;
+                    const lt = (spans[spans.length - 1].innerText || '').trim();
+                    if (lt && lt.length <= 10) location = lt;
+                }
+                out.push({ title: t, company: '', url: href, salary_text: '', location });
+            }
+            if (out.length) return out;
+            // ③ 桌面版回退（旧选择器；桌面搜索页对自动化 302 登录墙，正常命中不了）
+            for (const c of document.querySelectorAll('li.job_item, div.job-list-item')) {
                 const titleA = c.querySelector('a.t, span.name a, a.job-name');
                 if (!titleA) continue;
                 const t = (titleA.innerText || titleA.textContent || '').trim();
@@ -636,6 +600,92 @@ async def _extract_wuba_from_dom(page) -> list[dict]:
     return data or []
 
 
+async def _extract_boss_from_dom(page) -> list[dict]:
+    """BOSS直聘专属 DOM 提取：SSR JSON 优先 + DOM 卡片回退，直取 title/company/url。
+
+    为什么必须特化：BOSS 同标题多公司并排，OCR+标题回填会错配 URL；且 BOSS
+    反爬最严，越少交互越好——直接从 SSR JSON 拿加密岗位 ID 拼详情 URL，绕开 DOM。
+
+    ⚠️ 未经实页验证（2026-08-09 实测：本机出口 IP 被 BOSS 风控拦截"当前 IP
+    地址可能存在异常访问行为"，MCP 浏览器/API 都看不到卡片；需 CI/Camoufox
+    环境实跑复核，本机无法验证）。字段路径沿用旧 scrapers/boss.py 已验证结果；
+    命中不了时回退 OCR 兜底不丢数据。
+    SSR JSON（window.__NEXT_DATA__ / __INITIAL_STATE__）：
+      props.pageProps.jobList[]（或 props.pageProps.searchResult.jobList[]）
+        jobName / brandName / salaryDesc / cityName+areaDistrict / jobLabels[]
+        encryptJobId -> https://www.zhipin.com/job_detail/{encryptJobId}.html
+        bossInfo.online -> hr_active
+    DOM 回退（li.job-card-wrapper，旧版已验证选择器）：
+      span.job-name / a.job-title / h3.name    标题
+      h3.company-name a / a.company-name       公司
+      span.salary / span.red                   薪资
+      span.job-area / p.job-area               地点（"成都·高新区"，自带城市前缀）
+      span.boss-online-tag                     HR 在线
+      li.tag-item / span.tag-item              要求标签
+      a.job-card-left / a[ka^='search_list']   详情链接（浏览器内 a.href 即绝对 URL）
+    """
+    try:
+        data = await page.evaluate("""() => {
+            const out = [];
+            // ① SSR JSON：拿加密岗位 ID 拼详情 URL，零 DOM 依赖最稳
+            const data = window.__NEXT_DATA__ || window.__INITIAL_STATE__ || null;
+            if (data && typeof data === 'object') {
+                const props = data.props || data;
+                const pageProps = props.pageProps || props;
+                const list = pageProps.jobList ||
+                    (pageProps.searchResult && pageProps.searchResult.jobList) || [];
+                for (const it of list) {
+                    if (!it.jobName) continue;
+                    const boss = it.bossInfo || {};
+                    const eid = it.encryptJobId || it.jobId || '';
+                    const city = (it.cityName || '').trim();
+                    const area = (it.areaDistrict || '').trim();
+                    out.push({
+                        title: it.jobName.trim(),
+                        company: it.brandName || '',
+                        url: eid ? 'https://www.zhipin.com/job_detail/' + eid + '.html' : '',
+                        salary_text: it.salaryDesc || '',
+                        location: city + area,
+                        requirements: (it.jobLabels || []).join(', '),
+                        hr_active: !!(boss.online),
+                    });
+                }
+                if (out.length) return out;
+            }
+            // ② DOM 卡片回退（SSR 没数据时）
+            for (const c of document.querySelectorAll('li.job-card-wrapper, div.job-card-body, div.search-job-result li')) {
+                const titleEl = c.querySelector('span.job-name, a.job-title, h3.name');
+                if (!titleEl) continue;
+                const t = (titleEl.innerText || titleEl.textContent || '').trim();
+                if (!t) continue;
+                const a = c.querySelector('a.job-card-left, a[ka^="search_list"]');
+                const href = a ? (a.href || '') : '';
+                const url = (href && !href.startsWith('javascript')) ? href : '';
+                const coEl = c.querySelector('h3.company-name a, a.company-name, span.company-text');
+                const salEl = c.querySelector('span.salary, span.red');
+                const locEl = c.querySelector('span.job-area, p.job-area');
+                const hrEl = c.querySelector('span.boss-online-tag');
+                const reqTags = c.querySelectorAll('li.tag-item, span.tag-item');
+                const reqText = Array.from(reqTags)
+                    .map(x => (x.innerText || '').trim()).filter(Boolean).join(' ');
+                out.push({
+                    title: t,
+                    company: coEl ? (coEl.innerText || '').trim() : '',
+                    url,
+                    salary_text: salEl ? (salEl.innerText || '').trim() : '',
+                    location: locEl ? (locEl.innerText || '').trim() : '',
+                    requirements: reqText.slice(0, 200),
+                    hr_active: !!hrEl,
+                });
+            }
+            return out;
+        }""")
+    except Exception as e:
+        logger.warning(f"[agent] BOSS直聘 DOM 提取失败: {e}")
+        return []
+    return data or []
+
+
 # 平台 -> 专属 DOM 提取器（结构化直取 title/company/url，避免 OCR 标题匹配错配）
 # 运行时查找：extract_jobs_from_page 在模块加载完成后才调用，此时下方的提取器已定义
 _DOM_EXTRACTORS: dict = {
@@ -643,8 +693,8 @@ _DOM_EXTRACTORS: dict = {
     "智联招聘": _extract_zhilian_from_dom,
     "猎聘": _extract_liepin_from_dom,
     "中华英才网": _extract_chinahr_from_dom,
-    "拉勾": _extract_lagou_from_dom,
     "58同城": _extract_wuba_from_dom,
+    "BOSS直聘": _extract_boss_from_dom,
 }
 
 

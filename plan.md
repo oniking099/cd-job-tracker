@@ -42,7 +42,7 @@
 - **51Job**：升级现有 `_collect_job51_urls`——sensorsdata JSON 已含 jobId/jobTitle，查是否含 company；若不含从卡片其他 DOM 元素取。
 - **职友集**：升级 `_collect_jobui_urls` 带 company（对每个 `/job/数字/` 锚点向上取卡片容器取公司名），或写 `_extract_jobui_from_dom`。
 - **BOSS**（错配最重）：`.job-card-wrapper` 卡片，取 `.job-name`/`.company-name`；详情 URL 从卡片数据属性/加密参数构造（`/job_detail/{enc}.html`）。**需 Camoufox+登录态环境调试**（MCP 浏览器遇风控看不到卡片）。
-- **猎聘/拉勾/58/中华英才**：实施时用 agent 环境调试 DOM，参照智联模式。
+- **猎聘/58/中华英才**：实施时用 agent 环境调试 DOM，参照智联模式。（拉勾 2026-08-09 用户决定放弃：阿里云行为级滑块 WAF 需付费打码+IP 轮换才可能过，不花钱+不浪费 CI 时长，代码在 git 94e3bab 可找回）
 
 **B2. 整合进 `extract_jobs_from_page`** — `src/agent/extract.py`
 - 对有专属 DOM 提取器的平台：**优先 DOM 提取**（返回完整列表字段 title/company/url/salary/location），DOM 为空/失败再回退现有 OCR+DeepSeek 链。
@@ -100,6 +100,6 @@
 
 1. **止血**（A1-A4）：classifier 移除"集团"、DOM 通道带 company、`_merge_card_urls` 双匹配/不回填、jobui 搜索页 URL 加固。跑 `tests/` 全绿。
 2. **拆分 HTML**（C1-C5）：jd_category 分类、generator 拆分渲染、push 2 链接、pipeline 串接。跑 `tests/`。
-3. **深度重构**（B1-B3）：逐平台 DOM 提取器，优先智联（已验证）→ 51Job → 职友集 → BOSS → 猎聘/拉勾/58/中华英才。每个加测试，DOM 失败回退 OCR。
+3. **深度重构**（B1-B3）：逐平台 DOM 提取器，优先智联（已验证）→ 51Job → 职友集 → BOSS → 猎聘/58/中华英才（拉勾 2026-08-09 已放弃）。每个加测试，DOM 失败回退 OCR。
 
 每步独立可验证、可回滚。先止血上线见效，深度重构增量推进。
