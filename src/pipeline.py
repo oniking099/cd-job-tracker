@@ -398,8 +398,12 @@ def _compute_stats(round_label: str, jobs: list[Job]) -> dict:
     }
 
 
-async def run_report():
-    """生成最终报告并推送"""
+async def run_report(push: bool = True):
+    """生成最终报告；push=True 时顺带推送微信。
+
+    检索工作流（search.yml）用 push=False 只落 HTML（17:00 检索完即提交，
+    GitHub Pages 立即可看）；每日 11:00 由 push.yml 单独推送微信（含登录提醒）。
+    """
     print("\n" + "=" * 50)
     print("生成每日报告")
     print("=" * 50)
@@ -501,8 +505,12 @@ async def run_report():
         print(f"HTML 报告[{cat}]: {p}")
 
     # 推送到微信（用 BJT 日期，凌晨跨 UTC 日不串天）
-    from src.notify.serverchan import push_report
-    await push_report(valid_jobs, bjt_today())
+    # search.yml 用 --no-push 跳过这里；push.yml 每日 11:00 单独推送（含登录提醒）
+    if push:
+        from src.notify.serverchan import push_report
+        await push_report(valid_jobs, bjt_today())
+    else:
+        print("（--no-push：微信推送由 push.yml 每日 11:00 执行，此处仅生成 HTML）")
 
     # 统计摘要
     from collections import Counter

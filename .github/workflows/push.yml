@@ -1,0 +1,43 @@
+name: Daily Push
+
+# 每日 11:00 BJT 微信推送：前一日检索结果 + BOSS 扫码登录提醒。
+# 用户 2026-08-09：BOSS cookie 约 24h 过期需每天扫码刷新，检索改 17:00 BJT，
+# 11:00 的推送正好提醒「当天 17:00 检索前登录」，并附上前一日报告链接。
+# 轻量工作流：只 pip 装依赖（不需要 playwright/camoufox 浏览器），只发 ServerChan。
+on:
+  schedule:
+    # 11:00 BJT = 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: chengdu-daily-push
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 与 search.yml 一致：用 GH_PAT 确保能拿到最新提交的 data/（默认 token 也能读，保持一致）
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 推送前一日报告 + 红粗 BOSS 扫码登录提醒（只发微信，不改 HTML）
+      - name: Push daily report + login reminder
+        run: python scripts/push_daily.py

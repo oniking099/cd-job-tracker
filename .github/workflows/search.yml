@@ -3,10 +3,11 @@ name: Job Search
 on:
   workflow_dispatch:
   schedule:
-    # 北京时间 01:00 开始顺序跑 5 轮（UTC = BJT - 8h）
-    # GitHub 调度有 ~2.5h 延迟风险：即使 01:00 被延迟到 04:00 才触发，
-    # 仍是第一轮先跑、确认后立即下一轮；真正的停止在脚本内 21:30 BJT 截止兜底。
-    - cron: '0 17 * * *'
+    # 北京时间 17:00 开始顺序跑 5 轮（UTC = BJT - 8h，17:00 BJT = 09:00 UTC）
+    # 用户 2026-08-09：BOSS cookie 约 24h 过期需每天扫码刷新，检索改到傍晚，
+    # 次日 11:00 推送时提醒「当天 17:00 前登录」正好衔接。
+    # GitHub 调度有 ~2.5h 延迟风险：真正的停止在脚本内 21:30 BJT 截止兜底。
+    - cron: '0 9 * * *'
 
 # 防止同一工作流重叠执行；cancel-in-progress: false 确保排队执行而非中断
 concurrency:
@@ -148,13 +149,13 @@ jobs:
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
 
-      # ---- 检索完成后立即生成报告并推送（不固定 21:30）----
-      # 5 轮跑完（或 21:30 BJT 截止提前结束）即融合已完成轮次 → HTML + ServerChan 推送。
-      # 若用 sleep 撑到 21:30 会持续占用 runner → 每天约 20h 计费分钟（免费额度 2000/月），
-      # 故改为"检索完直接推送"（用户 2026-08-05 拍板；检索自然跑满则在 ~21:30 推送）。
-      - name: Generate report & push
+      # ---- 检索完成后立即生成 HTML 报告并提交（不固定 21:30）----
+      # 5 轮跑完（或 21:30 BJT 截止提前结束）即融合已完成轮次 → HTML（Pages 立即可看）。
+      # 微信推送不再随检索：用户 2026-08-09 改为每日 11:00 BJT 由 push.yml 单独推送
+      # （含 BOSS 扫码登录提醒）。--no-push 只落 HTML，不占用额外 runner 时长。
+      - name: Generate report (HTML only)
         if: always()
-        run: python scripts/report.py
+        run: python scripts/report.py --no-push
 
       # 报告产物（output/ HTML + data/<日期>/deduped.json）在 report.py 之后才生成，
       # 前面的逐轮 commit 只提交了 round JSON，这里必须再补一次提交，否则永远不入库。

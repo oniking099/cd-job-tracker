@@ -15,18 +15,37 @@ from src.report.generator import safe_url
 GITHUB_PAGES_BASE = "https://oniking099.github.io/cd-job-tracker"
 
 
-async def push_report(
-    jobs: list[Job],
-    report_date: str,
-) -> bool:
-    """
-    推送招聘摘要到微信。
-    返回是否推送成功。
-    """
+async def _send(title: str, desp: str) -> bool:
+    """发送 ServerChan 推送（desp 为 Markdown，支持内联 HTML 加粗/变色）。返回是否成功。"""
     if not SERVER_CHAN_SENDKEY:
         print("[Server酱] SENDKEY 未配置，跳过推送")
         return False
+    url = f"https://sctapi.ftqq.com/{SERVER_CHAN_SENDKEY}.send"
+    async with httpx.AsyncClient(timeout=30) as client:
+        try:
+            resp = await client.post(url, data={"title": title, "desp": desp})
+            result = resp.json()
+            if result.get("code") == 0:
+                print("[Server酱] 推送成功")
+                return True
+            print(f"[Server酱] 推送失败: {result}")
+            return False
+        except Exception as e:
+            print(f"[Server酱] 推送异常: {e}")
+            return False
 
+
+async def push_report(
+    jobs: list[Job],
+    report_date: str,
+    reminder: str = "",
+) -> bool:
+    """
+    推送招聘摘要到微信。
+    reminder：可选，Markdown 文本，插在推送最顶端（如 BOSS 扫码登录提醒）。
+    只影响微信推送消息，绝不改动 HTML 报告的 UI/UX。
+    返回是否推送成功。
+    """
     # 过滤有效岗位（修复3：没有正确 JD 页面的绝对不要，防御性再滤一遍）
     valid = [j for j in jobs if not j.excluded and safe_url(j.url)]
     if len(valid) != sum(1 for j in jobs if not j.excluded):
@@ -42,8 +61,14 @@ async def push_report(
     industry_url = f"{GITHUB_PAGES_BASE}/output/{report_date}/report-industry.html"
     professional_url = f"{GITHUB_PAGES_BASE}/output/{report_date}/report-professional.html"
 
-    # 构建摘要
-    lines = [
+    # 构建摘要：提醒（如有）置顶 → 报告正文
+    lines: list[str] = []
+    if reminder:
+        lines.append(reminder)
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+    lines.extend([
         f"## 🏙️ 成都招聘日报 ({report_date})",
         f"",
         f"**共 {len(valid)} 个岗位**",
@@ -51,7 +76,7 @@ async def push_report(
         f"📄 [行业类JD报告]({industry_url})",
         f"📄 [专业类JD报告]({professional_url})",
         "",
-    ]
+    ])
     for ct in ["国企", "央企", "外资", "合资", "其他"]:
         count = stats.get(ct, 0)
         if count > 0:
@@ -79,23 +104,12 @@ async def push_report(
                 lines.append("")
 
     # 发送
-    url = f"https://sctapi.ftqq.com/{SERVER_CHAN_SENDKEY}.send"
     title = f"📊 成都招聘日报 {report_date} · {len(valid)}个岗位"
     body = "\n".join(lines)
+    return await _send(title, body)
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        try:
-            resp = await client.post(url, data={
-                "title": title,
-                "desp": body,
-            })
-            result = resp.json()
-            if result.get("code") == 0:
-                print(f"[Server酱] 推送成功")
-                return True
-            else:
-                print(f"[Server酱] 推送失败: {result}")
-                return False
-        except Exception as e:
-            print(f"[Server酱] 推送异常: {e}")
-            return False
+
+async def push_reminder_only(reminder: str) -> bool:
+    """无检索数据时仅推送提醒（保证每日 11:00 都能收到扫码登录提醒）。"""
+    title = "⚠️ BOSS直聘 Cookie 需刷新（今日暂无检索数据）"
+    return await _send(title, reminder)
