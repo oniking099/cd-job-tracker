@@ -38,8 +38,9 @@ async def push_report(
         ct = job.company_type or CompanyType.OTHER
         stats[ct.value] = stats.get(ct.value, 0) + 1
 
-    # 卡片版网页报告 URL（修复2：点开是美观卡片网页，raw/jsdelivr 返回源码不可用）
-    report_url = f"{GITHUB_PAGES_BASE}/output/{report_date}/report.html"
+    # 卡片版网页报告 URL（用户 2026-08-08：拆成行业类 + 专业类两份）
+    industry_url = f"{GITHUB_PAGES_BASE}/output/{report_date}/report-industry.html"
+    professional_url = f"{GITHUB_PAGES_BASE}/output/{report_date}/report-professional.html"
 
     # 构建摘要
     lines = [
@@ -47,7 +48,8 @@ async def push_report(
         f"",
         f"**共 {len(valid)} 个岗位**",
         f"",
-        f"📄 [点我查看卡片版网页报告]({report_url})",
+        f"📄 [行业类JD报告]({industry_url})",
+        f"📄 [专业类JD报告]({professional_url})",
         "",
     ]
     for ct in ["国企", "央企", "外资", "合资", "其他"]:

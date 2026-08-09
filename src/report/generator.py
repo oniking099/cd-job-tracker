@@ -16,6 +16,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from src.config import OUTPUT_DIR, bjt_today
+from src.filters.jd_category import classify_jd_category
+from src.filters.report_exclusion import report_exclusion_reason
 from src.models import Job, CompanyType
 
 TEMPLATE_DIR = Path(__file__).parent / "templates"
@@ -141,23 +143,12 @@ def _group_by_company(jobs: list[Job]) -> dict[CompanyType, list[dict]]:
     return grouped
 
 
-def generate_report(
-    jobs: list[Job],
-    target_date: str | None = None,
-) -> str:
-    """
-    生成 HTML 报告。
-    返回生成的 HTML 文件路径。
-    """
-    # 去重过滤
-    jobs = [j for j in jobs if not j.excluded]
+def _render_report_html(jobs: list[Job], date_str: str) -> str:
+    """渲染单份报告 HTML（按公司聚合 + 按类型分组 + 套模板）。
 
-    # 职友集详情页改用移动版链接：www 版点击会被 valid.php 验证码拦截，
-    # m 版会正常 302 到真实来源站（智联/电梯招聘网等），不触发风控（实测 2026-08-07）。
-    for j in jobs:
-        if j.platform == "职友集" and j.url.startswith("https://www.jobui.com/job/"):
-            j.url = "https://m.jobui.com/job/" + j.url[len("https://www.jobui.com/job/"):]
-
+    不写文件、不计算日期，由 generate_report 拆分行业/专业后分别调用。
+    模板/排序/样式完全不变，仅 jobs 子集不同 -> 仅数量差异。
+    """
     # 按公司聚合 + 按类型分组
     grouped = _group_by_company(jobs)
 
@@ -182,9 +173,6 @@ def generate_report(
             "text_color": style["text_color"],
         })
 
-    total_jobs = len(jobs)
-    today = target_date or bjt_today()
-
     # 渲染模板
     env = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
     env.filters["salary_months"] = salary_months
@@ -192,17 +180,58 @@ def generate_report(
     env.filters["fmt_dist"] = format_distance
     env.filters["safe_url"] = safe_url
     template = env.get_template("report.html")
-    html = template.render(
-        date_str=today,
+    return template.render(
+        date_str=date_str,
         groups=groups,
         summary=summary,
-        total_count=total_jobs,
+        total_count=len(jobs),
     )
 
-    # 保存文件
+
+def generate_report(
+    jobs: list[Job],
+    target_date: str | None = None,
+) -> dict[str, str]:
+    """生成 HTML 报告。
+
+    用户要求（2026-08-08）：单个 report.html 拆成两份--
+    - report-industry.html：行业类（大气科学/气象/大气环境/环保/生态 等）
+    - report-professional.html：专业类（AI/agent/大模型 等）
+    两类都占 -> 行业类；都不占 -> 行业类兜底。详见 jd_category.classify_jd_category。
+    拆分后模板/排序/样式不变，仅 jobs 子集与数量不同。
+
+    报告层排除（2026-08-09 用户要求，对两份报告同时生效）：
+    - 医学/法律/游戏/证券/电商/餐饮 领域岗位（制造/服务两侧都剔除）
+    - 月薪下限 ≥ 2.9万 的岗位（年薪折月判断）
+    详见 report_exclusion.report_exclusion_reason。
+
+    返回 {"industry": 路径, "professional": 路径}。
+    """
+    # 去重过滤
+    jobs = [j for j in jobs if not j.excluded]
+
+    # 报告层排除：领域 + 月薪下限≥3万（拆分前过滤，两份报告都不含）
+    jobs = [j for j in jobs if not report_exclusion_reason(j)]
+
+    # 职友集详情页改用移动版链接：www 版点击会被 valid.php 验证码拦截，
+    # m 版会正常 302 到真实来源站（智联/电梯招聘网等），不触发风控（实测 2026-08-07）。
+    for j in jobs:
+        if j.platform == "职友集" and j.url.startswith("https://www.jobui.com/job/"):
+            j.url = "https://m.jobui.com/job/" + j.url[len("https://www.jobui.com/job/"):]
+
+    today = target_date or bjt_today()
     out_dir = OUTPUT_DIR / today
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "report.html"
-    out_path.write_text(html, encoding="utf-8")
 
-    return str(out_path)
+    # 按行业/专业拆分（行业优先，兜底行业）
+    industry_jobs = [j for j in jobs if classify_jd_category(j) == "industry"]
+    professional_jobs = [j for j in jobs if classify_jd_category(j) == "professional"]
+
+    paths: dict[str, str] = {}
+    for cat, subset in (("industry", industry_jobs), ("professional", professional_jobs)):
+        html = _render_report_html(subset, today)
+        out_path = out_dir / f"report-{cat}.html"
+        out_path.write_text(html, encoding="utf-8")
+        paths[cat] = str(out_path)
+
+    return paths

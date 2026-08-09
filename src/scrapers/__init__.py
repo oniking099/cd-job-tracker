@@ -2,7 +2,6 @@
 from src.scrapers.job51 import Job51Scraper
 from src.scrapers.zhilian import ZhilianScraper
 from src.scrapers.liepin import LiepinScraper
-from src.scrapers.lagou import LagouScraper
 from src.scrapers.boss import BossScraper
 from src.scrapers.yupao import YupaoScraper
 from src.scrapers.wuba import WubaScraper
@@ -16,7 +15,6 @@ from src.scrapers.agent_scraper import (
     ZhilianAgentScraper,
     # 转换平台（HTML 爬虫失效 → agent 模拟人类操作）
     LiepinAgentScraper,
-    LagouAgentScraper,
     WubaAgentScraper,
     ChinahrAgentScraper,
     YupaoAgentScraper,
@@ -33,7 +31,6 @@ ALL_SCRAPERS: dict[str, type] = {
     "51Job": Job51Scraper,
     "智联招聘": ZhilianScraper,
     "猎聘": LiepinScraper,
-    "拉勾": LagouScraper,
     "BOSS直聘": BossScraper,
     "鱼泡直聘": YupaoScraper,
     "58同城": WubaScraper,
@@ -53,7 +50,6 @@ AGENT_SCRAPERS: dict[str, type] = {
     "BOSS直聘": BossAgentScraper,
     # 转换平台
     "猎聘": LiepinAgentScraper,
-    "拉勾": LagouAgentScraper,
     "58同城": WubaAgentScraper,
     "中华英才网": ChinahrAgentScraper,
     "鱼泡直聘": YupaoAgentScraper,
