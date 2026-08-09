@@ -44,11 +44,12 @@ async def main() -> None:
     jobs = uniq
 
     print(f"\n共 {len(jobs)} 条（含真实URL {sum(1 for j in jobs if j.url)} 条）")
-    p = generate_report(jobs, target_date=None)
-    # 输出到独立演示文件，不覆盖正式 report.html
-    demo = Path(p).parent / "demo-report.html"
-    Path(p).rename(demo)
-    print("演示报告:", demo)
+    paths = generate_report(jobs, target_date=None)
+    # 输出到独立演示文件，不覆盖正式 report-industry/professional.html
+    for cat, p in paths.items():
+        demo = Path(p).parent / f"demo-report-{cat}.html"
+        Path(p).rename(demo)
+        print(f"演示报告[{cat}]:", demo)
 
 
 if __name__ == "__main__":

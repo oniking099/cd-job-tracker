@@ -494,10 +494,11 @@ async def run_report():
     # 保存去重结果（必须在距离补全之后，否则 deduped.json 的 distance_km 恒为 null）
     save_deduped(valid_jobs)
 
-    # 生成 HTML 报告
+    # 生成 HTML 报告（行业类 + 专业类两份）
     from src.report.generator import generate_report
-    html_path = generate_report(valid_jobs)
-    print(f"HTML 报告: {html_path}")
+    report_paths = generate_report(valid_jobs)
+    for cat, p in report_paths.items():
+        print(f"HTML 报告[{cat}]: {p}")
 
     # 推送到微信（用 BJT 日期，凌晨跨 UTC 日不串天）
     from src.notify.serverchan import push_report

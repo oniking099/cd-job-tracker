@@ -189,13 +189,14 @@ class TestDictToJob:
 
 
 class TestDedupJobs:
-    def _job(self, title, company):
+    def _job(self, title, company, location="", url=""):
         return Job(
             platform="智联招聘",
             job_id="x",
-            url="",
+            url=url,
             title=title,
             company=company,
+            location=location,
         )
 
     def test_dedup_case_insensitive(self):
@@ -216,3 +217,30 @@ class TestDedupJobs:
         result = _dedup_jobs(jobs)
         assert len(result) == 1
         assert result[0].title == "气象工程师"
+
+    def test_same_title_company_diff_location_kept(self):
+        # 同公司同标题不同地点 = 不同岗位，各自 URL 必须保留
+        jobs = [
+            self._job("气象学", "某气象公司", location="成都", url="https://x/1"),
+            self._job("气象学", "某气象公司", location="绵阳", url="https://x/2"),
+        ]
+        result = _dedup_jobs(jobs)
+        assert len(result) == 2
+
+    def test_same_title_company_diff_url_kept(self):
+        # 同公司同标题同地点不同编制（不同详情 URL）= 不同岗位
+        jobs = [
+            self._job("气象学", "某气象公司", location="成都", url="https://x/1"),
+            self._job("气象学", "某气象公司", location="成都", url="https://x/2"),
+        ]
+        result = _dedup_jobs(jobs)
+        assert len(result) == 2
+
+    def test_identical_quadruple_deduped(self):
+        # 四元组全同（滚动重叠采到同一卡片）才算重复
+        jobs = [
+            self._job("气象学", "某气象公司", location="成都", url="https://x/1"),
+            self._job("气象学", "某气象公司", location="成都", url="https://x/1"),
+        ]
+        result = _dedup_jobs(jobs)
+        assert len(result) == 1
