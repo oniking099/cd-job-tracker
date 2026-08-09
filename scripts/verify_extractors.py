@@ -67,7 +67,11 @@ def _looks_blocked(page_title: str, page_url: str) -> bool:
 
 def _dump_diagnostic(platform: str, keyword: str, title: str, url: str,
                      body_len: int, ssr: str, dom_cards: int, note: str) -> None:
-    """FAIL 时把 CI 实页现场落盘，供无日志权限时排查页面真实结构。"""
+    """FAIL 时输出 ::error:: 注解（annotations API 可读，绕开日志鉴权）+ 落盘现场。"""
+    line = (f"[{platform}] {note} | title={title!r} | url={url[:80]} "
+            f"| body_len={body_len} | ssr={ssr} | dom_cards={dom_cards}")
+    # ::error:: 被 GitHub Actions 转成 run 注解，check-runs annotations 接口即可读
+    print(f"::error::{line}")
     try:
         d = DATA_DIR / "verify-diagnostics"
         d.mkdir(parents=True, exist_ok=True)
