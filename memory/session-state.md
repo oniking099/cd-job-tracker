@@ -48,3 +48,23 @@ plan.md「修复卡片内容错配 + 拆分双 HTML 方案」——上次会话�
 - [ ] BOSS `_extract_boss_from_dom`：错配最重，但**需 Camoufox + BOSS_COOKIE 登录态环境调试**，MCP 浏览器遇风控看不到卡片，本地无法验证
 - [ ] 猎聘/拉勾/58/中华英才 DOM 提取器（增量，参照智联模式，需 agent 环境调 DOM）
 - [ ] 未提交：6 个改动文件 + 3 个新文件（plan.md/jd_category.py/2 个测试）等用户拍板是否 commit
+
+---
+
+# 以下为 2026-08-09 15:50 记录（GitHub 备份完成）
+
+## 防重启丢工作
+- ✅ `wip/report-split-exclusion` 已推送 GitHub（commit cd2ac45，与远端一致）
+- ✅ 本仓库 git 已固化 Clash 代理 `http(s).proxy=http://127.0.0.1:7890`（repo-local）——之前 push 卡死根因是 git 不走系统代理
+- ⚠️ 远端 main 已被定时 Actions 推进到 43291ee（本地未拉取），wip 合回 main 前需先 fetch + rebase
+- 习惯要求：每个小里程碑 commit+push（走代理增量秒级）
+
+---
+
+# 以下为 2026-08-09 16:10 记录（拉勾提取器完成）
+
+## plan B1 增量：拉勾 DOM 提取器 ✅
+- `_extract_lagou_from_dom`：SSR JSON（__INITIAL_STATE__.positionResult）优先 + DOM 锚点扫描回退，已注册 _DOM_EXTRACTORS["拉勾"]
+- ⚠️ **未经实页验证**：拉勾搜索页对 MCP 浏览器弹滑动验证（2026-08-09 实测），字段路径沿用旧 lagou.py；首次 agent 实跑需复核选择器
+- 测试 tests/test_lagou_extract.py 6 个；pytest 220 全绿
+- 剩余：58同城（同样可能有风控，先探）、BOSS（需 Camoufox+登录态）

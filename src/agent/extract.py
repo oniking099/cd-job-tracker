@@ -508,6 +508,87 @@ async def _extract_chinahr_from_dom(page) -> list[dict]:
     return data or []
 
 
+async def _extract_lagou_from_dom(page) -> list[dict]:
+    """拉勾专属提取：优先 window.__INITIAL_STATE__.positionResult SSR JSON（最稳），
+    失败回退 DOM 锚点扫描（/jobs/数字.html 详情链接 + 卡片容器取公司/薪资/地点）。
+
+    为什么必须特化：拉勾同标题多公司普遍，OCR+标题回填会错配别家 URL；
+    SSR JSON 自带 positionId/companyFullName，三元组成组直取，根治错配。
+
+    ⚠️ 未经实页验证（2026-08-09 实测：拉勾搜索页对 MCP 浏览器弹滑动验证，拿不到 DOM）。
+    字段路径沿用旧 scrapers/lagou.py 已验证结果（positionResult.result / companyFullName /
+    /gongsi/ 公司锚点钩子）；首次 agent 环境实跑后需复核选择器，失效时回退 OCR 兜底不丢数据。
+    """
+    # ① 优先 SSR JSON（不依赖选择器）
+    try:
+        data = await page.evaluate("""() => {
+            const s = window.__INITIAL_STATE__;
+            if (!s) return [];
+            const items = (s.positionResult && s.positionResult.result)
+                       || (s.positionList && s.positionList.result) || [];
+            const out = [];
+            for (const it of items) {
+                const title = it.positionName || '';
+                if (!title) continue;
+                const pid = it.positionId || '';
+                out.push({
+                    title,
+                    company: it.companyFullName || it.companyName || '',
+                    url: pid ? 'https://www.lagou.com/jobs/' + pid + '.html' : '',
+                    salary_text: it.salary || '',
+                    location: ((it.city || '') + (it.district || '')),
+                });
+            }
+            return out;
+        }""")
+        if data:
+            return data
+    except Exception as e:
+        logger.warning(f"[agent] 拉勾 SSR JSON 提取失败: {e}")
+
+    # ② 回退 DOM 锚点扫描（旧 _parse_html 选择器 + /gongsi/ 公司锚点钩子）
+    try:
+        data = await page.evaluate("""() => {
+            const out = [];
+            const seen = new Set();
+            const urlRe = /lagou\\.com\\/jobs\\/\\d+\\.html/;
+            const cards = document.querySelectorAll('a[href*="/jobs/"]');
+            for (const a of cards) {
+                const href = (a.href || '').split('?')[0];  // 去追踪参数，净详情 URL
+                if (!urlRe.test(href)) continue;
+                const t = (a.innerText || a.textContent || '').trim().replace(/\\s+/g, ' ');
+                if (!t || t.length > 40) continue;
+                if (seen.has(href)) continue;  // 同卡片多个锚点指向同一详情（标题区/底栏），去重
+                seen.add(href);
+                // 向上找卡片容器取公司/薪资/地点（同标题多公司时三元组必须同卡片取，防错配）
+                let company = '', salary = '', location = '';
+                let p = a.parentElement;
+                for (let i = 0; i < 6 && p; i++) {
+                    if (!company) {
+                        const coA = p.querySelector('a[href*="/gongsi/"], div.company_name a, span.company-name, .company-name');
+                        if (coA) { const ct = (coA.innerText || '').trim(); if (ct && ct.length <= 40) company = ct; }
+                    }
+                    if (!salary) {
+                        const salEl = p.querySelector('span.money, span.salary, .money, .salary');
+                        if (salEl) salary = (salEl.innerText || '').trim();
+                    }
+                    if (!location) {
+                        const locEl = p.querySelector('div.add em, span.work_addr, .work_addr');
+                        if (locEl) location = (locEl.innerText || '').trim();
+                    }
+                    if (company && salary && location) break;
+                    p = p.parentElement;
+                }
+                out.push({ title: t, company, url: href, salary_text: salary, location });
+            }
+            return out;
+        }""")
+    except Exception as e:
+        logger.warning(f"[agent] 拉勾 DOM 提取失败: {e}")
+        return []
+    return data or []
+
+
 # 平台 -> 专属 DOM 提取器（结构化直取 title/company/url，避免 OCR 标题匹配错配）
 # 运行时查找：extract_jobs_from_page 在模块加载完成后才调用，此时下方的提取器已定义
 _DOM_EXTRACTORS: dict = {
@@ -515,6 +596,7 @@ _DOM_EXTRACTORS: dict = {
     "智联招聘": _extract_zhilian_from_dom,
     "猎聘": _extract_liepin_from_dom,
     "中华英才网": _extract_chinahr_from_dom,
+    "拉勾": _extract_lagou_from_dom,
 }
 
 
