@@ -589,6 +589,53 @@ async def _extract_lagou_from_dom(page) -> list[dict]:
     return data or []
 
 
+async def _extract_wuba_from_dom(page) -> list[dict]:
+    """58同城专属 DOM 提取：卡片容器直取 title/company/url/salary/location。
+
+    为什么必须特化：58 同标题多公司普遍，OCR+标题回填会错配别家 URL；
+    卡片容器内三元组成组直取，根治错配。
+
+    ⚠️ 未经实页验证（2026-08-09 实测：cd.58.com 搜索页对 MCP 浏览器直接跳
+    passport.58.com 登录墙，m版重定向错乱，拿不到 DOM）。
+    选择器沿用旧 scrapers/wuba.py 已验证结果；首次 agent 环境实跑后需复核，
+    失效时回退 OCR 兜底不丢数据。
+    DOM 结构（旧版已验证）：
+      li.job_item / div.job-list-item     卡片容器
+        a.t / span.name a / a.job-name    标题锚点+详情链接
+        a.fl / a.comp_name / span.company-name   公司
+        span.salary / b.price / p.salary  薪资
+        span.address / span.area          地点
+    """
+    try:
+        data = await page.evaluate("""() => {
+            const out = [];
+            const cards = document.querySelectorAll('li.job_item, div.job-list-item');
+            for (const c of cards) {
+                const titleA = c.querySelector('a.t, span.name a, a.job-name');
+                if (!titleA) continue;
+                const t = (titleA.innerText || titleA.textContent || '').trim();
+                if (!t) continue;
+                const href = titleA.href || '';
+                if (!href || href.startsWith('javascript')) continue;
+                const coEl = c.querySelector('a.fl, a.comp_name, span.company-name');
+                const salEl = c.querySelector('span.salary, b.price, p.salary');
+                const locEl = c.querySelector('span.address, span.area');
+                out.push({
+                    title: t,
+                    company: coEl ? (coEl.innerText || '').trim() : '',
+                    url: href,
+                    salary_text: salEl ? (salEl.innerText || '').trim() : '',
+                    location: locEl ? (locEl.innerText || '').trim() : '',
+                });
+            }
+            return out;
+        }""")
+    except Exception as e:
+        logger.warning(f"[agent] 58同城 DOM 提取失败: {e}")
+        return []
+    return data or []
+
+
 # 平台 -> 专属 DOM 提取器（结构化直取 title/company/url，避免 OCR 标题匹配错配）
 # 运行时查找：extract_jobs_from_page 在模块加载完成后才调用，此时下方的提取器已定义
 _DOM_EXTRACTORS: dict = {
@@ -597,6 +644,7 @@ _DOM_EXTRACTORS: dict = {
     "猎聘": _extract_liepin_from_dom,
     "中华英才网": _extract_chinahr_from_dom,
     "拉勾": _extract_lagou_from_dom,
+    "58同城": _extract_wuba_from_dom,
 }
 
 

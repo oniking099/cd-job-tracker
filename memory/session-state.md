@@ -68,3 +68,15 @@ plan.md「修复卡片内容错配 + 拆分双 HTML 方案」——上次会话�
 - ⚠️ **未经实页验证**：拉勾搜索页对 MCP 浏览器弹滑动验证（2026-08-09 实测），字段路径沿用旧 lagou.py；首次 agent 实跑需复核选择器
 - 测试 tests/test_lagou_extract.py 6 个；pytest 220 全绿
 - 剩余：58同城（同样可能有风控，先探）、BOSS（需 Camoufox+登录态）
+
+---
+
+# 以下为 2026-08-09 16:25 记录（58提取器完成，B1 本地可做部分收尾）
+
+## plan B1 增量：58同城 DOM 提取器 ✅
+- `_extract_wuba_from_dom`：卡片容器直取（li.job_item/div.job-list-item 等旧验证选择器），已注册 _DOM_EXTRACTORS["58同城"]
+- ⚠️ **未经实页验证**：cd.58.com 搜索页对 MCP 浏览器直接跳 passport 登录墙（m版重定向错乱），选择器沿用旧 wuba.py；首次 agent 实跑需复核
+- 测试 tests/test_wuba_extract.py 4 个；pytest 224 全绿
+- 风控实测结论（2026-08-09）：拉勾=滑动验证、58=强制登录、BOSS=风控——MCP 浏览器全部看不到卡片
+- 剩余：仅 BOSS（错配最重，需 Camoufox+BOSS_COOKIE 登录态环境调试）
+- 拉勾/58 提取器首次 agent 实跑后需复核命中率（提取失败自动回退 OCR，不会比现在差）
