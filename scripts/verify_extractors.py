@@ -51,9 +51,13 @@ PLATFORMS: dict[str, dict] = {
 _BLOCK_MARKERS = (
     "验证码", "安全验证", "访问异常", "异常访问", "人机验证", "滑动验证",
     "verify", "captcha", "扫码登录",
+    # 登录墙：BOSS 等未登录/登录态失效时跳登录页（title 带"注册登录"）
+    "注册登录", "请登录",
 )
 _BLOCK_URL_FRAGMENTS = (
     "passport.", "verifyCode", "security", "captcha", "sso/", "checkcode",
+    # BOSS 登录页 https://www.zhipin.com/web/user/
+    "web/user", "login",
 )
 
 
