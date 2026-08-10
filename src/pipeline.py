@@ -12,6 +12,7 @@ from src.config import (
     GAODE_API_KEY,
     PLATFORM_BUDGET_AGENT,
     PLATFORM_BUDGET_HTML,
+    SEARCH_START_HOUR,
     SEARCH_DEADLINE_HOUR,
     SEARCH_DEADLINE_MINUTE,
     bjt_now,
@@ -129,9 +130,15 @@ ROUND_KEYWORDS: dict[str, dict] = {
 
 
 def _past_deadline() -> bool:
-    """当前 BJT 时刻是否已过截止时间（默认 21:30）。"""
+    """当前 BJT 时刻是否已过本次检索的截止时间（支持跨午夜窗口）。"""
     now = bjt_now()
-    return (now.hour, now.minute) >= (SEARCH_DEADLINE_HOUR, SEARCH_DEADLINE_MINUTE)
+    current = (now.hour, now.minute)
+    start = (SEARCH_START_HOUR, 0)
+    deadline = (SEARCH_DEADLINE_HOUR, SEARCH_DEADLINE_MINUTE)
+    if deadline < start:
+        # 例如 17:00 开始、次日 02:30 截止：17:00 至午夜和午夜至 02:29 都可执行。
+        return deadline <= current < start
+    return current >= deadline
 
 
 # 平台并发上限：每轮 12 个平台各自启动无头浏览器，
@@ -408,18 +415,20 @@ def _compute_stats(round_label: str, jobs: list[Job]) -> dict:
     }
 
 
-async def run_report(push: bool = True):
+async def run_report(push: bool = True, target_date: str | None = None):
     """生成最终报告；push=True 时顺带推送微信。
 
     检索工作流（search.yml）用 push=False 只落 HTML（17:00 检索完即提交，
-    GitHub Pages 立即可看）；每日 11:00 由 push.yml 单独推送微信（含登录提醒）。
+    GitHub Pages 立即可看）；每日 10:00 由 push.yml 单独推送微信（含登录提醒）。
+    target_date 指定数据日期（YYYY-MM-DD）：push.yml 补救 HTML 时按前一日数据重跑，
+    避免 10:00 运行时 bjt_today() 已翻到新的一天而找不到昨天的数据。
     """
     print("\n" + "=" * 50)
     print("生成每日报告")
     print("=" * 50)
 
     # 加载所有轮次
-    rounds = load_all_rounds()
+    rounds = load_all_rounds(target_date)
     if not rounds:
         print("今天没有搜索数据")
         return
@@ -506,21 +515,21 @@ async def run_report(push: bool = True):
         print("高德 Key 未配置，跳过离家距离计算")
 
     # 保存去重结果（必须在距离补全之后，否则 deduped.json 的 distance_km 恒为 null）
-    save_deduped(valid_jobs)
+    save_deduped(valid_jobs, target_date)
 
     # 生成 HTML 报告（行业类 + 专业类两份）
     from src.report.generator import generate_report
-    report_paths = generate_report(valid_jobs)
+    report_paths = generate_report(valid_jobs, target_date)
     for cat, p in report_paths.items():
         print(f"HTML 报告[{cat}]: {p}")
 
     # 推送到微信（用 BJT 日期，凌晨跨 UTC 日不串天）
-    # search.yml 用 --no-push 跳过这里；push.yml 每日 11:00 单独推送（含登录提醒）
+    # search.yml 用 --no-push 跳过这里；push.yml 每日 10:00 单独推送（含登录提醒）
     if push:
         from src.notify.serverchan import push_report
-        await push_report(valid_jobs, bjt_today())
+        await push_report(valid_jobs, target_date or bjt_today())
     else:
-        print("（--no-push：微信推送由 push.yml 每日 11:00 执行，此处仅生成 HTML）")
+        print("（--no-push：微信推送由 push.yml 每日 10:00 执行，此处仅生成 HTML）")
 
     # 统计摘要
     from collections import Counter

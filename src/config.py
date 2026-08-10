@@ -116,9 +116,11 @@ AGENT_EXTRACT_TIMEOUT = float(_env("AGENT_EXTRACT_TIMEOUT", "120"))  # 单次提
 PLATFORM_BUDGET_AGENT = int(_env("PLATFORM_BUDGET_AGENT", "300"))  # agent 平台（含 agent 循环 + 提取）
 PLATFORM_BUDGET_HTML = int(_env("PLATFORM_BUDGET_HTML", "40"))     # HTML 爬虫（基本在失败/重试，卡死）
 
-# ---- 搜索截止（BJT 时刻，>= 则停止本轮并保存已有结果）----
-# 21:30 报告推送前停止检索，避免与报告抢数据/浪费 CI 分钟。
-SEARCH_DEADLINE_HOUR = int(_env("SEARCH_DEADLINE_HOUR", "21"))
+# ---- 检索窗口（BJT 时刻）：17:00 开始，跨午夜至次日 02:30 截止 ----
+# 用户 2026-08-10：检索固定 17:00 BJT 开始；次日 10:00 才推送，
+# 窗口放宽到 02:30 不影响推送，同时给 GitHub 调度延迟留足余量。
+SEARCH_START_HOUR = int(_env("SEARCH_START_HOUR", "17"))
+SEARCH_DEADLINE_HOUR = int(_env("SEARCH_DEADLINE_HOUR", "2"))
 SEARCH_DEADLINE_MINUTE = int(_env("SEARCH_DEADLINE_MINUTE", "30"))
 
 # ---- 详情页正文富集 ----

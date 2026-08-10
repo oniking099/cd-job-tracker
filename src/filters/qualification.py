@@ -36,6 +36,43 @@ EXCLUDE_RULES: dict[str, str] = {
     "trainee": r"管培生|培训生|实习生|见习生",
 }
 
+# 证书规则（用户 2026-08-10）：明确要求证书时，只接受环保工程师证；
+# 注册类证书（注册安全/造价/建造/会计…师证等）一律排除。
+# 注意「优先」属于软性偏好，不作为硬性资格排除；未提证书也绝不因信息缺失排除。
+_ENVIRONMENTAL_ENGINEER_CERT_RE = re.compile(
+    r"(?:注册)?\s*(?:环境保护|环保)\s*工程师\s*(?:职业)?(?:资格)?(?:证(?:书)?)?"
+)
+_CERTIFICATE_TOKEN_RE = re.compile(
+    r"(?:"
+    r"注册\s*[^\s，。；、]{0,12}?(?:职业资格|执业资格|从业资格|资格证(?:书)?|执业证(?:书)?|上岗证(?:书)?|从业证(?:书)?|操作证(?:书)?|证(?:书)?|资格)"
+    r"|[一二三四五六七八九十\d]*级?\s*[^\s，。；、]{0,12}?(?:资格证书?|执业证书?|上岗证书?|从业证书?|操作证书?|职业资格(?:证书)?|执业资格|从业资格|证书)"
+    r")"
+)
+# 学历/学位/结业类证书不属于职业资格，绝不作为证书硬性要求排除。
+_ACADEMIC_CERT_RE = re.compile(r"(?:毕业|学位|学历|结业)\s*证(?:书)?")
+_CERTIFICATE_REQUIRED_RE = re.compile(
+    r"(?:须|需|必须|要求|应当|应|持有|具备|拥有|取得|获得|提供|需持|须持)"
+)
+_CLAUSE_SPLIT_RE = re.compile(r"[，。；;\n\r]")
+
+
+def _has_disallowed_certificate_requirement(text: str) -> bool:
+    """仅识别写明的硬性证书要求；环保工程师证是唯一允许项。"""
+    for clause in _CLAUSE_SPLIT_RE.split(text or ""):
+        if not _CERTIFICATE_REQUIRED_RE.search(clause):
+            continue
+        certificate_matches = list(_CERTIFICATE_TOKEN_RE.finditer(clause))
+        if not certificate_matches:
+            continue
+        # 「持有一级建造师证书者优先」并非硬条件，沿用全局软偏好原则保留。
+        if all(is_preference(clause, m.start(), m.end()) for m in certificate_matches):
+            continue
+        remaining = _ENVIRONMENTAL_ENGINEER_CERT_RE.sub("", clause)
+        remaining = _ACADEMIC_CERT_RE.sub("", remaining)
+        if _CERTIFICATE_TOKEN_RE.search(remaining):
+            return True
+    return False
+
 
 def filter_qualification(jobs: list[Job]) -> list[Job]:
     """
@@ -62,6 +99,10 @@ def filter_qualification(jobs: list[Job]) -> list[Job]:
             excluded = True
             exclude_reason = rule_name
             break
+
+        if not excluded and _has_disallowed_certificate_requirement(full_text):
+            excluded = True
+            exclude_reason = "certificate_non_environmental"
 
         if excluded:
             job.excluded = True

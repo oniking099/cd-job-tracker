@@ -1,13 +1,13 @@
 name: Daily Push
 
-# 每日 11:00 BJT 微信推送：前一日检索结果 + BOSS 扫码登录提醒。
+# 每日 10:00 BJT 微信推送：前一日检索结果 + BOSS 扫码登录提醒。
 # 用户 2026-08-09：BOSS cookie 约 24h 过期需每天扫码刷新，检索改 17:00 BJT，
-# 11:00 的推送正好提醒「当天 17:00 检索前登录」，并附上前一日报告链接。
+# 10:00 的推送正好提醒「当天 17:00 检索前登录」，并附上前一日报告链接。
 # 轻量工作流：只 pip 装依赖（不需要 playwright/camoufox 浏览器），只发 ServerChan。
 on:
   schedule:
-    # 11:00 BJT = 03:00 UTC
-    - cron: '0 3 * * *'
+    # 10:00 BJT = 02:00 UTC
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -17,7 +17,8 @@ concurrency:
 jobs:
   push:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # HTML 补救最多重试 3 次（每次间隔 60s），预留 30 分钟足够
+    timeout-minutes: 30
     env:
       SERVER_CHAN_SENDKEY: ${{ secrets.SERVER_CHAN_SENDKEY }}
 
@@ -37,6 +38,42 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      # ---- HTML 失败补救（用户 2026-08-10 要求）----
+      # 检索当晚生成报告失败不要紧：距次日 10:00 推送有整整一夜，
+      # 这里先从已提交的 data/<日期>/round-*.json 重新生成两份 HTML，
+      # 再提交 output/，确保推送的链接不是 404。仍失败则让后续推送步骤失败，
+      # 绝不发送残缺/404 链接。
+      - name: Recover report HTML if missing
+        run: |
+          report_date=$(python -c "from scripts.push_daily import _latest_data_date as f; print(f() or '')")
+          if [ -z "$report_date" ]; then
+            echo "没有可用的检索数据（data/*/deduped.json 均不存在），跳过 HTML 补救"
+            exit 0
+          fi
+          if [ -s "output/$report_date/report-industry.html" ] && [ -s "output/$report_date/report-professional.html" ]; then
+            echo "HTML 已存在: $report_date"
+            exit 0
+          fi
+          echo "HTML 缺失（$report_date），从已提交数据重新生成..."
+          for attempt in 1 2 3; do
+            python scripts/report.py --date "$report_date" --no-push && break
+            echo "报告补救失败（第 ${attempt} 次），60 秒后重试..."
+            sleep 60
+          done
+          test -s "output/$report_date/report-industry.html"
+          test -s "output/$report_date/report-professional.html"
+
+      # 补救生成的 HTML/deduped.json 必须提交，否则 GitHub Pages 上的链接仍是 404；
+      # 无改动时该步骤自动跳过（git-auto-commit 幂等）。
+      - name: Commit recovered report
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "report: recover missing HTML before push [skip ci]"
+          file_pattern: 'output/ data/'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
 
       # 推送前一日报告 + 红粗 BOSS 扫码登录提醒（只发微信，不改 HTML）
       - name: Push daily report + login reminder

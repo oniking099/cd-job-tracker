@@ -1,5 +1,70 @@
 # 会话状态（2026-08-09 更新——崩溃恢复已完成 ✅）
 
+# 以下为 2026-08-09 23:50 记录（一键扫码上传 + CI 预检跳过 BOSS，commit `00f18bb` ✅）
+
+## 用户两个需求已实现并推送 main
+1. **一键扫码+自动上传**：`scripts/refresh_boss_session.py`（新）——一条命令完成 BOSS 扫码登录 + 自动用 git PAT 上传 cookie 到 GitHub secret `BOSS_COOKIE`，无需打开 GitHub 网页。
+   - 复用 `capture_session.capture()` 弹浏览器扫码，成功后读 `.sessions/boss_cookie.json` → libsodium 加密 → `PUT /repos/.../actions/secrets/BOSS_COOKIE`。
+   - **用户每天只需**：`python scripts/refresh_boss_session.py` → 扫码 → 结束。不用叫我，不用碰网页。
+   - 依赖：本地 git 存有 GitHub PAT（git credential manager）+ pynacl + camoufox。
+2. **CI 预检跳过 BOSS**（忘登录时不烧 Actions 时长）：
+   - `verify_extractors.py`：BOSS 判定 BLOCKED（登录墙/风控拦截）时写 `$GITHUB_OUTPUT` → `boss_valid=false`；PASS=正常；FAIL/SKIP 不跳过（fail-safe，绝不误跳过丢数据）。
+   - `search.py` + `pipeline.py`：加 `--skip-boss`，`search_all_platforms` 从 ALL_SCRAPERS 剔 BOSS直聘（省掉每轮 Camoufox 启动 ~1-2 分钟 × 5 轮）。
+   - `search.yml`：Verify 步骤加 `id: verify`，5 轮 run 追加 `${{ steps.verify.outputs.boss_valid == 'false' && '--skip-boss' || '' }}`。
+   - 效果：忘了登录时，verify 仍启动 1 次 Camoufox（唯一一次）判出 BLOCKED → 5 轮跳过 BOSS，其余 11 平台照常。
+- 测试 224 全绿；YAML 解析 OK。
+
+## 每日节奏（最终版，2026-08-09 起）
+```
+11:00 微信推送红粗提醒
+   ↓ 用户: python scripts/refresh_boss_session.py → 扫码 → 自动上传（1 分钟）
+17:00 CI 检索（cookie 有效→BOSS 正常抓；失效→verify 判 BLOCKED → 5 轮跳过 BOSS 省时）
+```
+
+# 以下为 2026-08-09 23:10 记录（BOSS_COOKIE secret 已 API 更新 + report.yml 标注废弃 ✅）
+
+## BOSS_COOKIE secret 已自动更新（用户无需手动操作）
+- **用户反馈**："github 上没有 actions 这个板块，找不到 boss_cookie，也不会新建，你自己解决"
+- **方案**：用 git 凭据管理器里的 GitHub PAT（username=oniking099）+ REST API 直改，无需 gh CLI、无需网页操作：
+  1. `git credential fill` 取 PAT（绝不显示/落地）
+  2. `GET /repos/{owner}/{repo}/actions/secrets/public-key` 取 libsodium public key
+  3. `pip install pynacl` → SealedBox 加密 `.sessions/boss_cookie.json` 全文
+  4. `PUT /repos/.../actions/secrets/BOSS_COOKIE` 写入
+  5. 校验通过：secrets 列表已有 BOSS_COOKIE
+- **注意**：secret 更新走的是用户本地 PAT，与 GitHub 网页上 `Settings→Secrets→Actions` 是同一份。以后刷新 secret 可用同一脚本（.tmp 外置，未入库）。
+- 脚本位置：`C:\Users\pc\AppData\Local\Temp\update_boss_secret.py`（临时，不入库）
+
+## report.yml 已标注废弃（文件保留不删，commit `b2eda0f`）
+- 用户要求："actions 里有 5 个 workflows，把不需要的做标注表明废弃，但不要删除"
+- **远端 5 个 workflow 判定**：Job Search ✅ / Daily Push ✅ / Extractor Verify ✅ 在用；**report.yml 已废弃**（报告生成已并入 search.yml，其 report.py 会重复推送）；pages-build-deployment 是 GitHub Pages 系统自动生成的（路径 dynamic/pages/，不在仓库），无法也无需标注
+- **改法**：report.yml 加 `# ⚠️⚠️ [已废弃 DEPRECATED]` 注释块 + name 改「Daily Report (已废弃，勿运行)」+ 整条 job `if: false`（即使误点 Run workflow 也恒跳过，0 计算分钟）
+- 远端已确认：Actions tab 显示新名字，文件保留。
+
+# 以下为 2026-08-09 22:30 记录（BOSS 扫码登录成功 + capture_session 修复已提交 ✅）
+
+## BOSS 扫码登录成功 + cookie 已导出（用户已完成扫码）
+- **登录成功**：用户在弹出浏览器扫码后，capture_session.py 检测到真实登录并导出 **15 个 cookie**。关键证据：含 `__zp_stoken__`（BOSS 登录态核心 token，仅认证后下发）+ `zp_at`/`wt2`/`wbg` 会话链——不是此前那种 8 个匿名 cookie 的假登录。
+- **导出文件**：`.sessions/boss.json`（storage_state 全量）+ `.sessions/boss_cookie.json`（cookies 数组，用于 GitHub secret BOSS_COOKIE，3259 字节，远小于 64KB 上限）。
+- **capture_session.py 修复已提交并推送 main（commit `e07cc39`）**：
+  - 入口 URL 改 `https://www.zhipin.com/web/user/?ka=header-login`（直接登录页，首页匿名 cookie 膨胀会触发假登录）
+  - LOGIN_MARKERS 加 "web/user"（登录页 URL 命中即继续等）
+  - Camoufox 视口强制 1560x940 + 打开后滚到底部（修复"验证码在屏幕下托不起来无法扫码"）
+  - 登录成功同步导出 `{platform}_cookie.json`（每天刷新 secret 直接整体粘贴）
+- ⏳ **待用户手动操作**：GitHub web UI 更新 secret `BOSS_COOKIE` = `.sessions/boss_cookie.json` 全文（gh CLI 未装，GitHub MCP 无 secret 工具，只能网页粘贴）。
+
+# 以下为 2026-08-09 19:30 记录（批处理已合并 main + verify 门槛转绿 ✅ + BOSS cookie 过期预警）
+
+## 用户拍板：直接提交、明天凌晨 1 点自动触发、结果拆行业+专业两份 HTML 推送 ✅
+- **已提交并推送 main**：拉勾移除 + 58/BOSS 提取器 + verify 门槛 + 报告拆分全量上 main（head `ba29e05`）。cron `0 17 * * *` UTC = **01:00 BJT** 明早自动触发（schedule 只在默认分支 main 生效，故必须合并）。
+- **报告拆分已实现并确认**：`src/report/generator.py` `generate_report` 按 `classify_jd_category` 拆 `report-industry.html`（大气/气象/环保/生态等）+ `report-professional.html`（AI/agent/大模型等），两类都占→行业类，都不占→行业类兜底；`src/notify/serverchan.py` `push_report` 推 **2 个链接**（📄 行业类JD报告 / 📄 专业类JD报告）。
+- **verify 门槛转绿**（关键诊断）：此前 verify.yml 连续红。根因通过 `::error::` 注解（check-runs annotations API，绕开日志鉴权）定位：
+  - `[BOSS直聘] 提取 0 条 | title='【BOSS直聘注册登录】...' | url=https://www.zhipin.com/web/user/ | body_len=237 | ssr=no-ssr | dom_cards=0`
+  - BOSS 登录态失效 → 页面重定向到 `/web/user/` 纯登录页，`_looks_blocked` 没识别登录墙 → 误判 FAIL。已加拦截特征（标题"注册登录"/"请登录"、URL "web/user"/"login"）→ 正确判 **BLOCKED**。commit `ba29e05` 后 verify run **success**（58 PASS/BLOCKED + BOSS BLOCKED）。
+- ⚠️ **BOSS_COOKIE 已过期预警**：昨天夜里（01:00 BJT 08-09）run 还产出 BOSS=14 条；今天 ~10:51 UTC verify 里 BOSS 已跳登录墙（cookie 有效窗口约 18h 内过期）。**今晚 01:00 的 run BOSS 大概率 0 条或极少**。需用户本地跑 `python scripts/capture_session.py --platform boss`（手机扫码登录）→ 取 `.sessions/boss.json` 的 cookies 数组 → 更新 GitHub secret `BOSS_COOKIE`（JSON 数组，Playwright add_cookies 格式）。
+- 说明：verify 步骤在 search.yml 已 `continue-on-error: true`，**即使 verify 再红也不会卡停今晚检索**；双 HTML 报告与 ServerChan 推送不受影响。
+
+---
+
 # 以下为 2026-08-09 20:30 记录（拉勾完整移除 ✅）
 
 ## 拉勾平台完整移除（用户拍板：不花钱 + 不浪费 GitHub Actions 时长）
@@ -127,3 +192,30 @@ plan.md「修复卡片内容错配 + 拆分双 HTML 方案」——上次会话�
 - 风控实测结论（2026-08-09）：拉勾=滑动验证、58=强制登录、BOSS=风控——MCP 浏览器全部看不到卡片
 - 剩余：仅 BOSS（错配最重，需 Camoufox+BOSS_COOKIE 登录态环境调试）
 - 拉勾/58 提取器首次 agent 实跑后需复核命中率（提取失败自动回退 OCR，不会比现在差）
+
+---
+
+# 以下为 2026-08-10 记录（用户拍板：检索 17:00 / 推送 10:00 + HTML 补救 + 证书规则复核）
+
+## 时间修正（用户明确：检索开始 17:00 BJT，推送 10:00 BJT，不是 21:00）
+- search.yml cron `0 13` → `0 9`（17:00 BJT = 09:00 UTC）
+- push.yml cron 保持 `0 2`（10:00 BJT = 02:00 UTC），注释统一 10:00/17:00
+- config.py `SEARCH_START_HOUR` 21 → 17；`SEARCH_DEADLINE_HOUR` 保持 2（跨午夜 02:30 BJT 截止）
+- pipeline.py `_past_deadline()` 已支持跨午夜窗口；push_daily.py 提醒文案 21:00 → 17:00
+
+## HTML 失败补救（用户 2026-08-10：第二天才推送，时间足够补救）
+- search.yml 生成报告步骤加重试 3 次（间隔 60s）
+- push.yml 推送前新增 Recover 步骤：HTML 缺失时取最近数据日期，
+  `python scripts/report.py --date ... --no-push` 补生成（重试 3 次）并提交 output/ data/；
+  补救仍失败则推送步骤不执行，绝不发送 404/残缺链接
+- report.py / run_report 新增 `--date` 参数（默认今天 BJT；补救历史报告时必传）
+
+## 证书过滤复核（用户 2026-08-10）
+- 只接受环保工程师证（含"注册环保工程师资格"）；注册类证书（注册安全/造价/会计/环评工程师等）
+  只要写为必须要求就全部排除
+- 优先类（"X者优先"）不过滤；毕业证/学位证/学历证等学历材料不误伤
+- 测试：test_certificate_filter.py 9 个全绿；test_search_deadline.py 改为 17:00 窗口，
+  本机 pytest 收集崩溃（环境访问冲突），已用轻量脚本直跑 6 组断言全部通过
+
+## 未提交
+- 以上改动尚未 commit，等用户拍板

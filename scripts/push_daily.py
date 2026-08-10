@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""每日 11:00 BJT 微信推送：加载最近一日检索数据 → ServerChan 推送结果 + BOSS 扫码登录提醒。
+"""每日 10:00 BJT 微信推送：加载最近一日检索数据 → ServerChan 推送结果 + BOSS 扫码登录提醒。
 
 背景（用户 2026-08-09）：BOSS cookie 约 24h 过期，需每天扫码登录刷新，否则拉不到 JD。
-检索改为 17:00 BJT 开始，故 11:00 的推送要「提醒用户当天 17:00 前登录」，并附上前一日结果。
+检索改为 17:00 BJT 开始，故 10:00 的推送要「提醒用户当天 17:00 前登录」，并附上前一日结果。
 HTML 报告不在此生成（search.yml 检索完已生成并提交 output/），本脚本只做微信推送。
 
 本脚本只改微信推送消息，绝不改动 HTML 报告的 UI/UX。
@@ -36,7 +36,7 @@ LOGIN_REMINDER = (
 def _latest_data_date() -> str | None:
     """最近一个有 deduped.json 的日期目录。
 
-    检索 17:00 BJT 写 data/D/，推送次日 11:00 BJT 跑时 bjt_today() 已是 D+1，
+    检索 17:00 BJT 写 data/D/，推送次日 10:00 BJT 跑时 bjt_today() 已是 D+1，
     必须显式取最近完成检索的那一天，否则 load_deduped 会落到空目录。
     """
     candidates = []
