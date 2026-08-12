@@ -1,13 +1,19 @@
 """
 JD 行业/专业分类：将岗位拆分为「行业类」与「专业类」两份报告。
 
-分类规则（用户要求 2026-08-08；精细版 2026-08-09 用户确认）：
-- 行业类：大气科学 / 气象 / 大气环境 / 环保 / 生态 等领域岗位
-- 专业类：AI / agent / 大模型 / 深度学习 等领域岗位
-- 同一岗位同时命中两类（标题或正文任一来源）-> 归行业类（用户明确要求）
-- 两类都不命中（如「算法工程师」「Python开发」「解决方案经理」）-> 归行业类（兜底）
+分类规则（2026-08-12 用户要求，明确行业优先）：
+- 行业类：明确行业为 气象 / 环保 / 农业气象 / 环境应急 等领域的岗位
+- 专业类：其余全部归专业类——含 AI/agent/大模型/深度学习 等专业岗，
+  以及无法判定领域的岗位（兜底由行业改为专业）
+- 判定优先级（自上而下返回）：
+  1. 标题命中行业关键词 -> 行业类（标题双命中「AI气象应用工程师」仍归行业）
+  2. 标题命中专业关键词 -> 专业类（标题专业信号压过正文行业信号——
+     正文行业词常被爬虫页面导航栏噪声污染，不可靠）
+  3. 正文命中行业关键词 -> 行业类
+  4. 正文命中专业关键词 -> 专业类
+  5. 兜底 -> 专业类
 
-匹配依据（精细版）：标题 + 正文（responsibilities + requirements），两处信号合并判定。
+匹配依据：标题 + 正文（responsibilities + requirements），两处信号合并判定。
 正文匹配必须降噪，否则会把大量岗位错划：
 1. 行业正文词只用具体复合词，排除三个高噪声裸词——
    裸「环境」（「办公环境/开发环境」会把 AI 岗误判行业）、
@@ -34,6 +40,8 @@ INDUSTRY_KEYWORDS: list[str] = [
     "气象", "大气", "气候", "环保", "生态",
     "碳中和", "低碳", "水处理", "水环境", "微污染", "大气科学",
     "环境检测", "环境评价", "环境监测",
+    # 2026-08-12 用户点名的明确行业：农业气象 / 环境应急
+    "农业气象", "环境应急",
 ]
 
 # 专业类关键词（标题用）：AI / agent / 大模型 / 深度学习
@@ -51,6 +59,8 @@ INDUSTRY_BODY_KEYWORDS: list[str] = [
     "环境检测", "环境评价", "环境监测", "生态环境", "环境保护", "环境影响评价", "环评",
     "污染治理", "污染防治", "固废", "废水", "废气", "污水处理", "排污",
     "碳排放", "双碳", "数值预报", "天气预报", "水文",
+    # 2026-08-12 用户点名的明确行业：农业气象 / 环境应急（含应急监测/应急预警）
+    "农业气象", "环境应急", "应急监测", "应急预警",
 ]
 
 # 专业类正文关键词（中文，子串匹配安全）
@@ -76,21 +86,29 @@ def classify_jd_category(job: Job) -> str:
     """判定岗位属于「行业类」还是「专业类」。
 
     返回 "industry"（行业类）或 "professional"（专业类）。
-    匹配优先级：行业类 > 专业类 > 兜底行业类（两类都不命中时归行业类）。
-    标题与正文信号合并判定：任一来源命中行业即归行业（用户要求：都占 -> 行业）。
+    匹配优先级（2026-08-12 用户要求）：
+        标题行业 > 标题专业 > 正文行业 > 正文专业 > 专业兜底。
+    标题专业信号压过正文行业信号——正文行业词常被爬虫页面导航栏噪声污染，
+    标题才是「明确行业」的最可靠信号。
     """
     title = (job.title or "").lower()
     body = f"{job.responsibilities or ''} {job.requirements or ''}".lower()
 
-    title_industry = bool(title) and any(kw in title for kw in INDUSTRY_KEYWORDS)
-    body_industry = bool(body.strip()) and any(kw in body for kw in INDUSTRY_BODY_KEYWORDS)
-    if title_industry or body_industry:
+    # 1. 标题明确行业 -> 行业类（「AI气象应用工程师」标题双命中也归行业）
+    if bool(title) and any(kw in title for kw in INDUSTRY_KEYWORDS):
         return "industry"
 
-    title_professional = bool(title) and any(kw in title for kw in PROFESSIONAL_KEYWORDS)
-    body_professional = bool(body.strip()) and _match_professional_body(body)
-    if title_professional or body_professional:
+    # 2. 标题明确专业 -> 专业类（压过正文行业信号）
+    if bool(title) and any(kw in title for kw in PROFESSIONAL_KEYWORDS):
         return "professional"
 
-    # 兜底：无法判定领域（如「算法工程师」「Python开发」）-> 行业类
-    return "industry"
+    # 3. 正文明确行业
+    if bool(body.strip()) and any(kw in body for kw in INDUSTRY_BODY_KEYWORDS):
+        return "industry"
+
+    # 4. 正文明确专业
+    if bool(body.strip()) and _match_professional_body(body):
+        return "professional"
+
+    # 5. 兜底：无法判定领域（如「算法工程师」「Python开发」）-> 专业类
+    return "professional"

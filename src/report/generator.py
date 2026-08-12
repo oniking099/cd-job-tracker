@@ -194,10 +194,11 @@ def generate_report(
 ) -> dict[str, str]:
     """生成 HTML 报告。
 
-    用户要求（2026-08-08）：单个 report.html 拆成两份--
-    - report-industry.html：行业类（大气科学/气象/大气环境/环保/生态 等）
-    - report-professional.html：专业类（AI/agent/大模型 等）
-    两类都占 -> 行业类；都不占 -> 行业类兜底。详见 jd_category.classify_jd_category。
+    用户要求（2026-08-08；规则 2026-08-12 用户更新）：单个 report.html 拆成两份--
+    - report-industry.html：行业类（明确行业为 气象/环保/农业气象/环境应急 等领域）
+    - report-professional.html：专业类（AI/agent/大模型 及行业之外的全部兜底）
+    优先级：标题行业 > 标题专业 > 正文行业 > 正文专业 > 专业兜底。
+    详见 jd_category.classify_jd_category。
     拆分后模板/排序/样式不变，仅 jobs 子集与数量不同。
 
     报告层排除（2026-08-09 用户要求，对两份报告同时生效）：
