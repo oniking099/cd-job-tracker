@@ -1,0 +1,7 @@
+[BOSS直聘] verify FAIL (提取 0 条)
+keyword:   气象
+page_title: 「成都招聘」-2026年成都人才招聘信息 - BOSS直聘
+page_url:  https://www.zhipin.com/web/geek/jobs?query=%E6%B0%94%E8%B1%A1&city=101270100
+body_len:  1489
+ssr:       no-ssr
+dom_cards: 0
