@@ -108,8 +108,11 @@ def upload_to_secret(value: str) -> None:
 
 async def main() -> int:
     # 1) 复用 capture_session 的 BOSS 扫码登录流程（打开浏览器 → 你扫码 → 自动导出 cookie）
+    #    fresh=True：先清空持久 profile 旧 cookie，保证登录页出现扫码二维码，
+    #    而不是直接打开上次的已登录状态（2026-08-12 用户反馈）
     rc = await capture_session.capture(
-        "boss", capture_session.PLATFORM_URLS["boss"], manual=False, engine="camoufox"
+        "boss", capture_session.PLATFORM_URLS["boss"],
+        manual=False, engine="camoufox", fresh=True,
     )
     if rc != 0:
         print("❌ 未检测到登录成功，未上传。请重新运行本命令完成扫码。")

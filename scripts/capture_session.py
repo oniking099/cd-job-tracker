@@ -66,8 +66,13 @@ async def _wait_login_auto(page, context, timeout_s: int, platform: str = "") ->
     返回 (是否成功, storage_state 对象)。
     """
     # 基线：页面打开几秒后的基础 cookie 数（未登录也有部分 cookie）
-    await page.wait_for_timeout(4000)
-    baseline = len((await context.storage_state()).get("cookies", []))
+    try:
+        await page.wait_for_timeout(4000)
+        baseline = len((await context.storage_state()).get("cookies", []))
+    except Exception as e:
+        # 用户在等待期间关掉了浏览器窗口 → 友好提示而非裸 traceback
+        print(f"  ⚠️ 浏览器窗口异常/被关闭，无法继续: {e}")
+        return False, None
     logout_marker = LOGOUT_MARKER_BY_PLATFORM.get(platform, "")
     if logout_marker:
         print(f"  基线 cookie 数: {baseline}，等待登录（检测导航栏「{logout_marker}」消失，最多 {timeout_s // 60} 分钟）...")
@@ -76,8 +81,8 @@ async def _wait_login_auto(page, context, timeout_s: int, platform: str = "") ->
 
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
-        await page.wait_for_timeout(5000)  # 低频检测，避免干扰页面
         try:
+            await page.wait_for_timeout(5000)  # 低频检测，避免干扰页面
             state = await context.storage_state()
             low_url = page.url.lower()
         except Exception as e:
@@ -107,12 +112,13 @@ ENGINE_BY_PLATFORM = {
 }
 
 
-async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
+async def _capture_camoufox(platform: str, url: str, manual: bool, fresh: bool = False) -> int:
     """Camoufox persistent context：C++ 引擎层伪造指纹，唯一能过 BOSS 检测的方案。
 
     - persistent_context=True + user_data_dir：登录态天然持久化在 profiles/{platform}/
     - 不再叠加 apply_stealth（JS 层注入可能破坏 Camoufox 的一致性指纹）
     - 登录完成后导出 storage_state JSON 供 new_context({storage_state}) 复用
+    - fresh=True：打开前清空持久 profile 的旧 cookie，保证登录页一定出现扫码二维码
     """
     from camoufox.async_api import AsyncCamoufox
 
@@ -135,9 +141,22 @@ async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
     ) as context:
         page = context.pages[0] if context.pages else await context.new_page()
 
+        # 强制全新登录：清空持久 profile 里的旧 cookie。
+        # 否则上次登录态还在时打开就是已登录页面，扫码二维码不出现（2026-08-12 用户反馈）
+        if fresh:
+            try:
+                await context.clear_cookies()
+                print("已清空旧登录态，打开全新登录页（请扫码）")
+            except Exception as e:
+                print(f"  ⚠️ 清空旧 cookie 失败，忽略: {e}")
+
         print(f"[1/2] 打开浏览器: {url}")
-        await page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        await page.wait_for_timeout(2500)
+        try:
+            await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            await page.wait_for_timeout(2500)
+        except Exception as e:
+            print(f"  ⚠️ 页面加载失败或浏览器被关闭: {e}")
+            return 1
         # 双保险：强制拉大视口 + 滚到底部，确保扫码/滑块验证一定进视野可操作
         try:
             await page.set_viewport_size({"width": 1560, "height": 940})
@@ -179,7 +198,7 @@ async def _capture_camoufox(platform: str, url: str, manual: bool) -> int:
         return 0
 
 
-async def _capture_chromium(platform: str, url: str, manual: bool) -> int:
+async def _capture_chromium(platform: str, url: str, manual: bool, fresh: bool = False) -> int:
     """系统真实 Chrome + persistent context（非 BOSS 平台默认引擎）。"""
     SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
     out_path = SESSIONS_DIR / f"{platform}.json"
@@ -217,9 +236,21 @@ async def _capture_chromium(platform: str, url: str, manual: bool) -> int:
         await apply_stealth(context)
         page = context.pages[0] if context.pages else await context.new_page()
 
+        # 强制全新登录：清空持久 profile 里的旧 cookie，保证登录页出现扫码二维码
+        if fresh:
+            try:
+                await context.clear_cookies()
+                print("已清空旧登录态，打开全新登录页（请扫码）")
+            except Exception as e:
+                print(f"  ⚠️ 清空旧 cookie 失败，忽略: {e}")
+
         print(f"[1/2] 打开浏览器: {url}")
-        await page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        await page.wait_for_timeout(2500)
+        try:
+            await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            await page.wait_for_timeout(2500)
+        except Exception as e:
+            print(f"  ⚠️ 页面加载失败或浏览器被关闭: {e}")
+            return 1
 
         if manual:
             print("[2/2] 请在浏览器里手动完成登录，完成后按 Enter 继续...")
@@ -254,12 +285,12 @@ async def _capture_chromium(platform: str, url: str, manual: bool) -> int:
         return 0
 
 
-async def capture(platform: str, url: str, manual: bool, engine: str = "") -> int:
+async def capture(platform: str, url: str, manual: bool, engine: str = "", fresh: bool = False) -> int:
     # 引擎选择：--engine 显式指定 > 平台默认（BOSS 强制 Camoufox）
     engine = engine or ENGINE_BY_PLATFORM.get(platform, "chromium")
     if engine == "camoufox":
-        return await _capture_camoufox(platform, url, manual)
-    return await _capture_chromium(platform, url, manual)
+        return await _capture_camoufox(platform, url, manual, fresh)
+    return await _capture_chromium(platform, url, manual, fresh)
 
 
 def main() -> int:
@@ -276,6 +307,10 @@ def main() -> int:
         "--engine", default="",
         help="浏览器引擎：camoufox / chromium（默认按平台自动选，BOSS 强制 camoufox）",
     )
+    parser.add_argument(
+        "--fresh", action="store_true",
+        help="强制全新登录：清空上次登录态重新扫码（默认保留已保存的登录态）",
+    )
     args = parser.parse_args()
 
     url = args.url or PLATFORM_URLS.get(args.platform, "")
@@ -283,7 +318,7 @@ def main() -> int:
         print(f"未知平台 {args.platform}，支持: {list(PLATFORM_URLS)}，或 --url 指定")
         return 1
 
-    return asyncio.run(capture(args.platform, url, args.manual, args.engine))
+    return asyncio.run(capture(args.platform, url, args.manual, args.engine, args.fresh))
 
 
 if __name__ == "__main__":
