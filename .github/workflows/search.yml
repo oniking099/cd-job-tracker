@@ -25,10 +25,10 @@ jobs:
     # 导致 "Invalid workflow file" 秒败。统一放 job 级 env，所有步骤共享，无需锚点/合并键。
     env:
       DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-      QWENVL_API_KEY: ${{ secrets.QWENVL_API_KEY }}
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      # 视觉降级链：ModelScope(免费2000/天) → SiliconFlow → Gemini → Qwen-VL
+      # 视觉链：ModelScope(免费2000/天) → GLM-5.3-Flash(智谱 Coding Plan，端点 /api/coding/paas/v4)
+      GLM_API_KEY: ${{ secrets.GLM_API_KEY }}
       MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+      # SiliconFlow 仅剩云端 OCR 兜底（PaddleOCR-VL-1.5）；VL 角色已退出视觉链
       SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
       GAODE_API_KEY: ${{ secrets.GAODE_API_KEY }}
       BOSS_COOKIE: ${{ secrets.BOSS_COOKIE }}
