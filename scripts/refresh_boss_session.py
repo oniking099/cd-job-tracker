@@ -65,22 +65,28 @@ def get_token() -> str:
 
 
 def _api(method: str, url: str, token: str, body: dict | None = None) -> dict:
-    import urllib.error
-    import urllib.request
+    """GitHub API 调用（SSRF 加固：仅 https + api.github.com 白名单，走 safe_request）。"""
+    from src.net.safe_http import safe_request
 
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(url, data=data, method=method)
-    req.add_header("Authorization", f"Bearer {token}")
-    req.add_header("Accept", "application/vnd.github+json")
-    req.add_header("X-GitHub-Api-Version", "2022-11-28")
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
     if data:
-        req.add_header("Content-Type", "application/json")
-    try:
-        with urllib.request.urlopen(req) as resp:
-            raw = resp.read()
-            return json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as e:
-        raise SystemExit(f"HTTP {e.code} {e.reason}: {e.read().decode(errors='replace')[:200]}")
+        headers["Content-Type"] = "application/json"
+    resp = safe_request(
+        method, url,
+        allowed_hosts=("api.github.com",),
+        headers=headers,
+        content=data,
+    )
+    if resp.status_code >= 400:
+        raise SystemExit(f"HTTP {resp.status_code} {resp.reason_phrase}: "
+                         f"{resp.text[:200]}")
+    raw = resp.content
+    return json.loads(raw) if raw else {}
 
 
 def upload_to_secret(value: str) -> None:
