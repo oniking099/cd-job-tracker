@@ -39,6 +39,15 @@ OUTPUT_DIR = PROJECT_ROOT / "output"
 SESSIONS_DIR = PROJECT_ROOT / ".sessions"  # 登录态文件（capture_session.py 导出，gitignore）
 
 # ---- LLM ----
+# GLM 视觉多模态（兜底，视觉链末位：ModelScope → GLM）：智谱 GLM Coding Plan
+# （OpenAI 兼容），glm-5.3-flash 原生多模态可读图，套餐内额度为 GLM-5.3 的 3 倍，
+# 非高峰时段（含周末全天）积分减半。
+# ⚠️ base_url 必须用 Coding Plan 专属端点 /api/coding/paas/v4（普通 /api/paas/v4
+#    扣平台余额而非套餐额度）。思考模型官方推荐 temperature=1 / top_p=0.95。
+GLM_API_KEY = _env("GLM_API_KEY")
+GLM_BASE_URL = _env("GLM_BASE_URL", "https://open.bigmodel.cn/api/coding/paas/v4")
+GLM_VL_MODEL = _env("GLM_VL_MODEL", "glm-5.3-flash")
+
 DEEPSEEK_API_KEY = _env("DEEPSEEK_API_KEY")
 DEEPSEEK_BASE_URL = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_MODEL = "deepseek-chat"  # v4-flash 通过 API 调用
@@ -82,8 +91,8 @@ MODELSCOPE_TEXT_MODELS = _env(
 MODELSCOPE_VL_MODEL = _env("MODELSCOPE_VL_MODEL", "")
 
 # SiliconFlow 硅基流动（OpenAI 兼容）
-# - SILICONFLOW_VL_MODEL 视觉提取/决策兜底（默认 Qwen3-VL-8B，走新用户免费 tokens）
 # - SILICONFLOW_OCR_MODEL 云端 OCR 兜底（PaddleOCR-VL-1.5 永久免费，RapidOCR 空时用）
+# - SILICONFLOW_VL_MODEL 视觉提取（2026-09-04 已退出视觉链，变量保留供 siliconflow.py 备用）
 SILICONFLOW_API_KEY = _env("SILICONFLOW_API_KEY")
 SILICONFLOW_BASE_URL = _env("SILICONFLOW_BASE_URL", "https://api.siliconflow.cn/v1")
 SILICONFLOW_VL_MODEL = _env("SILICONFLOW_VL_MODEL", "Qwen/Qwen3-VL-8B-Instruct")

@@ -49,10 +49,11 @@
 | Secret | 说明 |
 |--------|------|
 | `DEEPSEEK_API_KEY` | DeepSeek API Key |
-| `QWENVL_API_KEY` | 阿里云百炼 Qwen-VL-Max Key |
+| `GLM_API_KEY` | 智谱 GLM Coding Plan Key（视觉链兜底 glm-5.3-flash） |
+| `MODELSCOPE_API_KEY` | ModelScope Key（视觉链首选，免费额度） |
+| `SILICONFLOW_API_KEY` | SiliconFlow Key（云端 OCR 兜底） |
 | `SERVER_CHAN_SENDKEY` | Server酱 SendKey |
 | `GAODE_API_KEY` | （可选）高德 Web服务 Key |
-| `GEMINI_API_KEY` | （可选）Gemini API Key |
 | `GH_PAT` | GitHub Personal Access Token |
 
 ### 3. 本地开发
@@ -86,7 +87,8 @@ python scripts/report.py
 
 - Python 3.12 + Playwright + playwright-stealth
 - DeepSeek v4-flash（文本推理）
-- Qwen-VL-Max（视觉提取兜底）
+- ModelScope Qwen3-VL（视觉链首选，免费额度）
+- GLM-5.3-Flash（视觉链兜底，智谱 Coding Plan）
 - Jinja2 + Tailwind CSS（HTML 报告）
 - GitHub Actions（定时调度）
 
