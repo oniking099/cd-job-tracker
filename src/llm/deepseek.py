@@ -4,10 +4,13 @@ DeepSeek 客户端：文本推理、职位匹配、企业分类辅助。
 """
 from __future__ import annotations
 
+import asyncio
+import json
 import logging
 from openai import AsyncOpenAI
 
 from src.config import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL, DEEPSEEK_MODEL
+from src.models import Job
 
 logger = logging.getLogger(__name__)
 
@@ -123,3 +126,82 @@ async def cross_platform_dedup(
     except Exception as e:
         logger.warning(f"LLM跨平台去重失败，返回原始列表: {e}")
         return jobs
+
+
+# ---- JD 要点总结（报告展开态的职责/要求要点，用户 2026-09-05：必须总结准确）----
+
+_JD_SUMMARY_SYSTEM = (
+    "你是招聘 JD 分析专家，擅长从混有网页噪音的正文里提炼岗位关键信息，只输出严格 JSON。"
+)
+
+_JD_SUMMARY_PROMPT = """岗位：{title}
+公司：{company}
+
+JD 原文（可能混有网页导航/登录提示等噪音）：
+{jd}
+
+请提炼并只输出 JSON 对象 {{"resp": [...], "req": [...]}}：
+- "resp"：核心岗位职责，最多3条，每条≤25字，动词开头（例："负责环境监测数据审核与报告编制"）
+- "req"：硬性任职要求，最多3条，每条≤25字，按重要性优先提炼：学历、经验年限、专业技能、必备证书
+
+规则：
+1. 只依据原文，禁止编造；原文没有对应内容则该数组为空
+2. 忽略网页导航、登录/注册提示、公司宣传、福利待遇、工作环境描述
+3. 要求条目保留具体信息（如"环境类本科+3年监测经验"优于"有相关经验"）
+4. 不要 markdown 代码块，只输出 JSON"""
+
+
+async def summarize_jd(job: Job) -> bool:
+    """单岗 JD → 职责/要求要点，写入 job.resp_summary / req_summary。成功返回 True。"""
+    jd = f"【职责】{(job.responsibilities or '')[:1500]}\n【要求】{(job.requirements or '')[:1500]}"
+    if not jd.strip("【职责】 \n【要求】"):
+        return False
+    raw = await chat(
+        _JD_SUMMARY_PROMPT.format(title=job.title, company=job.company or "未知公司", jd=jd),
+        system=_JD_SUMMARY_SYSTEM,
+        temperature=0.1,
+        max_tokens=400,
+    )
+    if "```" in raw:
+        parts = raw.split("```")
+        raw = parts[1] if len(parts) > 1 else parts[0]
+        if raw.lstrip().startswith("json"):
+            raw = raw.lstrip()[4:]
+    try:
+        data = json.loads(raw.strip())
+    except json.JSONDecodeError as e:
+        logger.warning(f"[jd-summary] LLM 输出非 JSON（{job.title}）: {raw[:120]} … {e}")
+        return False
+    resp = [str(x).strip() for x in data.get("resp", []) if str(x).strip()][:3]
+    req = [str(x).strip() for x in data.get("req", []) if str(x).strip()][:3]
+    if not resp and not req:
+        return False
+    job.resp_summary = resp
+    job.req_summary = req
+    return True
+
+
+async def summarize_jobs_jd(
+    jobs: list[Job],
+    concurrency: int = 5,
+    timeout: float = 45.0,
+) -> int:
+    """批量 JD 要点总结（并发受限）。返回成功条数；失败岗位置空——报告层回退规则切分。"""
+    targets = [j for j in jobs if not (j.resp_summary or j.req_summary)
+               and ((j.responsibilities or "").strip() or (j.requirements or "").strip())]
+    if not targets:
+        return 0
+    sem = asyncio.Semaphore(concurrency)
+    ok = 0
+
+    async def _one(j: Job) -> None:
+        nonlocal ok
+        async with sem:
+            try:
+                if await asyncio.wait_for(summarize_jd(j), timeout=timeout):
+                    ok += 1
+            except Exception as e:
+                logger.warning(f"[jd-summary] {j.title} 总结失败（报告回退规则切分）: {e}")
+
+    await asyncio.gather(*(_one(j) for j in targets))
+    return ok

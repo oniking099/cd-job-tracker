@@ -197,23 +197,24 @@ class BaseScraper(ABC):
     async def _parse_with_fallback(self, page: Page) -> list[Job]:
         """
         HTML 解析失败时的降级方案：
-        截图 → Qwen-VL-Max 视觉提取 → Gemini 备用。
+        截图 → ModelScope VL 视觉提取 → GLM-5.3-Flash 备用。
+        （用户 2026-09-04：视觉链只留 ModelScope → GLM，Qwen-VL/Gemini 已移除。）
         """
         screenshot_bytes = await page.screenshot(type="png", full_page=False)
 
-        # 尝试 Qwen-VL-Max
+        # 尝试 ModelScope（免费 2000/天，VL 链内自动降级）
         try:
-            from src.llm.qwen_vl import extract_jobs_from_screenshot as qwen_extract
-            return await qwen_extract(screenshot_bytes, self.platform_name)
+            from src.llm.modelscope import extract_jobs_from_screenshot as modelscope_extract
+            return await modelscope_extract(screenshot_bytes, self.platform_name)
         except Exception as e:
-            logger.warning(f"[{self.platform_name}] Qwen-VL 降级提取失败: {e}")
+            logger.warning(f"[{self.platform_name}] ModelScope 降级提取失败: {e}")
 
-        # 尝试 Gemini
+        # 尝试 GLM-5.3-Flash（智谱 Coding Plan）
         try:
-            from src.llm.gemini import extract_jobs_from_screenshot as gemini_extract
-            return await gemini_extract(screenshot_bytes, self.platform_name)
+            from src.llm.glm import extract_jobs_from_screenshot as glm_extract
+            return await glm_extract(screenshot_bytes, self.platform_name)
         except Exception as e:
-            logger.warning(f"[{self.platform_name}] Gemini 降级提取失败: {e}")
+            logger.warning(f"[{self.platform_name}] GLM 降级提取失败: {e}")
 
         return []
 

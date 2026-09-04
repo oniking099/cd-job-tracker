@@ -6,8 +6,9 @@
    RapidOCR 读字）→ 文本 LLM 输出动作 JSON。零视觉 API 调用，成本分毫。
 2. ModelScope 文本兜底：DeepSeek 失败时用 Qwen3.5 文本链（397B→35B→27B，
    429 自动降级），仍不占视觉模型额度。
-3. 视觉兜底链：ModelScope-VL（235B→72B 自动降级）→ SiliconFlow → Gemini → Qwen-VL。
-   仅在文本决策全失败时才动用多模态。
+3. 视觉兜底链：ModelScope-VL（免费 2000/天，235B→72B 自动降级）→ GLM-5.3-Flash
+   （智谱 Coding Plan）。仅在文本决策全失败时才动用多模态。
+   （用户 2026-09-04：SiliconFlow/Gemini/Qwen-VL 已退出视觉链，只留两级。）
 
 输出用 prompt 约束的纯 JSON，宽容解析 + Pydantic 校验，失败重试并注入上次错误。
 """
@@ -20,14 +21,9 @@ from openai import AsyncOpenAI
 
 from src.config import (
     AGENT_LLM_TIMEOUT,
-    GEMINI_API_KEY,
-    GEMINI_MODEL,
-    QWENVL_API_KEY,
-    QWENVL_BASE_URL,
-    QWENVL_MODEL,
-    SILICONFLOW_API_KEY,
-    SILICONFLOW_BASE_URL,
-    SILICONFLOW_VL_MODEL,
+    GLM_API_KEY,
+    GLM_BASE_URL,
+    GLM_VL_MODEL,
 )
 from src.agent.actions import (
     AgentAction,
@@ -61,9 +57,7 @@ async def decide_next_action(
             ("DeepSeek-文本", _call_deepseek_text),
             ("ModelScope-文本", _call_modelscope_text),
             ("ModelScope-视觉", _call_model_scope),
-            ("SiliconFlow", _call_siliconflow),
-            ("Gemini", _call_gemini),
-            ("Qwen-VL", _call_qwen_vl),
+            ("GLM-视觉", _call_glm),
         ]
         for name, call in providers:
             try:
@@ -226,6 +220,48 @@ async def _call_modelscope_text(
     return raw
 
 
+async def _call_glm(
+    *,
+    task: str,
+    state_signal: str,
+    last_result: str,
+    history_lines: list[str],
+    inventory_text: str,
+    page_text: str,
+    screenshot: bytes,
+    error_hint: str | None,
+) -> str:
+    """GLM-5.3-Flash 视觉决策兜底（视觉链末位）：Coding Plan 套餐内调用，原生多模态读图。
+
+    思考模型官方推荐 temperature=1 / top_p=0.95（低温易复读），与
+    system prompt 的"严格只输出 JSON"约束配合，输出仍走 parse_action 宽容解析。
+    """
+    if not GLM_API_KEY:
+        raise ValueError("GLM_API_KEY 未设置")
+    client = AsyncOpenAI(
+        api_key=GLM_API_KEY,
+        base_url=GLM_BASE_URL,
+        timeout=AGENT_LLM_TIMEOUT,
+    )
+    response = await client.chat.completions.create(
+        model=GLM_VL_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": _build_vision_content(
+                    task, state_signal, last_result, history_lines,
+                    inventory_text, page_text, screenshot, error_hint,
+                ),
+            },
+        ],
+        temperature=1.0,
+        top_p=0.95,
+        max_tokens=_MAX_ACTION_TOKENS,
+    )
+    return response.choices[0].message.content or ""
+
+
 async def _call_model_scope(
     *,
     task: str,
@@ -258,111 +294,3 @@ async def _call_model_scope(
         kind="vl",
     )
     return raw
-
-
-async def _call_siliconflow(
-    *,
-    task: str,
-    state_signal: str,
-    last_result: str,
-    history_lines: list[str],
-    inventory_text: str,
-    page_text: str,
-    screenshot: bytes,
-    error_hint: str | None,
-) -> str:
-    if not SILICONFLOW_API_KEY:
-        raise ValueError("SILICONFLOW_API_KEY 未设置")
-    client = AsyncOpenAI(
-        api_key=SILICONFLOW_API_KEY,
-        base_url=SILICONFLOW_BASE_URL,
-        timeout=AGENT_LLM_TIMEOUT,
-    )
-    response = await client.chat.completions.create(
-        model=SILICONFLOW_VL_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": _build_vision_content(
-                    task, state_signal, last_result, history_lines,
-                    inventory_text, page_text, screenshot, error_hint,
-                ),
-            },
-        ],
-        temperature=0.1,
-        max_tokens=_MAX_ACTION_TOKENS,
-    )
-    return response.choices[0].message.content or ""
-
-
-async def _call_gemini(
-    *,
-    task: str,
-    state_signal: str,
-    last_result: str,
-    history_lines: list[str],
-    inventory_text: str,
-    page_text: str,
-    screenshot: bytes,
-    error_hint: str | None,
-) -> str:
-    if not GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY 未设置")
-    client = AsyncOpenAI(
-        api_key=GEMINI_API_KEY,
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-        timeout=AGENT_LLM_TIMEOUT,
-    )
-    response = await client.chat.completions.create(
-        model=GEMINI_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": _build_vision_content(
-                    task, state_signal, last_result, history_lines,
-                    inventory_text, page_text, screenshot, error_hint,
-                ),
-            },
-        ],
-        temperature=0.1,
-        max_tokens=_MAX_ACTION_TOKENS,
-    )
-    return response.choices[0].message.content or ""
-
-
-async def _call_qwen_vl(
-    *,
-    task: str,
-    state_signal: str,
-    last_result: str,
-    history_lines: list[str],
-    inventory_text: str,
-    page_text: str,
-    screenshot: bytes,
-    error_hint: str | None,
-) -> str:
-    if not QWENVL_API_KEY:
-        raise ValueError("QWENVL_API_KEY 未设置")
-    client = AsyncOpenAI(
-        api_key=QWENVL_API_KEY,
-        base_url=QWENVL_BASE_URL,
-        timeout=AGENT_LLM_TIMEOUT,
-    )
-    response = await client.chat.completions.create(
-        model=QWENVL_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": _build_vision_content(
-                    task, state_signal, last_result, history_lines,
-                    inventory_text, page_text, screenshot, error_hint,
-                ),
-            },
-        ],
-        temperature=0.1,
-        max_tokens=_MAX_ACTION_TOKENS,
-    )
-    return response.choices[0].message.content or ""
