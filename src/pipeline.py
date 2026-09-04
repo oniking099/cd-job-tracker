@@ -69,6 +69,9 @@ ROUND_KEYWORDS: dict[str, dict] = {
     "3": {
         "theme": "AI/大模型 + 补充/长尾",
         # 原第 14 轮（AI/大模型宽泛）+ 原第 17 轮（补充/长尾）合并
+        # 2026-09-04 收敛（用户拍板）：删掉产品经理/售前/解决方案/架构师/数据标注/
+        # 技术支持/咨询顾问/项目经理等与背景无关的泛岗词——搜回来的杂岗即便过滤
+        # 也会挤占详情富集预算；AI 相关性交由 major.py 正向清单把关。
         "primary": [
             "成都 人工智能", "成都 AI工程师", "成都 算法工程师",
             "成都 大模型", "成都 LLM", "成都 语言模型",
@@ -77,14 +80,10 @@ ROUND_KEYWORDS: dict[str, dict] = {
             "成都 数据科学家", "成都 数据分析师",
             "成都 研究岗", "成都 科研助理", "成都 博士后",
             "成都 数据工程师", "成都 大数据开发",
-            "成都 技术顾问", "成都 解决方案", "成都 售前",
-            "成都 产品经理AI", "成都 AI产品", "成都 技术产品",
         ],
         "expand": [
             "成都 AI", "成都 算法", "成都 模型",
-            "成都 人工智能工程师", "成都 数据标注",
-            "成都 技术支持", "成都 咨询顾问",
-            "成都 项目经理", "成都 架构师",
+            "成都 人工智能工程师",
         ],
         "borrow": [
             "成都 Python开发", "成都 研发工程师",
@@ -482,6 +481,16 @@ async def run_report(push: bool = True, target_date: str | None = None):
     dropped = before_url_filter - len(valid_jobs)
     if dropped:
         print(f"无有效JD页面过滤: 剔除 {dropped} 条，保留 {len(valid_jobs)} 条")
+
+    # LLM JD 要点总结（用户 2026-09-05：报告展开态的职责/要求要准确提炼重点；
+    # 失败岗位置空，报告层自动回退规则切分，不影响出报告）
+    try:
+        from src.llm.deepseek import summarize_jobs_jd
+        summarized = await summarize_jobs_jd(valid_jobs)
+        if summarized:
+            print(f"JD 要点总结: {summarized} 条成功（其余回退规则切分）")
+    except Exception as e:
+        print(f"JD 要点总结失败: {e}")
 
     # LLM 企业分类（规则未判定的）
     try:
