@@ -205,9 +205,7 @@ class TestDecisionTextFirst:
 
         monkeypatch.setattr("src.llm.deepseek.chat", fake_chat)
         monkeypatch.setattr(decision_mod, "_call_model_scope", fail_vision)
-        monkeypatch.setattr(decision_mod, "_call_siliconflow", fail_vision)
-        monkeypatch.setattr(decision_mod, "_call_gemini", fail_vision)
-        monkeypatch.setattr(decision_mod, "_call_qwen_vl", fail_vision)
+        monkeypatch.setattr(decision_mod, "_call_glm", fail_vision)
 
         action = await decide_next_action(
             task="在智联招聘搜索「气象」岗位",

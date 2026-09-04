@@ -18,8 +18,6 @@ import concurrent.futures
 import json
 import re
 import time
-import urllib.error
-import urllib.request
 
 API_TIMEOUT = 30          # 单次请求超时（秒）
 MAX_TOKENS = 20           # 可达性探测只需极短输出
@@ -82,29 +80,34 @@ def expand_qwen_candidates(names: list[str]) -> list[str]:
 
 
 def probe(model_id: str) -> tuple[str, str, int, str]:
-    """探测单个模型 ID。返回 (kind, model_id, status_code, detail)。"""
+    """探测单个模型 ID（SSRF 加固：仅 .env 配置的 ModelScope 端点 host，走 safe_request）。"""
+    from urllib.parse import urlparse
+
+    from src.net.safe_http import safe_request
+
     body = json.dumps({
         "model": model_id,
         "messages": [{"role": "user", "content": "你好，请只回复：OK"}],
         "max_tokens": MAX_TOKENS,
         "temperature": 0,
     }).encode("utf-8")
-    req = urllib.request.Request(
-        f"{BASE}/chat/completions",
-        data=body,
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json",
-        },
-    )
     try:
-        with urllib.request.urlopen(req, timeout=API_TIMEOUT) as resp:
-            data = json.loads(resp.read())
-            content = data["choices"][0]["message"]["content"] or ""
-            return "vl", model_id, resp.status, content[:30].replace("\n", " ")
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", errors="replace")[:100].replace("\n", " ")
-        return "vl", model_id, e.code, detail
+        resp = safe_request(
+            "POST", f"{BASE}/chat/completions",
+            allowed_hosts=(urlparse(BASE).hostname or "",),
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json",
+            },
+            content=body,
+            timeout=API_TIMEOUT,
+        )
+        if resp.status_code >= 400:
+            detail = resp.text[:100].replace("\n", " ")
+            return "vl", model_id, resp.status_code, detail
+        data = resp.json()
+        content = data["choices"][0]["message"]["content"] or ""
+        return "vl", model_id, resp.status_code, content[:30].replace("\n", " ")
     except Exception as e:  # 网络/超时
         return "vl", model_id, 0, str(e)[:100]
 

@@ -26,3 +26,6 @@ playwright-report/
 .mcp.json
 # Claude Code / Playwright MCP 本地产物（浏览器快照、控制台日志）
 .playwright-mcp/
+
+# 报告预览产物（.claude/render_preview.py 本地渲染，不入库）
+output/_preview/

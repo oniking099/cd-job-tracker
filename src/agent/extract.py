@@ -131,7 +131,8 @@ async def _extract_with_vision(screenshots: list[bytes], platform: str) -> list[
     视觉大模型的额度/延时。视觉 API 只做最后兜底。
     - 读字：本地 RapidOCR（离线免费）优先；空/失败 → SiliconFlow PaddleOCR-VL-1.5（免费）
     - 结构化：便宜文本 LLM（DeepSeek）→ 规则解析离线兜底
-    - 视觉兜底：ModelScope（免费 2000/天）→ SiliconFlow → Gemini → Qwen-VL(DashScope)
+    - 视觉兜底：ModelScope（免费 2000/天）→ GLM-5.3-Flash（智谱 Coding Plan）。
+      （用户 2026-09-04：SiliconFlow-VL/Gemini/Qwen-VL 已退出视觉链，只留两级。）
     """
     # ① 读字：本地 RapidOCR 优先，空/失败补云端 OCR（免费）
     ocr_text = await _ocr_text(screenshots)
@@ -161,9 +162,7 @@ async def _extract_with_vision(screenshots: list[bytes], platform: str) -> list[
     raw: list[dict] = []
     for name, mod in (
         ("ModelScope", "src.llm.modelscope"),
-        ("SiliconFlow", "src.llm.siliconflow"),
-        ("Gemini", "src.llm.gemini"),
-        ("Qwen-VL", "src.llm.qwen_vl"),
+        ("GLM", "src.llm.glm"),
     ):
         if raw:
             break

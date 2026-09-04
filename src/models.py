@@ -72,6 +72,10 @@ class Job:
     excluded: bool = False           # 是否被过滤掉
     exclude_reason: str = ""         # 被过滤原因
 
+    # JD 要点总结（LLM 提炼，报告展开态展示；空则报告回退规则切分）
+    resp_summary: list[str] = field(default_factory=list)  # 职责要点（≤3条）
+    req_summary: list[str] = field(default_factory=list)   # 要求要点（≤3条）
+
     @property
     def dedup_key(self) -> str:
         """去重键：平台 + 岗位ID"""

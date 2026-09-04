@@ -16,8 +16,6 @@ import re
 import subprocess
 import sys
 import time
-import urllib.error
-import urllib.request
 
 try:
     import nacl.bindings
@@ -38,33 +36,37 @@ def get_repo_auth() -> tuple[str, str, str]:
 
 
 def api(token: str, owner: str, repo: str, method: str, path: str, body: dict | None = None):
-    """带重试的 GitHub API 调用（CN 网络下 api.github.com 偶发 TLS 重置/空响应）。"""
+    """带重试的 GitHub API 调用（SSRF 加固走 safe_request；CN 网络下偶发 TLS 重置/空响应）。"""
+    import httpx
+
+    from src.net.safe_http import safe_request
+
     last_err: Exception | None = None
     for attempt in range(6):
         try:
-            req = urllib.request.Request(
-                f"https://api.github.com/repos/{owner}/{repo}{path}",
-                data=json.dumps(body).encode() if body else None,
-                method=method,
+            resp = safe_request(
+                method, f"https://api.github.com/repos/{owner}/{repo}{path}",
+                allowed_hosts=("api.github.com",),
                 headers={
                     "Authorization": f"token {token}",
                     "Accept": "application/vnd.github+json",
                     "User-Agent": "cd-job-tracker",
                 },
+                content=json.dumps(body).encode() if body else None,
+                timeout=30,
             )
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                raw = resp.read()
-                if resp.status == 204:
-                    # GitHub Actions Secrets PUT 成功返回 204 No Content（无响应体）
-                    return {}
-                if 200 <= resp.status < 300:
-                    if not raw.strip():
-                        raise ConnectionError("empty response body on 2xx")
-                    return json.loads(raw)
-                raise ConnectionError(
-                    f"HTTP {resp.status}: {raw.decode(errors='replace')[:200]}"
-                )
-        except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError) as e:
+            if resp.status_code == 204:
+                # GitHub Actions Secrets PUT 成功返回 204 No Content（无响应体）
+                return {}
+            if 200 <= resp.status_code < 300:
+                if not resp.content.strip():
+                    raise ConnectionError("empty response body on 2xx")
+                return json.loads(resp.content)
+            raise ConnectionError(
+                f"HTTP {resp.status_code}: {resp.text[:200]}"
+            )
+        except (httpx.HTTPError, TimeoutError, ConnectionError,
+                json.JSONDecodeError, ValueError) as e:
             last_err = e
             time.sleep(2 * (attempt + 1))
     raise last_err
