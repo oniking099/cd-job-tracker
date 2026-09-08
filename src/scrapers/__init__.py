@@ -24,6 +24,8 @@ from src.scrapers.agent_scraper import (
     QixiangAgentScraper,
     BjxHuanbaoAgentScraper,
     GaoxiaoJobAgentScraper,
+    # 体制内渠道（2026-09-05 补强：事业单位/国企社招）
+    Sc91AgentScraper,
 )
 
 # 覆盖的招聘渠道（点3：专业垂直平台 + 主流综合平台；低效平台已剔除）
@@ -41,6 +43,8 @@ ALL_SCRAPERS: dict[str, type] = {
     "气象人才网": QixiangAgentScraper,
     "北极星环保招聘": BjxHuanbaoAgentScraper,
     "高校人才网": GaoxiaoJobAgentScraper,
+    # 体制内渠道
+    "四川公共招聘网": Sc91AgentScraper,
 }
 
 # LLM Agent 智能体平台：命中则用 Agent 模拟人类操作，否则走 HTML 爬虫
@@ -59,4 +63,6 @@ AGENT_SCRAPERS: dict[str, type] = {
     "气象人才网": QixiangAgentScraper,
     "北极星环保招聘": BjxHuanbaoAgentScraper,
     "高校人才网": GaoxiaoJobAgentScraper,
+    # 体制内渠道
+    "四川公共招聘网": Sc91AgentScraper,
 }

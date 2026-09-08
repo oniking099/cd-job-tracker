@@ -42,6 +42,14 @@ class AgentScraperBase(BaseScraper):
         """构造起始页 URL。默认用固定 start_url；子类可覆写为带关键词/城市筛选参数的搜索页。"""
         return self.start_url
 
+    def _search_keyword(self, keyword: str) -> str:
+        """实际传给平台搜索框的词（默认原样；子类可剥城市前缀等适配）。
+
+        pipeline 的关键词统一为「{city} 岗位词」（如"成都 气象工程师"），
+        平台自身已按城市过滤或按岗位名精确匹配时，城市前缀必须剥掉。
+        """
+        return keyword
+
     async def _prewarm(self, page, start_url: str) -> None:
         """预导航起始页，再启动 agent 循环。
 
@@ -65,7 +73,7 @@ class AgentScraperBase(BaseScraper):
 
         task = self.task_template.format(
             platform=self.platform_name,
-            keyword=keyword,
+            keyword=self._search_keyword(keyword),
             city=self.target_city,
         )
         trace_dir = DATA_DIR / "agent-traces" / self.platform_name / self._safe_name(keyword)
@@ -464,9 +472,17 @@ class QixiangAgentScraper(AgentScraperBase):
     )
 
 
-class BjxHuanbaoAgentScraper(AgentScraperBase):
-    """北极星环保招聘：环保/水处理/固废垂直平台（hbjob.bjx.com.cn）。"""
+class BjxHuanbaoAgentScraper(CamoufoxAgentScraperBase):
+    """北极星环保招聘：环保/水处理/固废垂直平台（hbjob.bjx.com.cn）。
+
+    2026-09-05 修复零产出：裸 Chromium 访问 /search/ 直接返回滑动验证页
+    （实测 Playwright 命中"滑动验证页面"），与 BOSS 同因——CDP 指纹被识别。
+    改走 Camoufox（引擎层指纹伪造）过验证墙；无登录需求，persistent profile
+    自动建立即可。
+    """
     platform_name = "北极星环保招聘"
+    platform_key = "bjx"      # .sessions/profiles/bjx（无登录态，仅稳定指纹）
+    cookie_env = ""            # 无 Cookie Secret
     start_url = "https://hbjob.bjx.com.cn/"
 
     def build_start_url(self, keyword: str) -> str:
@@ -477,6 +493,7 @@ class BjxHuanbaoAgentScraper(AgentScraperBase):
     task_template = (
         "在北极星环保招聘网搜索「{keyword}」岗位，地区选{city}。"
         "如果搜索页有地区/城市筛选控件，选择{city}；没有则直接查看当前结果。"
+        "如果出现滑动验证，尝试拖动滑块完成验证后继续。"
         "滚动查看岗位卡片列表（卡片含 岗位名/薪资/地点/公司），看到{city}的岗位列表后执行 extract。"
     )
 
@@ -495,4 +512,37 @@ class GaoxiaoJobAgentScraper(AgentScraperBase):
         "在搜索框输入关键词，选择{city}地区，点击搜索。"
         "如果出现登录/验证码，忽略它，不要点击。"
         "滚动查看岗位卡片列表（含 岗位名/单位/地点/要求），看到{city}的岗位列表后执行 extract。"
+    )
+
+
+class Sc91AgentScraper(AgentScraperBase):
+    """四川（成都）公共招聘网：成都市人社局主管官方平台（cd.sc91.org.cn）。
+
+    用户 2026-09-05 要求补强体制内渠道（事业单位/国企社招）。本站岗位默认
+    成都地区（cd 子域），含事业单位与国企发布岗，是官方一手数据源。
+
+    实测（2026-09-05 Playwright）：搜索页 /app/search/jobSearch.shtml 填
+    input[name=keyword] 后点「确定」按钮（layui 表单）触发查询，结果卡片
+    div.search_result_item 由 JS 渲染（含详情 onclick 链接），配套 DOM 提取器
+    _extract_sc91_from_dom。
+    """
+    platform_name = "四川公共招聘网"
+    start_url = "https://cd.sc91.org.cn/app/search/jobSearch.shtml"
+
+    def _search_keyword(self, keyword: str) -> str:
+        # 本站默认成都岗位且按岗位名匹配（实测"成都 环境"无结果、"环境"6 条），
+        # 剥掉 pipeline 关键词的"成都"前缀
+        return keyword.replace("成都", " ").replace("  ", " ").strip()
+
+    def build_start_url(self, keyword: str) -> str:
+        return self.start_url
+
+    task_template = (
+        "在四川公共招聘网（成都人社局官方平台，岗位默认成都地区，无需再选城市）"
+        "的职位搜索页搜索「{keyword}」岗位：\n"
+        "1. 在「请匹配工种类别或者职位名称」输入框输入「{keyword}」"
+        "（输入后若弹出自动补全下拉，按 Esc 关闭它，不要从下拉里选择）\n"
+        "2. 点击「确定」按钮提交搜索\n"
+        "3. 等待岗位列表刷新（卡片含 岗位名[地区]/公司名/薪资待遇）\n"
+        "4. 滚动查看列表后执行 extract。若列表为空或提示无结果，输出 done（reason 写'无结果'）。"
     )
