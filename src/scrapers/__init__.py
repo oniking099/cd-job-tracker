@@ -7,6 +7,7 @@ from src.scrapers.yupao import YupaoScraper
 from src.scrapers.wuba import WubaScraper
 from src.scrapers.jobui import JobuiScraper
 from src.scrapers.chinahr import ChinahrScraper
+from src.scrapers.gov_notice import Rc5Scraper, ScptaScraper
 
 from src.scrapers.agent_scraper import (
     AgentScraperBase,
@@ -45,6 +46,8 @@ ALL_SCRAPERS: dict[str, type] = {
     "高校人才网": GaoxiaoJobAgentScraper,
     # 体制内渠道
     "四川公共招聘网": Sc91AgentScraper,
+    "四川人事考试网": ScptaScraper,
+    "王才网成都站": Rc5Scraper,
 }
 
 # LLM Agent 智能体平台：命中则用 Agent 模拟人类操作，否则走 HTML 爬虫
@@ -63,6 +66,6 @@ AGENT_SCRAPERS: dict[str, type] = {
     "气象人才网": QixiangAgentScraper,
     "北极星环保招聘": BjxHuanbaoAgentScraper,
     "高校人才网": GaoxiaoJobAgentScraper,
-    # 体制内渠道
+    # 体制内渠道（agent 型；公告型爬虫走 HTML 预算档，不进本表）
     "四川公共招聘网": Sc91AgentScraper,
 }

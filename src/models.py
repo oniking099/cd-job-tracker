@@ -33,6 +33,8 @@ class SourcePlatform(str, Enum):
     GAOXIAOJOB = "高校人才网"
     # 体制内渠道（2026-09-05 用户要求补强：事业单位/国企央企社招）
     SC91 = "四川公共招聘网"
+    SCPTA = "四川人事考试网"
+    RC5 = "王才网成都站"
 
 
 @dataclass
