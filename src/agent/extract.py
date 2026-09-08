@@ -599,6 +599,45 @@ async def _extract_wuba_from_dom(page) -> list[dict]:
     return data or []
 
 
+async def _extract_sc91_from_dom(page) -> list[dict]:
+    """四川（成都）公共招聘网专属 DOM 提取（cd.sc91.org.cn，人社局官方平台）。
+
+    实测（2026-09-05 Playwright）：结果由 JS 渲染，卡片结构与详情链接稳定：
+      div.search_result_item          卡片（onclick 里 window.open 详情 URL）
+        .search_result_text_item_1    第1个: 岗位名[四川省成都市XX区]
+        .search_result_text_item_1    第2个: 公司名
+        .search_result_text_item_2    招聘人数 / 薪资待遇 / 工作方式 / 工作经验
+    薪资为纯数字（元/月），拼回标准文本让 salary.py 解析；标题拆出地区。
+    """
+    try:
+        data = await page.evaluate("""() => {
+            const out = [];
+            for (const c of document.querySelectorAll('div.search_result_item')) {
+                const onclick = c.getAttribute('onclick') || '';
+                const m = onclick.match(/window\\.open\\(["']([^"']+)["']/);
+                const url = m ? new URL(m[1], window.location.origin).href : '';
+                const lines = [...c.querySelectorAll('.search_result_text_item_1')]
+                    .map(e => (e.innerText || '').trim()).filter(Boolean);
+                if (!lines.length) continue;
+                let title = lines[0], loc = '';
+                const lm = lines[0].match(/^(.*?)\\[(.*?)\\]\\s*$/);
+                if (lm) { title = lm[1].trim(); loc = lm[2].trim(); }
+                const meta = ((c.querySelector('.search_result_text_item_2') || {}).innerText || '')
+                    .replace(/\\u00a0/g, ' ');
+                const sm = meta.match(/薪资待遇[:：]?\\s*([\\d.]+)\\s*-\\s*([\\d.]+)/);
+                const salaryText = sm ? sm[1] + '-' + sm[2] + '元/月' : '';
+                const req = meta.split('|').map(s => s.trim()).filter(Boolean).join(', ');
+                out.push({ title, company: lines[1] || '', url, salary_text: salaryText,
+                           location: loc, requirements: req });
+            }
+            return out;
+        }""")
+    except Exception as e:
+        logger.warning(f"[agent] 四川公共招聘网 DOM 提取失败: {e}")
+        return []
+    return data or []
+
+
 async def _extract_boss_from_dom(page) -> list[dict]:
     """BOSS直聘专属 DOM 提取：SSR JSON 优先 + DOM 卡片回退，直取 title/company/url。
 
@@ -694,6 +733,7 @@ _DOM_EXTRACTORS: dict = {
     "中华英才网": _extract_chinahr_from_dom,
     "58同城": _extract_wuba_from_dom,
     "BOSS直聘": _extract_boss_from_dom,
+    "四川公共招聘网": _extract_sc91_from_dom,
 }
 
 

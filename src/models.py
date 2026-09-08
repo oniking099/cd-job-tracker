@@ -31,6 +31,8 @@ class SourcePlatform(str, Enum):
     QIXIANG = "气象人才网"
     BJX_HUANBAO = "北极星环保招聘"
     GAOXIAOJOB = "高校人才网"
+    # 体制内渠道（2026-09-05 用户要求补强：事业单位/国企央企社招）
+    SC91 = "四川公共招聘网"
 
 
 @dataclass
