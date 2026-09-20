@@ -1,0 +1,7 @@
+[58同城] verify FAIL (提取 0 条)
+keyword:   气象
+page_title: 成都全职招聘_全职招聘网_成都人才招聘 - 成都58同城招聘
+page_url:  https://m.58.com/cd/job/
+body_len:  486
+ssr:       jobList=0
+dom_cards: 0
