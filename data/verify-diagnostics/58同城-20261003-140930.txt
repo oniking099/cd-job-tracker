@@ -1,0 +1,7 @@
+[58同城] verify FAIL (提取 0 条)
+keyword:   气象
+page_title: m.58.com
+page_url:  chrome-error://chromewebdata/
+body_len:  169
+ssr:       no-ssr
+dom_cards: 0
